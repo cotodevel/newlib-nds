@@ -1,0 +1,2 @@
+export TGDS_ENV="linux"
+export DEFAULT_GCC_PATH="/usr/arm-none-eabi/lib/newlib-nano-2.1-nds/6.2_2016q4/"
