@@ -242,7 +242,8 @@ ifeq ($(TGDS_ENV),windows)
 	-@rm -rf $(TARGET_LIBRARY_HEADERS_7)	$(TARGET_LIBRARY_HEADERS_9)	$(TARGET_LIBRARY_PATH)$(TARGET_LIBRARY_LINKER_SRC)
 endif
 ifeq ($(TGDS_ENV),linux)
-	-@sudo rm -rf $(DEFAULT_GCC_PATH)
+	-@sudo rm -rf	$(DEFAULT_GCC_PATH)	$(CURDIR)/temp
+	-@sudo rm	/usr/bin/bin2c
 endif
 
 setup:
@@ -279,7 +280,21 @@ ifeq ($(TGDS_ENV),linux)
 		zip \
 		texlive \
 		texlive-extra-utils
+		$(MAKE)	buildbin2c
+		$(MAKE)	ndstool		
 endif
+
+#rule already validated == linux
+buildbin2c:
+	-rm -fr $(CURDIR)/temp
+	-mkdir -p $(CURDIR)/temp
+	-wget	-O $(CURDIR)/temp/bin2c.zip	https://github.com/cotodevel/bin2c/archive/master.zip 
+	-7z x $(CURDIR)/temp/bin2c.zip	-o$(CURDIR)/temp
+	-$(MAKE)	-C	$(CURDIR)/temp/bin2c-master/linux
+
+#rule already validated == linux
+ndstool:
+	-@echo 'ndstool:todo'
 
 #files renamed to -excluded is because the current toolchain paths are being included (for default GNU ARM tools), EVEN
 #when we force -nostdinc++ and -nostdinc. So the files inside TGDS are used
@@ -295,6 +310,7 @@ ifeq ($(TGDS_ENV),linux)
 	-sudo chmod -R 777	$(DEFAULT_GCC_PATH)../../
 	-sudo mkdir -p $(DEFAULT_GCC_PATH)
 	-sudo cp	-r $(CURDIR)/../installer/shared/6.2_2016q4/	$(DEFAULT_GCC_PATH)/../
+	-sudo mv	$(CURDIR)/temp/bin2c-master/linux/bin2c	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)bin2c
 	-sudo cp	-r $(CURDIR)/../installer/shared/Makefile.basenewlib	$(DEFAULT_GCC_PATH)/
 	-sudo mkdir -p $(TARGET_LIBRARY_PATH)
 	-sudo cp	-r $(CURDIR)/../newlib-src/newlib/libc/include/	$(TARGET_LIBRARY_PATH)
