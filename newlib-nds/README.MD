@@ -12,4 +12,7 @@ Open a terminal, execute these 3 commands before compile (enter password if requ
  - make clean
  - make
  
- Linux: Keep in mind that if you close the shell/terminal you need to repeat the above [Linux] steps everytime you want to recompile a TGDS project.
+ Linux Notes: 
+	-	Keep in mind that if you close the shell/terminal you need to repeat the above [Linux] steps everytime you want to recompile a TGDS project.
+	-	Sometimes the packages will fail to download, make sure all packages required by newlib-nds are installed (when you type make), otherwise newlib-nds won't compile.
+		(This means the newlib-nds should not return an ERROR rule then exit, but instead should begin compiling a lot of code.)
