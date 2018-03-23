@@ -208,7 +208,7 @@ export DIRS_ARM9_HEADER = ../../newlib-src/libgloss/	\
 
 	# Build Target(s)	(both processors here)
 all: compilelib
-#all: debug
+#all: ndstool
 
 #Make. Also copy libc headers and own nds-headers. Must resemble the windows folder structure 
 compilelib	:
@@ -244,6 +244,7 @@ endif
 ifeq ($(TGDS_ENV),linux)
 	-@sudo rm -rf	$(DEFAULT_GCC_PATH)	$(CURDIR)/temp
 	-@sudo rm	/usr/bin/bin2c
+	$(MAKE)	cleanstuff
 endif
 
 setup:
@@ -280,8 +281,6 @@ ifeq ($(TGDS_ENV),linux)
 		zip \
 		texlive \
 		texlive-extra-utils
-		$(MAKE)	buildbin2c
-		$(MAKE)	ndstool		
 endif
 
 #rule already validated == linux
@@ -291,11 +290,23 @@ buildbin2c:
 	-wget	-O $(CURDIR)/temp/bin2c.zip	https://github.com/cotodevel/bin2c/archive/master.zip 
 	-7z x $(CURDIR)/temp/bin2c.zip	-o$(CURDIR)/temp
 	-$(MAKE)	-C	$(CURDIR)/temp/bin2c-master/linux
-
+	-sudo mv	$(CURDIR)/temp/bin2c-master/linux/bin2c	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)bin2c
+	
 #rule already validated == linux
 ndstool:
-	-@echo 'ndstool:todo'
+	-$(MAKE)	-C	$(CURDIR)/misc/ndstool1.31src/
+	-sudo mv	$(CURDIR)/misc/ndstool1.31src/ndstool	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)ndstool
+	
+buildstuff:
+	$(MAKE)	buildbin2c
+	$(MAKE)	ndstool
 
+#order is important here. 
+cleanstuff:
+	$(MAKE)	clean	-C	$(CURDIR)/misc/ndstool1.31src/
+	$(MAKE)	clean	-C	$(CURDIR)/temp/bin2c-master/linux
+	
+	
 #files renamed to -excluded is because the current toolchain paths are being included (for default GNU ARM tools), EVEN
 #when we force -nostdinc++ and -nostdinc. So the files inside TGDS are used
 copylibs:
@@ -310,11 +321,14 @@ ifeq ($(TGDS_ENV),linux)
 	-sudo chmod -R 777	$(DEFAULT_GCC_PATH)../../
 	-sudo mkdir -p $(DEFAULT_GCC_PATH)
 	-sudo cp	-r $(CURDIR)/../installer/shared/6.2_2016q4/	$(DEFAULT_GCC_PATH)/../
-	-sudo mv	$(CURDIR)/temp/bin2c-master/linux/bin2c	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)bin2c
 	-sudo cp	-r $(CURDIR)/../installer/shared/Makefile.basenewlib	$(DEFAULT_GCC_PATH)/
 	-sudo mkdir -p $(TARGET_LIBRARY_PATH)
 	-sudo cp	-r $(CURDIR)/../newlib-src/newlib/libc/include/	$(TARGET_LIBRARY_PATH)
 	-sudo cp	-r $(CURDIR)/../newlib-nds/newlib-nds-headers/	$(TARGET_LIBRARY_PATH)
 	-sudo mkdir -p $(TARGET_LIBRARY_LINKER_DEST) && sudo cp	-r $(CURDIR)$(TARGET_LIBRARY_LINKER_SRC) $(TARGET_LIBRARY_LINKER_DEST)
 	-sudo cp	-r $(CURDIR)$(TARGET_LIBRARY_MAKEFILES_SRC) $(TARGET_LIBRARY_MAKEFILES_DEST)
+	$(MAKE)	buildstuff
+	
+	
+
 endif

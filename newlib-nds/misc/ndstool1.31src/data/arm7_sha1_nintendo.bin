@@ -1,0 +1,4 @@
+const char arm7_sha1_nintendo[0] = {
+};
+
+const int arm7_sha1_nintendo_length = 0;
