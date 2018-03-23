@@ -127,5 +127,5 @@ $(BINSTRIP_RULE_7): $(addprefix $(OBJDIR)/, $(OBJECTS))
 	
 clean:
 	-@echo 'cleanup $(DIR_ARM7)'
-	-@rm -fr $(OBJDIR)	$(BINSTRIP_RULE_7)
+	-@rm -fr $(OBJDIR)	$(BINSTRIP_RULE_7).bin
 	

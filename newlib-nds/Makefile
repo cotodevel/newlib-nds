@@ -303,8 +303,8 @@ buildstuff:
 
 #order is important here. 
 cleanstuff:
-	$(MAKE)	clean	-C	$(CURDIR)/misc/ndstool1.31src/
-	$(MAKE)	clean	-C	$(CURDIR)/temp/bin2c-master/linux
+	$(MAKE)	-C	$(CURDIR)/misc/ndstool1.31src/	clean	
+	$(MAKE)	-C	$(CURDIR)/temp/bin2c-master/linux	clean
 	
 	
 #files renamed to -excluded is because the current toolchain paths are being included (for default GNU ARM tools), EVEN
