@@ -26,8 +26,8 @@ MEMORY
 	ITCM : ORIGIN = 0x01FF8300, LENGTH = 32K - 1K + 256
 	VECTORS : ORIGIN = 0x01FF8000, LENGTH = 1K - 256
 	GBAROM : ORIGIN = 0x08000000, LENGTH = 32M
-	EWRAM : ORIGIN = (0x02000000 + 256k), LENGTH = 4M	/* cached(0x02040000 - 0x023fffff) ~ uncached region (0x02400000 - 0x02440000) */
-	GBAEW   : ORIGIN = 0x02000000, LENGTH = 256k
+	EWRAM : ORIGIN = 0x02000000, LENGTH = 4M
+	GBAEW   : ORIGIN = 0x02000000, LENGTH = 256k	/* todo... */
 }
 
 _itcm_start = ORIGIN(ITCM);
@@ -65,118 +65,127 @@ sp_IRQCHANDLER	=	sp_SYS - 0x1000;
 SECTIONS
 {
 	.init : { __init_start__ = .;
-		KEEP(*(.init*))
+		*(.init*)
 		. = ALIGN(4);
 	} > EWRAM = 0xff
 	__init_end__ = .;
 	__preinit_array_start__ = .;
 	.preinit_array : { 
-		KEEP (*(.preinit_array*))
+		*(.preinit_array*)
 		. = ALIGN(4);
 	} > EWRAM = 0xff
 	__preinit_array_end__ = .;
 	__init_array_start__ = .;
 	.init_array : { 
-		KEEP (*(.init_array*))
+		*(.init_array*)
 		. = ALIGN(4);
 	} > EWRAM = 0xff
 	init_array_end__ = .;
 	__fini_array_start__ = .;
 	.fini_array : {
-		KEEP (*(.fini_array*))
+		*(.fini_array*)
 		. = ALIGN(4);
 	} > EWRAM = 0xff
 	__fini_array_end__ = .;
 	__text_start__ = .;
 	.text : {
-		KEEP (*(.text*))
+		*(.text)
+		*(.text*)
+		*(.gnu.linkonce.t*)
 		. = ALIGN(4);
 	} > EWRAM = 0xff
 	__text_end__ = .;
 	__bss_vma_start = .;
-	.bss : { 
-		KEEP (*(.sbss*))
-		. = ALIGN(4);
-		KEEP (*(.dynbss*))
-		. = ALIGN(4);
-		KEEP (*(.gnu.linkonce.b*))
-		. = ALIGN(4);
-		KEEP (*(.bss*))
-		. = ALIGN(4);
-		KEEP (*(COMMON*))			/* libc requires these for uninitialized objects, include any heap uninit vars*/
+	.bss : {
+		*(.dynbss*)
+		*(.bss)
+		*(.gnu.linkonce.b*.)
+		*(COMMON)					/* libc requires these for uninitialized objects, include any heap uninit vars*/
 		. = ALIGN(4);
 	} > EWRAM = 0xff
 	__bss_vma_end = .;
+	__sbss_start__ = .;
+	.sbss : {
+		*(.sbss*)
+		. = ALIGN(4);
+	}> EWRAM = 0xff
+	__sbss_vma_end = .;
 	__data_start__ = .;
 	.data : {
-		KEEP (*(.data*))
-		. = ALIGN(4);
-		KEEP (*(.gnu.linkonce.d*))
+		*(.data)
+		*(.data.*)
+		*(.gnu.linkonce.d*)
 		. = ALIGN(4);
 	} > EWRAM = 0xff
 	__data_end__ = .;
 	__rodata_start__ = .;
 	.rodata : { 
-		KEEP (*(.rodata*))
+		*(.rdata)
+		*(.rodata)
+		*(.rodata.*)
+    	*(.gnu.linkonce.r.*)
 		. = ALIGN(4);
 	} > EWRAM = 0xff
 	__rodata_end__ = .;
 	__eh_frame_start__ = .;
-	.eh_frame : { 
-		KEEP (*(.eh_frame*))
+	.eh_frame : {
+		*(.eh_frame*)
 		. = ALIGN(4);
 	} > EWRAM = 0xff
 	__eh_frame_end__ = .;
 	__jcr_start__ = .;
-	.jcr : { 
-		KEEP (*(.jcr*))
+	.jcr : {
+		*(.jcr*)
 		. = ALIGN(4);
 	} > EWRAM = 0xff
 	__jcr_end__ = .;
 	__vfp11_veneer_start__ = .;
 	.vfp11_veneer : {
-		KEEP (*(.vfp11_veneer*))
+		*(.vfp11_veneer*)
 		. = ALIGN(4);
 	} > EWRAM = 0xff
 	__vfp11_veneer_end__ = .;
 	__exidx_start = .;
-    .ARM.exidx   : { 
-		*(.ARM.exidx* .gnu.linkonce.armexidx.*) 	/* newlib C++ require these constructors */
+    .ARM.exidx   : {		/* newlib C++ require these constructors */
+		*(.ARM.exidx)
+		*(.ARM.exidx*)
+		*(.gnu.linkonce.armexidx.)
+		*(.gnu.linkonce.armexidx.*)
 	} > EWRAM = 0xff
     __exidx_end = .;
 	__v4_bx_start__ = .;
 	.v4_bx : {
-		KEEP (*(.v4_bx*))
+		*(.v4_bx*)
 		. = ALIGN(4);
 	} > EWRAM = 0xff
 	__v4_bx_end__ = .;
 	__iplt_start__ = .;
-	.iplt : { 
-		KEEP (*(.iplt*))
+	.iplt : {
+		*(.iplt*)
 		. = ALIGN(4);
 	} > EWRAM = 0xff
 	__iplt_end__ = .;
 	__igot_plt_start__ = .;
 	.igot.plt : {
-		KEEP (*(.igot.plt*))
+		*(.igot.plt*)
 		. = ALIGN(4);
 	} > EWRAM = 0xff
 	__igot_plt_end__ = .;
 	__rel_dyn_start__ = .;
 	.rel.dyn : { 
-		KEEP (*(.rel.dyn*))
+		*(.rel.dyn*)
 		. = ALIGN(4);
 	} > EWRAM = 0xff
 	__rel_dyn_end__ = .;
 	__fini_start__ = .;
 	.fini : {
-		KEEP (*(.fini*))
+		*(.fini*)
 		. = ALIGN(4);
 	} > EWRAM = 0xff
 	__fini_end__ = .;
 	__lib__end__ = __fini_end__;
 	__itcm_vma_start = .;
-	.itcm : { 
+	.itcm : {
 		KEEP (*(.itcm*))
 		. = ALIGN(4);
 	} > ITCM AT > EWRAM
