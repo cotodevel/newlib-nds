@@ -38,8 +38,8 @@ d_objs_arm7:=	${file_arm7_src_c:.c=.d}	${file_arm7_src_s:.s=.d}	${file_arm7_src_
 MAPFILE = $(DIR_ARM7).map
 SHARED_FLAGS	=	-mcpu=arm7tdmi	-mthumb-interwork
 AS_ASFLAGS		=	$(SHARED_FLAGS)	-defsym debug=0	-defsym	appver='$(EXECUTABLE_VERSION)'	-defsym	ARM7='1'
-CC_ASFLAGS		=	$(SHARED_FLAGS)	-Wall	-DNDS -DASM_OPCODES -DARM7	-fno-common	-mtune=arm7tdmi	-marm	-O2 -ffast-math -fomit-frame-pointer	-Dappver='$(EXECUTABLE_VERSION)'
-CPP_FLAGS		=	$(SHARED_FLAGS)	-fno-exceptions -fno-rtti	-marm	-MMD -MP	-DARM7	-Dappver='$(EXECUTABLE_VERSION)'	-DNDS
+CC_ASFLAGS		=	$(SHARED_FLAGS)	-Wall	-DNDS -DASM_OPCODES -DARM7	-fno-common	-mtune=arm7tdmi	-marm	-O2 -ffast-math -fomit-frame-pointer	-Dappver='$(EXECUTABLE_VERSION)'	-nostdinc
+CPP_FLAGS		=	$(SHARED_FLAGS)	-fno-exceptions -fno-rtti	-marm	-MMD -MP	-DARM7	-Dappver='$(EXECUTABLE_VERSION)'	-DNDS	-nostdinc++
 BUILD			= 	$(BUILD_ARM7)
 DIR_SRC			= 	$(DIRS_ARM7_SRC)
 
@@ -69,12 +69,12 @@ $(OBJDIR):
 $(OBJDIR)/%.o : %.bin
 	-@echo 'trying to convert .BIN ($<) -> .C output: ${@:.o=.c} : arrayName: $(subst build/,,${@:.o=})'
 	$(BIN2C)	$<	${@:.o=.c}	$(subst build/,,${@:.o=})
-	$(CC)	$(CC_ASFLAGS)	$(DIRLIBS_HDR)	$(DIRLIBS_SRC)	-nostdinc	$(DIRLIBS_PROHIBITED)	-o $@ -c ${@:.o=.c}
+	$(CC)	$(CC_ASFLAGS)	$(DIRLIBS_HDR)	$(DIRLIBS_SRC)	$(DIRLIBS_PROHIBITED)	-o $@ -c ${@:.o=.c}
 
 #Do C Compile now!
 $(OBJDIR)/%.o : %.c
 	-@echo 'C Compile start: $@'
-	$(CC)	$(CC_ASFLAGS)	$(DIRLIBS_HDR)	$(DIRLIBS_SRC)	-nostdinc	$(DIRLIBS_PROHIBITED)	-o $@ -c $<
+	$(CC)	$(CC_ASFLAGS)	$(DIRLIBS_HDR)	$(DIRLIBS_SRC)	$(DIRLIBS_PROHIBITED)	-o $@ -c $<
 	-@echo 'C Compile End: $@'
 
 #Do C++ (CXX) Compile now!

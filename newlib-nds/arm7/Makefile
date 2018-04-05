@@ -38,9 +38,9 @@ d_objs_arm7:=	${file_arm7_src_c:.c=.d}	${file_arm7_src_s:.s=.d}	${file_arm7_src_
 #ARM7 specific definitions. -fno-common so we force initialized data to rodata
 MAPFILE = $(DIR_ARM7).map
 SHARED_FLAGS	=	-mcpu=arm7tdmi	-mthumb-interwork
-AS_ASFLAGS		=	$(SHARED_FLAGS)	-defsym debug=0	-defsym	readvertoolchain='$(TOOLCHAIN_VERSION)'	$(NEWLIB_NANO_COMPILE_FLAGS_ASM)
-CC_ASFLAGS		=	$(SHARED_FLAGS)	-marm	-Wall	-O2	-DASM_OPCODES -DARM7	-fno-common	-mtune=arm7tdmi	-marm -fomit-frame-pointer	-ffast-math	-Ddebug=0	-Dreadvertoolchain='$(TOOLCHAIN_VERSION)'	$(NEWLIB_NANO_COMPILE_FLAGS_C)
-CPP_FLAGS		=	$(SHARED_FLAGS)	-fno-exceptions -fno-rtti	-marm	-MMD -MP	$(LIBSTDCPPFLAGS)
+AS_ASFLAGS		=	$(SHARED_FLAGS)	-defsym	readvertoolchain='$(TOOLCHAIN_VERSION)'	$(NEWLIB_NANO_COMPILE_FLAGS_ASM)
+CC_ASFLAGS		=	$(SHARED_FLAGS)	-marm	-Wall	-O2	-DARM7	-fno-common	-mtune=arm7tdmi	-marm -fomit-frame-pointer	-ffast-math	-Dreadvertoolchain='$(TOOLCHAIN_VERSION)'	$(NEWLIB_NANO_COMPILE_FLAGS_C)	-nostdinc
+CPP_FLAGS		=	$(SHARED_FLAGS)	-fno-exceptions -fno-rtti	-marm	-MMD -MP	$(LIBSTDCPPFLAGS)	-nostdinc++
 BUILD			= 	$(BUILD_ARM7)
 DIR_SRC			= 	$(DIRS_ARM7_SRC)
 
@@ -66,16 +66,22 @@ $(OBJDIR):
 	@echo "Folder $(OBJDIR) does not exist. Creating"
 	mkdir -p $@
 
+#rule for reading *.bin in /data folder, converts to .C source code, which then gets compiled as object so it can be linked later
+$(OBJDIR)/%.o : %.bin
+	-@echo 'trying to convert .BIN ($<) -> .C output: ${@:.o=.c} : arrayName: $(subst build/,,${@:.o=})'
+	$(BIN2C)	$<	${@:.o=.c}	$(subst build/,,${@:.o=})
+	$(CC)	$(CC_ASFLAGS)	$(DIRLIBS_HDR)	$(DIRLIBS_SRC)	$(DIRLIBS_PROHIBITED)	-o $@ -c ${@:.o=.c}
+
 #Do C Compile now!
 $(OBJDIR)/%.o : %.c
 	-@echo 'C Compile start: $@'
-	$(CC)	$(CC_ASFLAGS)	$(NEWLIB_NANO_COMPILE_FLAGS_C)	$(DIRLIBS_HDR)	$(DIRLIBS_SRC)	-nostdinc -I/$(GCC_BUILD_ENV)include/	-o $@ -c $<
+	$(CC)	$(CC_ASFLAGS)	$(DIRLIBS_HDR)	$(DIRLIBS_SRC)	$(DIRLIBS_PROHIBITED)	-o $@ -c $<
 	-@echo 'C Compile End: $@'
 
-#Do C++ (G++) Compile now!
+#Do C++ (CXX) Compile now!
 $(OBJDIR)/%.o : %.cpp
 	-@echo 'C++ Compile start: $@'
-	$(CXX)	$(CC_ASFLAGS)	$(CPP_FLAGS)	$(DIRLIBS_HDR)	$(DIRLIBS_SRC)	-nostdinc	$(DIRLIBS_PROHIBITED)	-o $@ -c $<
+	$(CXX)	$(CPP_FLAGS)	$(DIRLIBS_HDR)	$(DIRLIBS_SRC)	-o $@ -c $<
 	-@echo 'C Compile End: $@'
 
 #Coto: Special "exception" rule. Fixes tricky projects such as SnemulDS's opcodes2.s where GCC AS is used, while compatibility with .S is required for newer projects.
@@ -85,13 +91,13 @@ $(OBJDIR)/%.o : %.cpp
 #Do s (GCC AS) Compile now!
 $(OBJDIR)/%.o : %.s
 	-@echo 's Compile start: $@'
-	$(AS)	$(NEWLIB_NANO_COMPILE_FLAGS_ASM)	$(DIRLIBS_HDR)	$(DIRLIBS_SRC)	$(AS_ASFLAGS)	-o $@ -c $<
+	$(AS)	$(DIRLIBS_HDR)	$(DIRLIBS_SRC)	$(AS_ASFLAGS)	-o $@ -c $<
 	-@echo 's Compile end: $@'
 
 #Do S (GCC CC) Compile now!
 $(OBJDIR)/%.o : %.S
 	-@echo 'S Compile start: $@'
-	$(CC)	-x assembler-with-cpp	$(NEWLIB_NANO_COMPILE_FLAGS_C)	$(DIRLIBS_HDR)	$(DIRLIBS_SRC)	-o $@ -c $<
+	$(CXX)	-x assembler-with-cpp	$(DIRLIBS_HDR)	$(DIRLIBS_SRC)	$(CC_ASFLAGS)	-o $@ -c $<
 	-@echo 'S Compile end: $@'
 
 #Builder.
