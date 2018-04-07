@@ -1,0 +1,3 @@
+7/4/2018:
+
+- the sprintf variants in C++ code is bugged, fix them. (dswnifi sender/receiver has no problem using C code and sprintf)
