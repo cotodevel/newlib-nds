@@ -57,7 +57,7 @@ _DEFUN (_times_r, (ptr, ptms),
 {
   clock_t ret;
 
-  ret = _times (ptms);
+  ret = 0;	//_times (ptms);
   return ret;
 }
 #endif /* ! defined (REENTRANT_SYSCALLS_PROVIDED) */
