@@ -31,9 +31,9 @@ ifeq ($(TGDS_ENV),windows)
 								-I "$(TOOLCHAIN_PATH)newlib-nano-2.1-nds/newlib-nds-headers/bits/" \
 								-I "$(TOOLCHAIN_PATH)newlib-nano-2.1-nds/newlib-nds-headers/machine/" \
 								-I "$(TOOLCHAIN_PATH)newlib-nano-2.1-nds/newlib-nds-headers/sys/"	\
-								-I "$(TOOLCHAIN_LIBRARY_SRCPATH)/include/c++/4.7.2/"	\
-								-I "$(TOOLCHAIN_LIBRARY_SRCPATH)/include/c++/4.7.2/arm-none-eabi/bits/"
-
+								-I "$(TOOLCHAIN_LIBRARY_SRCPATH)/include/c++/7.2.1/"	\
+								-I "$(TOOLCHAIN_LIBRARY_SRCPATH)/include/c++/7.2.1/arm-none-eabi/bits/"	\
+								-I	"$(TOOLCHAIN_LIBRARY_SRCPATH)/include"
 
 	export TARGET_LIBRARY_PATH =	$(TOOLCHAIN_LIBRARY_SRCPATH)/lib/newlib-nano-2.1-nds
 	export TARGET_LIBRARY_LINKER_SRC = /linkers
@@ -79,8 +79,8 @@ ifeq ($(TGDS_ENV),linux)
 								-I "$(TOOLCHAIN_PATH)newlib-nano-2.1-nds/newlib-nds-headers/bits/" \
 								-I "$(TOOLCHAIN_PATH)newlib-nano-2.1-nds/newlib-nds-headers/machine/" \
 								-I "$(TOOLCHAIN_PATH)newlib-nano-2.1-nds/newlib-nds-headers/sys/"	\
-								-I "$(TOOLCHAIN_LIBRARY_SRCPATH)/include/c++/4.7.2/"	\
-								-I "$(TOOLCHAIN_LIBRARY_SRCPATH)/include/c++/4.7.2/arm-none-eabi/bits/"
+								-I "$(TOOLCHAIN_LIBRARY_SRCPATH)/include/c++/7.2.1/"	\
+								-I "$(TOOLCHAIN_LIBRARY_SRCPATH)/include/c++/7.2.1/arm-none-eabi/bits/"
 
 
 	export TARGET_LIBRARY_PATH =	$(TOOLCHAIN_LIBRARY_SRCPATH)/lib/newlib-nano-2.1-nds
