@@ -31,28 +31,29 @@
  * SUCH DAMAGE.
  *
  *	@(#)syslimits.h	8.1 (Berkeley) 6/2/93
- * $FreeBSD: src/sys/sys/syslimits.h,v 1.10 2001/06/18 20:24:54 wollman Exp $
+ * $Id$
  */
 
 #ifndef _SYS_SYSLIMITS_H_
 #define _SYS_SYSLIMITS_H_
 
-#define	ARG_MAX			65536	/* max bytes for an exec function */
+#include <dirent.h>
+
+#define	ARG_MAX			 4096	/* max bytes for an exec function */
 #ifndef CHILD_MAX
-#define	CHILD_MAX		   40	/* max simultaneous processes */
+#define	CHILD_MAX		    6	/* max simultaneous processes */
 #endif
-#define	LINK_MAX		32767	/* max file link count */
+#define	LINK_MAX		    8	/* max file link count */
 #define	MAX_CANON		  255	/* max bytes in term canon input line */
 #define	MAX_INPUT		  255	/* max bytes in terminal input */
-#define	NAME_MAX		  255	/* max bytes in a file name */
+//#define	NAME_MAX		  255	/* max bytes in a file name */ //#include <dirent.h>
 #define	NGROUPS_MAX		   16	/* max supplemental group id's */
 #ifndef OPEN_MAX
-#define	OPEN_MAX		   64	/* max open files per process */
+#define	OPEN_MAX		   OPEN_MAXFILEDES	/* max open files per process */
 #endif
-#define	PATH_MAX		 1024	/* max bytes in pathname */
+#define	PATH_MAX		  NAME_MAX	/* max bytes in pathname */
 #define	PIPE_BUF		  512	/* max bytes for atomic pipe writes */
 #define	IOV_MAX			 1024	/* max elements in i/o vector */
-
 #define	BC_BASE_MAX		   99	/* max ibase/obase values in bc(1) */
 #define	BC_DIM_MAX		 2048	/* max array elements in bc(1) */
 #define	BC_SCALE_MAX		   99	/* max scale value in bc(1) */
