@@ -36,10 +36,9 @@ d_objs_arm7:=	${file_arm7_src_c:.c=.d}	${file_arm7_src_s:.s=.d}	${file_arm7_src_
 
 #ARM7 specific definitions. -fno-common so we force initialized data to rodata
 MAPFILE = $(DIR_ARM7).map
-SHARED_FLAGS	=	-mcpu=arm7tdmi	-mthumb-interwork
-AS_ASFLAGS		=	$(SHARED_FLAGS)	-defsym debug=0	-defsym	appver='$(EXECUTABLE_VERSION)'	-defsym	ARM7='1'
-CC_ASFLAGS		=	$(SHARED_FLAGS)	-Wall	-DNDS -DASM_OPCODES -DARM7	-fno-common	-mtune=arm7tdmi	-marm	-O2 -ffast-math -fomit-frame-pointer	-Dappver='$(EXECUTABLE_VERSION)'	-nostdinc
-CPP_FLAGS		=	$(SHARED_FLAGS)	-fno-exceptions -fno-rtti	-marm	-MMD -MP	-DARM7	-Dappver='$(EXECUTABLE_VERSION)'	-DNDS	-nostdinc++
+AS_ASFLAGS		=	$(GLOBAL_SHARED_FLAGS_7)	$(SPECIFIC_AS_COMPILER_FLAGS_7)		$(GLOBAL_AS_COMPILER_FLAGS)
+CC_ASFLAGS		=	$(GLOBAL_SHARED_FLAGS_7)	$(SPECIFIC_CXX_COMPILER_FLAGS_7)	$(GLOBAL_CC_COMPILER_FLAGS)
+CPP_FLAGS		=	$(GLOBAL_SHARED_FLAGS_7)	$(SPECIFIC_CXX_COMPILER_FLAGS_7)	$(GLOBAL_CXX_COMPILER_FLAGS)
 BUILD			= 	$(BUILD_ARM7)
 DIR_SRC			= 	$(DIRS_ARM7_SRC)
 

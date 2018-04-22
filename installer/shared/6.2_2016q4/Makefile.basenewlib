@@ -1,3 +1,5 @@
+export TOOLCHAIN_GENERIC_DS_VER	=	"TGDS1.4"
+
 # Shared start
 ifeq ($(TGDS_ENV),windows)
 	export GCC_BUILD_ENV	= $(DEFAULT_GCC_PATH)
@@ -97,6 +99,27 @@ ifeq ($(TGDS_ENV),linux)
 	
 
 endif
+
+#global ASM / C / C++ vars used across all TGDS Makefiles (TGDS / Newlib / TGDS project):
+
+#CPU specific
+export GLOBAL_SHARED_FLAGS_7 = -mcpu=arm7tdmi	-mthumb-interwork
+export GLOBAL_SHARED_FLAGS_9 = -mcpu=arm946e-s	-mthumb-interwork
+
+#CPU code builder settings
+export GLOBAL_AS_COMPILER_FLAGS =	-defsym	readvertoolchain='$(TOOLCHAIN_GENERIC_DS_VER)'	-defsym		NDS='1'
+export GLOBAL_CC_COMPILER_FLAGS =	-Wall	-falign-functions=4	-marm	-O	-fomit-frame-pointer	-ffast-math		-Dreadvertoolchain='$(TOOLCHAIN_GENERIC_DS_VER)'	-nostdinc	-DSINGLE_THREADED
+export GLOBAL_CXX_COMPILER_FLAGS =	-falign-functions=4	-marm	-O	-fno-exceptions	-MMD -MP	-nostdinc++	-DSINGLE_THREADED
+
+#CPU code builder settings TGDS project specific
+export SPECIFIC_AS_COMPILER_FLAGS_7		= -defsym	ARM7='1'	-defsym	appver='$(EXECUTABLE_VERSION)'
+export SPECIFIC_CC_COMPILER_FLAGS_7		= -DARM7	-Dappver='$(EXECUTABLE_VERSION)'
+export SPECIFIC_CXX_COMPILER_FLAGS_7	= $(SPECIFIC_CC_COMPILER_FLAGS_7)
+
+export SPECIFIC_AS_COMPILER_FLAGS_9		= -defsym	ARM9='1'	-defsym	appver='$(EXECUTABLE_VERSION)'
+export SPECIFIC_CC_COMPILER_FLAGS_9		= -DARM9	-Dappver='$(EXECUTABLE_VERSION)'
+export SPECIFIC_CXX_COMPILER_FLAGS_9	= $(SPECIFIC_CC_COMPILER_FLAGS_9)
+
 
 #default built-in rules removal
 MAKEFLAGS += --no-builtin-rules

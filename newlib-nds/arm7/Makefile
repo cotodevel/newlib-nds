@@ -37,10 +37,9 @@ d_objs_arm7:=	${file_arm7_src_c:.c=.d}	${file_arm7_src_s:.s=.d}	${file_arm7_src_
 
 #ARM7 specific definitions. -fno-common so we force initialized data to rodata
 MAPFILE = $(DIR_ARM7).map
-SHARED_FLAGS	=	-mcpu=arm7tdmi	-mthumb-interwork
-AS_ASFLAGS		=	$(SHARED_FLAGS)	-defsym	readvertoolchain='$(TOOLCHAIN_VERSION)'	$(NEWLIB_NANO_COMPILE_FLAGS_ASM)
-CC_ASFLAGS		=	$(SHARED_FLAGS)	-marm	-Wall	-O2	-DARM7	-fno-common	-mtune=arm7tdmi	-marm -fomit-frame-pointer	-ffast-math	-Dreadvertoolchain='$(TOOLCHAIN_VERSION)'	$(NEWLIB_NANO_COMPILE_FLAGS_C)	-nostdinc
-CPP_FLAGS		=	$(SHARED_FLAGS)	-fno-exceptions -fno-rtti	-marm	-MMD -MP	$(LIBSTDCPPFLAGS)	-nostdinc++
+AS_ASFLAGS		=	$(GLOBAL_SHARED_FLAGS_7)	$(SPECIFIC_AS_COMPILER_FLAGS_7)		$(GLOBAL_AS_COMPILER_FLAGS)		$(NEWLIB_NANO_COMPILE_FLAGS_ASM)
+CC_ASFLAGS		=	$(GLOBAL_SHARED_FLAGS_7)	$(SPECIFIC_CXX_COMPILER_FLAGS_7)	$(GLOBAL_CC_COMPILER_FLAGS)		$(NEWLIB_NANO_COMPILE_FLAGS_C)
+CPP_FLAGS		=	$(GLOBAL_SHARED_FLAGS_7)	$(SPECIFIC_CXX_COMPILER_FLAGS_7)	$(GLOBAL_CXX_COMPILER_FLAGS)	$(LIBSTDCPPFLAGS)
 BUILD			= 	$(BUILD_ARM7)
 DIR_SRC			= 	$(DIRS_ARM7_SRC)
 

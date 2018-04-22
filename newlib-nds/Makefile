@@ -16,7 +16,7 @@
 #USA
 #
 
-#TGDS1.3 compatible Makefile
+#TGDS1.4 compatible Makefile
 
 #ToolchainGenericDS specific: Use Makefiles from either TGDS, or custom
 export SOURCE_MAKEFILE7 = custom
@@ -239,7 +239,7 @@ ifeq ($(SOURCE_MAKEFILE9),default)
 	-@rm -rf $(CURDIR)/$(DIR_ARM9)/Makefile
 endif
 ifeq ($(TGDS_ENV),windows)
-	-@rm -rf $(TARGET_LIBRARY_HEADERS_7)	$(TARGET_LIBRARY_HEADERS_9)	$(TARGET_LIBRARY_PATH)$(TARGET_LIBRARY_LINKER_SRC)
+	-@rm -rf $(TARGET_LIBRARY_HEADERS_7)	$(TARGET_LIBRARY_HEADERS_9)	$(TARGET_LIBRARY_PATH)$(TARGET_LIBRARY_LINKER_SRC)	$(DEFAULT_GCC_PATH)/../
 endif
 ifeq ($(TGDS_ENV),linux)
 	-@sudo rm -rf	$(DEFAULT_GCC_PATH)	$(CURDIR)/temp

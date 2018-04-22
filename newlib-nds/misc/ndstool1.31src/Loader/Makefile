@@ -16,9 +16,9 @@
 #USA
 #
 
-#TGDS1.3 compatible Makefile
+#TGDS1.4 compatible Makefile
 
-#treat this session as a TGDS1.3 ARM7 Makefile, for the loader part.
+#treat this session as a TGDS1.4 ARM7 Makefile, for the loader part.
 #for the rest, just use linux to compile
 
 #Shared
