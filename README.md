@@ -24,8 +24,9 @@ Steps:
 [Windows]
 1.a)You WILL need to install Visual C++ Redistributable Visual Studio 2012 Update 4 installer, get it here:
 	https://www.microsoft.com/es-es/download/details.aspx?id=30679
-	Download and install package according to windows OS processor arquitecture: x86 or x64.
+	Download and install the x32 package and install. (This setup distributes bin2c.exe as x86 binaries)
 	(if you skip this step, most C++ code that helps TGDS will fail, so don't skip it...)
+	Note: if you wish to use the x64 version, you must recompile the source as x64 binary and install the above package as x64 installer.
 
 -	Head to /installer/windows/
 
