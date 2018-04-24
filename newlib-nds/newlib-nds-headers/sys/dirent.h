@@ -14,7 +14,7 @@ extern "C" {
 #include <limits.h>
 
 #define NAME_MAX (int)(0x100)	//256 bytes posix character len as standard
-#define OPEN_MAXFILEDES (int)(20)		//Available POSIX File Descriptors	//aka OPEN_MAX
+#define OPEN_MAXFILEDES (int)(60)		//Available POSIX File Descriptors	//aka OPEN_MAX
 #define MAXNAMLEN	NAME_MAX	//required by newlib parts
 
 /*
