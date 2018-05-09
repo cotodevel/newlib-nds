@@ -1,6 +1,6 @@
 Compile:
 [Windows]
- - make clean 
+ - make clean (everytime you make clean, you must re-do the install step. Which is execute /installer/windows/setup.bat)
  - make
 
 [Linux]
