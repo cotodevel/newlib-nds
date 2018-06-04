@@ -1,3 +1,7 @@
+06/04/2018:
+Micro$oft has acquired github, you can find updates from this software at: https://coto88.bitbucket.io/
+Have a good day.
+
 Update:
 3/3/2018
 If you already installed Newlib 2.1 for Nintendo DS before, 
