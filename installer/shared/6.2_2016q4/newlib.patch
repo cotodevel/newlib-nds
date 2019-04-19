@@ -1,0 +1,156 @@
+diff -urN newlib-2.1.0-orig/libgloss/arm/_kill.c newlib-2.1.0/libgloss/arm/_kill.c
+--- newlib-2.1.0-orig/libgloss/arm/_kill.c	2007-01-03 08:55:25 -0800
++++ newlib-2.1.0/libgloss/arm/_kill.c	2014-08-20 19:18:24 -0700
+@@ -4,7 +4,9 @@
+ 
+ int _kill _PARAMS ((int, int));
+ 
+-int
++#define DEFAULTSYSCALL __attribute__((weak))
++
++int DEFAULTSYSCALL
+ _kill (int pid, int sig)
+ {
+   (void) pid; (void) sig;
+diff -urN newlib-2.1.0-orig/libgloss/arm/syscalls.c newlib-2.1.0/libgloss/arm/syscalls.c
+--- newlib-2.1.0-orig/libgloss/arm/syscalls.c	2010-08-27 04:55:36 -0700
++++ newlib-2.1.0/libgloss/arm/syscalls.c	2014-09-25 18:41:00 -0700
+@@ -17,31 +17,34 @@
+ #include <sys/wait.h>
+ #include "swi.h"
+ 
++
++#define DEFAULTSYSCALL __attribute__((weak))
++
+ /* Forward prototypes.  */
+-int     _system     _PARAMS ((const char *));
+-int     _rename     _PARAMS ((const char *, const char *));
+-int     _isatty		_PARAMS ((int));
+-clock_t _times		_PARAMS ((struct tms *));
+-int     _gettimeofday	_PARAMS ((struct timeval *, void *));
+-int     _unlink		_PARAMS ((const char *));
+-int     _link 		_PARAMS ((void));
+-int     _stat 		_PARAMS ((const char *, struct stat *));
+-int     _fstat 		_PARAMS ((int, struct stat *));
+-int	_swistat	_PARAMS ((int fd, struct stat * st));
+-caddr_t _sbrk		_PARAMS ((int));
+-int     _getpid		_PARAMS ((int));
+-int     _close		_PARAMS ((int));
+-clock_t _clock		_PARAMS ((void));
+-int     _swiclose	_PARAMS ((int));
+-int     _open		_PARAMS ((const char *, int, ...));
+-int     _swiopen	_PARAMS ((const char *, int));
+-int     _write 		_PARAMS ((int, char *, int));
+-int     _swiwrite	_PARAMS ((int, char *, int));
+-int     _lseek		_PARAMS ((int, int, int));
+-int     _swilseek	_PARAMS ((int, int, int));
+-int     _read		_PARAMS ((int, char *, int));
+-int     _swiread	_PARAMS ((int, char *, int));
+-void    initialise_monitor_handles _PARAMS ((void));
++int     DEFAULTSYSCALL _system     _PARAMS ((const char *));
++int     DEFAULTSYSCALL _rename     _PARAMS ((const char *, const char *));
++int     DEFAULTSYSCALL _isatty		_PARAMS ((int));
++clock_t DEFAULTSYSCALL _times		_PARAMS ((struct tms *));
++int     DEFAULTSYSCALL _gettimeofday	_PARAMS ((struct timeval *, void *));
++int     DEFAULTSYSCALL _unlink		_PARAMS ((const char *));
++int     DEFAULTSYSCALL _link 		_PARAMS ((void));
++int     DEFAULTSYSCALL _stat 		_PARAMS ((const char *, struct stat *));
++int     DEFAULTSYSCALL _fstat 		_PARAMS ((int, struct stat *));
++int	DEFAULTSYSCALL _swistat	_PARAMS ((int fd, struct stat * st));
++caddr_t DEFAULTSYSCALL _sbrk		_PARAMS ((int));
++int     DEFAULTSYSCALL _getpid		_PARAMS ((int));
++int     DEFAULTSYSCALL _close		_PARAMS ((int));
++clock_t DEFAULTSYSCALL _clock		_PARAMS ((void));
++int     DEFAULTSYSCALL _swiclose	_PARAMS ((int));
++int     DEFAULTSYSCALL _open		_PARAMS ((const char *, int, ...));
++int     DEFAULTSYSCALL _swiopen	_PARAMS ((const char *, int));
++int     DEFAULTSYSCALL _write 		_PARAMS ((int, char *, int));
++int     DEFAULTSYSCALL _swiwrite	_PARAMS ((int, char *, int));
++int     DEFAULTSYSCALL _lseek		_PARAMS ((int, int, int));
++int     DEFAULTSYSCALL _swilseek	_PARAMS ((int, int, int));
++int     DEFAULTSYSCALL _read		_PARAMS ((int, char *, int));
++int     DEFAULTSYSCALL _swiread	_PARAMS ((int, char *, int));
++void    DEFAULTSYSCALL initialise_monitor_handles _PARAMS ((void));
+ 
+ static int	checkerror	_PARAMS ((int));
+ static int	error		_PARAMS ((int));
+diff -urN newlib-2.1.0-orig/newlib/libc/sys/arm/swi.h newlib-2.1.0/newlib/libc/sys/arm/swi.h
+--- newlib-2.1.0-orig/newlib/libc/sys/arm/swi.h	2013-07-19 02:57:51 -0700
++++ newlib-2.1.0/newlib/libc/sys/arm/swi.h	2014-09-25 18:41:04 -0700
+@@ -89,3 +89,4 @@
+ }
+ 
+ #endif
++
+diff -urN newlib-2.1.0-orig/newlib/libc/sys/arm/syscalls.c newlib-2.1.0/newlib/libc/sys/arm/syscalls.c
+--- newlib-2.1.0-orig/newlib/libc/sys/arm/syscalls.c	2013-07-19 02:57:51 -0700
++++ newlib-2.1.0/newlib/libc/sys/arm/syscalls.c	2014-09-25 18:41:08 -0700
+@@ -17,32 +17,33 @@
+ #include <sys/wait.h>
+ #include "swi.h"
+ 
++#define DEFAULTSYSCALL __attribute__((weak))
+ /* Forward prototypes.  */
+-int     _system     _PARAMS ((const char *));
+-int     _rename     _PARAMS ((const char *, const char *));
+-int     _isatty		_PARAMS ((int));
+-clock_t _times		_PARAMS ((struct tms *));
+-int     _gettimeofday	_PARAMS ((struct timeval *, void *));
+-void    _raise 		_PARAMS ((void));
+-int     _unlink		_PARAMS ((const char *));
+-int     _link 		_PARAMS ((void));
+-int     _stat 		_PARAMS ((const char *, struct stat *));
+-int     _fstat 		_PARAMS ((int, struct stat *));
+-caddr_t _sbrk		_PARAMS ((int));
+-int     _getpid		_PARAMS ((int));
+-int     _kill		_PARAMS ((int, int));
+-void    _exit		_PARAMS ((int));
+-int     _close		_PARAMS ((int));
+-int     _swiclose	_PARAMS ((int));
+-int     _open		_PARAMS ((const char *, int, ...));
+-int     _swiopen	_PARAMS ((const char *, int));
+-int     _write 		_PARAMS ((int, char *, int));
+-int     _swiwrite	_PARAMS ((int, char *, int));
+-int     _lseek		_PARAMS ((int, int, int));
+-int     _swilseek	_PARAMS ((int, int, int));
+-int     _read		_PARAMS ((int, char *, int));
+-int     _swiread	_PARAMS ((int, char *, int));
+-void    initialise_monitor_handles _PARAMS ((void));
++int     DEFAULTSYSCALL _system     _PARAMS ((const char *));
++int     DEFAULTSYSCALL _rename     _PARAMS ((const char *, const char *));
++int     DEFAULTSYSCALL _isatty		_PARAMS ((int));
++clock_t DEFAULTSYSCALL _times		_PARAMS ((struct tms *));
++int     DEFAULTSYSCALL _gettimeofday	_PARAMS ((struct timeval *, void *));
++void    DEFAULTSYSCALL _raise 		_PARAMS ((void));
++int     DEFAULTSYSCALL _unlink		_PARAMS ((const char *));
++int     DEFAULTSYSCALL _link 		_PARAMS ((void));
++int     DEFAULTSYSCALL _stat 		_PARAMS ((const char *, struct stat *));
++int     DEFAULTSYSCALL _fstat 		_PARAMS ((int, struct stat *));
++caddr_t DEFAULTSYSCALL _sbrk		_PARAMS ((int));
++int     DEFAULTSYSCALL _getpid		_PARAMS ((int));
++int     DEFAULTSYSCALL _kill		_PARAMS ((int, int));
++void    DEFAULTSYSCALL _exit		_PARAMS ((int));
++int     DEFAULTSYSCALL _close		_PARAMS ((int));
++int     DEFAULTSYSCALL _swiclose	_PARAMS ((int));
++int     DEFAULTSYSCALL _open		_PARAMS ((const char *, int, ...));
++int     DEFAULTSYSCALL _swiopen	_PARAMS ((const char *, int));
++int     DEFAULTSYSCALL _write 		_PARAMS ((int, char *, int));
++int     DEFAULTSYSCALL _swiwrite	_PARAMS ((int, char *, int));
++int     DEFAULTSYSCALL _lseek		_PARAMS ((int, int, int));
++int     DEFAULTSYSCALL _swilseek	_PARAMS ((int, int, int));
++int     DEFAULTSYSCALL _read		_PARAMS ((int, char *, int));
++int     DEFAULTSYSCALL _swiread	_PARAMS ((int, char *, int));
++void    DEFAULTSYSCALL initialise_monitor_handles _PARAMS ((void));
+ 
+ static int	wrap		_PARAMS ((int));
+ static int	error		_PARAMS ((int));
+diff -urN newlib-2.1.0-orig/newlib/libc/sys/arm/trap.S newlib-2.1.0/newlib/libc/sys/arm/trap.S
+--- newlib-2.1.0-orig/newlib/libc/sys/arm/trap.S	2006-02-07 10:44:54 -0800
++++ newlib-2.1.0/newlib/libc/sys/arm/trap.S	2014-08-20 19:18:25 -0700
+@@ -1,5 +1,5 @@
+         /* Run-time exception support */
+-#if !defined(__thumb2__)
++#if !defined(__thumb2__) && !defined(__thumb__)
+ #include "swi.h"
+ 
+ /* .text is used instead of .section .text so it works with arm-aout too.  */

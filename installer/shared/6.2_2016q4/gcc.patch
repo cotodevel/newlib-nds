@@ -1,0 +1,156 @@
+diff -urN gcc-4.9.1-orig/gcc/config/arm/arm.c gcc-4.9.1/gcc/config/arm/arm.c
+--- gcc-4.9.1-orig/gcc/config/arm/arm.c	2014-08-20 18:09:34.826148500 -0700
++++ gcc-4.9.1/gcc/config/arm/arm.c	2014-10-05 11:31:32.840125200 -0700
+@@ -2559,6 +2559,31 @@
+       target_fpu_name = "vfp";
+ #endif
+ 
++	switch(arm_selected_cpu->core)
++	{
++		case cortexm4:
++			target_fpu_name = "fpv4-sp-d16";
++			break;
++		case cortexr4:
++		case cortexr4f:
++		case cortexr5:
++		case cortexr7:
++			target_fpu_name = "vfpv3";
++			break;
++		case cortexa5:
++		case cortexa7:
++			target_fpu_name = "vfpv4-d16";
++			break;
++		case cortexa8:
++		case cortexa9:
++			target_fpu_name = "vfpv3";
++			break;
++		case cortexa12:
++		case cortexa15:
++			target_fpu_name = "vfpv4";
++			break;
++	}
++
+       ok = opt_enum_arg_to_value (OPT_mfpu_, target_fpu_name, &arm_fpu_index,
+ 				  CL_TARGET);
+       gcc_assert (ok);
+diff -urN gcc-4.9.1-orig/gcc/config/arm/t-arm-elf gcc-4.9.1/gcc/config/arm/t-arm-elf
+--- gcc-4.9.1-orig/gcc/config/arm/t-arm-elf	2014-08-20 18:09:34.545120400 -0700
++++ gcc-4.9.1/gcc/config/arm/t-arm-elf	2014-11-07 10:08:30.424835300 -0800
+@@ -38,12 +38,18 @@
+ # Not quite true.  We can support hard-vfp calling in Thumb2, but how do we
+ # express that here?  Also, we really need architecture v5e or later
+ # (mcrr etc).
++# Additional filtering will remove mfloat-abi=hard on thumb for all non-supported cores
++#*mthumb/*mfloat-abi=hard*
+ MULTILIB_OPTIONS       += mfloat-abi=hard
+ MULTILIB_DIRNAMES      += fpu
+-MULTILIB_EXCEPTIONS    += *mthumb/*mfloat-abi=hard*
++MULTILIB_EXCEPTIONS    += 
+ #MULTILIB_EXCEPTIONS    += *mcpu=fa526/*mfloat-abi=hard*
+ #MULTILIB_EXCEPTIONS    += *mcpu=fa626/*mfloat-abi=hard*
+ 
++MULTILIB_OPTIONS += mcpu=cortex-a15/mcpu=cortex-a5/mcpu=cortex-a7/mcpu=cortex-a8/mcpu=cortex-a9/mcpu=cortex-m0/mcpu=cortex-m0plus/mcpu=cortex-m1/mcpu=cortex-m3/mcpu=cortex-m4/mcpu=cortex-r4/mcpu=cortex-r4f/mcpu=cortex-r5
++MULTILIB_DIRNAMES += cortex_a15 cortex_a5 cortex_a7 cortex_a8 cortex_a9 cortex_m0 cortex_m0plus cortex_m1 cortex_m3 cortex_m4 cortex_r4 cortex_r4f cortex_r5
++#MULTILIB_EXCEPTIONS += 
++
+ # MULTILIB_OPTIONS    += mcpu=ep9312
+ # MULTILIB_DIRNAMES   += ep9312
+ # MULTILIB_EXCEPTIONS += *mthumb/*mcpu=ep9312*
+diff -urN gcc-4.9.1-orig/gcc/genmultilib gcc-4.9.1/gcc/genmultilib
+--- gcc-4.9.1-orig/gcc/genmultilib	2014-08-20 18:10:19.452677900 -0700
++++ gcc-4.9.1/gcc/genmultilib	2014-10-05 11:31:32.889125200 -0700
+@@ -140,6 +140,7 @@
+ multiarch=$9
+ multilib_reuse=${10}
+ enable_multilib=${11}
++target_noncanonical=${12}
+ 
+ echo "static const char *const multilib_raw[] = {"
+ 
+@@ -240,6 +241,10 @@
+ 
+ fi
+ 
++if [ -e ../$(dirname $0)/genmultilib_filter_${target_noncanonical} ]; then
++   combinations=`../$(dirname $0)/genmultilib_filter_${target_noncanonical} ${combinations}`
++fi
++
+ # Construct a sed pattern which will convert option names to directory
+ # names.
+ todirnames=
+diff -urN gcc-4.9.1-orig/gcc/genmultilib_filter_arm-eabi gcc-4.9.1/gcc/genmultilib_filter_arm-eabi
+--- gcc-4.9.1-orig/gcc/genmultilib_filter_arm-eabi	1969-12-31 16:00:00.000000000 -0800
++++ gcc-4.9.1/gcc/genmultilib_filter_arm-eabi	2014-08-20 18:23:04.967976700 -0700
+@@ -0,0 +1,13 @@
++#!/bin/perl
++
++foreach (@ARGV)
++{
++	next if (/\/mcpu=cortex-m/ && !/\/mthumb\//);
++	next if (!/\/mcpu=cortex-/ && /\/mthumb\// && /\/mfloat-abi=hard\//);
++	next if (/\/mcpu=cortex-m0/ && /\/mthumb\// && /\/mfloat-abi=hard\//);
++	next if (/\/mcpu=cortex-m1/ && /\/mthumb\// && /\/mfloat-abi=hard\//);
++	
++	print;
++	print " ";
++}
++
+diff -urN gcc-4.9.1-orig/gcc/genmultilib_filter_arm-eabi.orig gcc-4.9.1/gcc/genmultilib_filter_arm-eabi.orig
+--- gcc-4.9.1-orig/gcc/genmultilib_filter_arm-eabi.orig	1969-12-31 16:00:00.000000000 -0800
++++ gcc-4.9.1/gcc/genmultilib_filter_arm-eabi.orig	2014-08-20 18:23:04.000000000 -0700
+@@ -0,0 +1,13 @@
++#!/bin/perl
++
++foreach (@ARGV)
++{
++	next if (/\/mcpu=cortex-m/ && !/\/mthumb\//);
++	next if (!/\/mcpu=cortex-/ && /\/mthumb\// && /\/mfloat-abi=hard\//);
++	next if (/\/mcpu=cortex-m0/ && /\/mthumb\// && /\/mfloat-abi=hard\//);
++	next if (/\/mcpu=cortex-m1/ && /\/mthumb\// && /\/mfloat-abi=hard\//);
++	
++	print;
++	print " ";
++}
++
+diff -urN gcc-4.9.1-orig/gcc/genmultilib_filter_arm-eabi.rej gcc-4.9.1/gcc/genmultilib_filter_arm-eabi.rej
+--- gcc-4.9.1-orig/gcc/genmultilib_filter_arm-eabi.rej	1969-12-31 16:00:00.000000000 -0800
++++ gcc-4.9.1/gcc/genmultilib_filter_arm-eabi.rej	2014-10-05 11:31:45.196125200 -0700
+@@ -0,0 +1,16 @@
++--- gcc/genmultilib_filter_arm-eabi	1969-12-31 16:00:00.000000000 -0800
+++++ gcc/genmultilib_filter_arm-eabi	2014-08-20 18:23:04.967976700 -0700
++@@ -0,0 +1,13 @@
+++#!/bin/perl
+++
+++foreach (@ARGV)
+++{
+++	next if (/\/mcpu=cortex-m/ && !/\/mthumb\//);
+++	next if (!/\/mcpu=cortex-/ && /\/mthumb\// && /\/mfloat-abi=hard\//);
+++	next if (/\/mcpu=cortex-m0/ && /\/mthumb\// && /\/mfloat-abi=hard\//);
+++	next if (/\/mcpu=cortex-m1/ && /\/mthumb\// && /\/mfloat-abi=hard\//);
+++	
+++	print;
+++	print " ";
+++}
+++
+diff -urN gcc-4.9.1-orig/gcc/Makefile.in gcc-4.9.1/gcc/Makefile.in
+--- gcc-4.9.1-orig/gcc/Makefile.in	2014-08-20 18:09:55.487615900 -0700
++++ gcc-4.9.1/gcc/Makefile.in	2014-10-05 11:31:45.264125200 -0700
+@@ -1841,6 +1841,7 @@
+ 	    "$(if $(MULTILIB_OSDIRNAMES),,$(MULTIARCH_DIRNAME))" \
+ 	    "$(MULTILIB_REUSE)" \
+ 	    "@enable_multilib@" \
++		"$(target_noncanonical)" \
+ 	    > tmp-mlib.h; \
+ 	else \
+ 	  $(SHELL) $(srcdir)/genmultilib '' '' '' '' '' '' '' '' \
+diff -urN gcc-4.9.1-orig/libgcc/crtstuff.c gcc-4.9.1/libgcc/crtstuff.c
+--- gcc-4.9.1-orig/libgcc/crtstuff.c	2014-08-20 18:08:35.048171300 -0700
++++ gcc-4.9.1/libgcc/crtstuff.c	2014-10-05 11:32:35.994125200 -0700
+@@ -51,6 +51,7 @@
+ /* FIXME: Including auto-host is incorrect, but until we have
+    identified the set of defines that need to go into auto-target.h,
+    this will have to do.  */
++#define USED_FOR_TARGET
+ #include "auto-host.h"
+ #undef pid_t
+ #undef rlim_t

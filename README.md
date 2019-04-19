@@ -1,2 +1,62 @@
-# newlib-nds
+[Newlib for NintendoDS]
+These sources are Newlib + ARM specific drivers, for Nintendo DS and it's the baremetal OS ToolchainGenericDS requires, in order to build ToolchainGenericDS projects.
+You need to rebuild it at least once so then ToolchainGenericDS 1.5 can use it, and subsequently, other TGDS projects.
 
+It relies on ARM EABI components, (and not ARM NONE EABI components, thus any object using that format will not be compatible, and you'll require the source code to turn it into ARM EABI).
+The environment uses GCC 4.9.2, thus it takes less space and it's less cluttered overall. 
+
+You can check a copy of these steps at:
+https://bitbucket.org/Coto88/newlib-nds
+
+Requirements: 
+-  Internet Connection (for MinGW setup)
+-  Windows7 or higher / Linux
+
+For building the toolchain you need three steps:
+
+1) Recompile Newlib for Nintendo DS (this guide, keep reading)
+2) Recompile ToolchainGenericDS (optional, not on this guide)
+3) Recompile project (optional, not on this guide)
+
+
+Steps:
+
+[Windows]
+1.a)You WILL need to install Visual C++ Redistributable Visual Studio 2012 Update 4 installer, get it here:
+	https://www.microsoft.com/es-es/download/details.aspx?id=30679
+	Download and install the x86 package and install. (This setup distributes bin2c.exe as x86 binaries)
+	(if you skip this step, most C++ code that helps TGDS will fail, so don't skip it...)
+	Note: if you wish to use the x64 version, you must recompile the source as x64 binary and install the above package as x64 installer.
+
+-	Head to /installer/windows/
+
+-	Run setup.bat
+	
+1.b)Once copy is done, a MingGW setup will appear.
+	
+-	The installation Path recommended by default: C:\MinGW
+-	While running setup, wait until Continue button appears. Then you must choose: 
+		mingw-developer-toolkit then Mark For Installation. Click: Installation> Apply Changes then Apply. Setup will begin. 
+-	Wait for the Close button to appear, close setup. Head to C:/MinGW/msys/1.0/
+-	Copy a msys.bat shortcut from the same file here, to your desired place, this is the minimal console required to build ToolchainGenericDS projects. 
+	By default, you can Unzip/make (build) projects from within: C:/MinGW/msys/1.0/home folder.
+
+1.c)Building Newlib for NintendoDS: 
+- Proceed to:
+	https://bitbucket.org/Coto88/newlib-nds/src/master/newlib-nds/README.MD
+
+[Linux]
+1.a)Building Newlib for NintendoDS: 
+
+- Requires Ubuntu 14.04 or later (kubuntu, xubuntu or others working as well). Proceed to:
+	https://bitbucket.org/Coto88/newlib-nds/src/master/newlib-nds/README.MD
+	requires the SAME terminal to be open when compiling: newlib for NDS, ToolchainGenericDS, and Project Specific TGDS
+
+After a while, Newlib for NintendoDS will be recompiled for ToolchainGenericDS successfully.
+
+
+What's next if you plan on building TGDS projects: 
+You need to build ToolchainGenericDS:
+https://bitbucket.org/Coto88/toolchaingenericds
+
+Coto

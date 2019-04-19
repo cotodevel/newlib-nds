@@ -1,0 +1,153 @@
+export TOOLCHAIN_GENERIC_DS_VER	=	"TGDS1.5"
+
+# Shared start
+export DIR_ARM7 = arm7
+export DIR_ARM9 = arm9
+export PosIndCodeDIR_FILENAME = PositionIndependentCode
+
+ifeq ($(TGDS_ENV),windows)
+	export GCC_BUILD_ENV	= $(DEFAULT_GCC_PATH)
+	export GCC_BIN_PATH	= bin/
+	export AR	=	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)arm-eabi-ar.exe
+	export AS	=	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)arm-eabi-as.exe
+	export CC 	= 	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)arm-eabi-gcc.exe
+	export CXX 	= 	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)arm-eabi-g++.exe
+	export CPP 	= 	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)arm-eabi-c++.exe
+	export LD	=	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)arm-eabi-ld.exe
+	export OBJCOPY	=	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)arm-eabi-objcopy.exe
+	export OBJDUMP	=	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)arm-eabi-objdump.exe
+	export OBJSTRIP	=	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)arm-eabi-strip.exe
+	export NDSTOOL	=	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)ndstool.exe
+	export BIN2C	=	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)bin2c.exe
+
+	#cleanup default C/C++/ASM flags
+	export ARFLAGS	=''
+	export ASFLAGS	=''
+	export CFLAGS	=''
+	export CXXFLAGS	=''
+	export CPPFLAGS	=''
+	export LDFLAGS	=''
+	export VPATH 	=''
+
+	export TOOLCHAIN_LIBRARY_SRCPATH = $(DEFAULT_GCC_PATH)arm-eabi
+	export TOOLCHAIN_PATH	= 	$(TOOLCHAIN_LIBRARY_SRCPATH)/lib/
+	export LIBPATH	=	$(TOOLCHAIN_PATH)newlib-nano-2.1-nds
+	export DIRLIBS_PROHIBITED =	
+	export DIRLIBS_ALLOWED =	-I "$(TOOLCHAIN_PATH)newlib-nano-2.1-nds/include/"	\
+								-I "$(TOOLCHAIN_PATH)newlib-nano-2.1-nds/newlib-nds-headers/"	\
+								-I "$(TOOLCHAIN_PATH)newlib-nano-2.1-nds/newlib-nds-headers/bits/" \
+								-I "$(TOOLCHAIN_PATH)newlib-nano-2.1-nds/newlib-nds-headers/machine/" \
+								-I "$(TOOLCHAIN_PATH)newlib-nano-2.1-nds/newlib-nds-headers/sys/"	\
+								-I "$(TOOLCHAIN_LIBRARY_SRCPATH)/include/c++/4.9.2/"	\
+								-I "$(TOOLCHAIN_LIBRARY_SRCPATH)/include/c++/4.9.2/arm-eabi/bits/"	\
+								-I	"$(TOOLCHAIN_LIBRARY_SRCPATH)/include/"	\
+								-I	"$(TOOLCHAIN_LIBRARY_SRCPATH)/include/linux/"	\
+								-I	"$(TOOLCHAIN_LIBRARY_SRCPATH)/include/linux/bits/"	\
+								-I	"$(TOOLCHAIN_LIBRARY_SRCPATH)/include/linux/include/"	\
+								-I	"$(TOOLCHAIN_LIBRARY_SRCPATH)/include/linux/arpa/"	\
+								-I	"$(TOOLCHAIN_LIBRARY_SRCPATH)/include/linux/include/netinet/"	\
+								-I	"$(TOOLCHAIN_LIBRARY_SRCPATH)/include/linux/net/"	\
+								-I	"$(TOOLCHAIN_LIBRARY_SRCPATH)/include/linux/sys/"	
+								
+								
+	export TARGET_LIBRARY_PATH =	$(TOOLCHAIN_LIBRARY_SRCPATH)/lib/newlib-nano-2.1-nds
+	export TARGET_LIBRARY_LINKER_SRC = /linkers
+	export TARGET_LIBRARY_LINKER_DEST = $(TARGET_LIBRARY_PATH)
+	export TARGET_LIBRARY_MAKEFILES_SRC = /TGDSMakefiles
+	export TARGET_LIBRARY_MAKEFILES_DEST = $(TARGET_LIBRARY_PATH)
+	export TARGET_LIBRARY_HEADERS_7 = $(TARGET_LIBRARY_PATH)/headers7
+	export TARGET_LIBRARY_HEADERS_9 = $(TARGET_LIBRARY_PATH)/headers9
+	export TARGET_LIBRARY_HEADERS_7_INC = -I	"$(TARGET_LIBRARY_PATH)/headers7"
+	export TARGET_LIBRARY_HEADERS_9_INC = -I	"$(TARGET_LIBRARY_PATH)/headers9"
+	export TARGET_LIBRARY_LINKER_PATH_LD = $(TARGET_LIBRARY_PATH)$(TARGET_LIBRARY_LINKER_SRC)/
+	export TARGET_LIBRARY_MAKEFILES_SRC7_NOFPIC = $(TARGET_LIBRARY_PATH)$(TARGET_LIBRARY_MAKEFILES_SRC)/$(DIR_ARM7)/Makefile	
+	export TARGET_LIBRARY_MAKEFILES_SRC9_NOFPIC = $(TARGET_LIBRARY_PATH)$(TARGET_LIBRARY_MAKEFILES_SRC)/$(DIR_ARM9)/Makefile
+	export TARGET_LIBRARY_MAKEFILES_SRC7_FPIC = $(TARGET_LIBRARY_PATH)$(TARGET_LIBRARY_MAKEFILES_SRC)/$(PosIndCodeDIR_FILENAME)/$(DIR_ARM7)/Makefile	
+	export TARGET_LIBRARY_MAKEFILES_SRC9_FPIC = $(TARGET_LIBRARY_PATH)$(TARGET_LIBRARY_MAKEFILES_SRC)/$(PosIndCodeDIR_FILENAME)/$(DIR_ARM9)/Makefile
+endif
+ifeq ($(TGDS_ENV),linux)
+	export GCC_BUILD_ENV	:= $(DEFAULT_GCC_PATH)../../../../arm-none-eabi/
+	export GCC_BIN_PATH	:= bin/
+	export AR	:=	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)arm-none-eabi-ar
+	export AS	:=	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)arm-none-eabi-as
+	export CC 	:= 	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)arm-none-eabi-gcc
+	export CXX 	:= 	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)arm-none-eabi-g++
+	export CPP 	:= 	$(CC) -E
+	export LD	:=	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)arm-none-eabi-ld
+	export OBJCOPY	:=	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)arm-none-eabi-objcopy
+	export OBJDUMP	=	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)arm-none-eabi-objdump
+	export OBJSTRIP	=	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)arm-none-eabi-strip
+	export NDSTOOL	:=	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)ndstool
+	export BIN2C	:=	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)bin2c
+
+	#cleanup default C/C++/ASM flags
+	export ARFLAGS	=''
+	export ASFLAGS	=''
+	export CFLAGS	=''
+	export CXXFLAGS	=''
+	export CPPFLAGS	=''
+	export LDFLAGS	=''
+	export VPATH 	=''
+
+	export TOOLCHAIN_LIBRARY_SRCPATH = $(DEFAULT_GCC_PATH)arm-none-eabi
+	export TOOLCHAIN_PATH	= 	$(TOOLCHAIN_LIBRARY_SRCPATH)/lib/
+	export LIBPATH	=	$(TOOLCHAIN_PATH)newlib-nano-2.1-nds
+	export DIRLIBS_PROHIBITED =	
+	export DIRLIBS_ALLOWED =	-I "$(TOOLCHAIN_PATH)newlib-nano-2.1-nds/include/"	\
+								-I "$(TOOLCHAIN_PATH)newlib-nano-2.1-nds/newlib-nds-headers/"	\
+								-I "$(TOOLCHAIN_PATH)newlib-nano-2.1-nds/newlib-nds-headers/bits/" \
+								-I "$(TOOLCHAIN_PATH)newlib-nano-2.1-nds/newlib-nds-headers/machine/" \
+								-I "$(TOOLCHAIN_PATH)newlib-nano-2.1-nds/newlib-nds-headers/sys/"	\
+								-I "$(TOOLCHAIN_LIBRARY_SRCPATH)/include/c++/7.2.1/"	\
+								-I "$(TOOLCHAIN_LIBRARY_SRCPATH)/include/c++/7.2.1/arm-none-eabi/bits/"\
+								-I "$(TOOLCHAIN_LIBRARY_SRCPATH)/include/"	\
+								-I "$(TOOLCHAIN_LIBRARY_SRCPATH)/include/linux/"	\
+								-I "$(TOOLCHAIN_LIBRARY_SRCPATH)/include/linux/bits/"	\
+								-I "$(TOOLCHAIN_LIBRARY_SRCPATH)/include/linux/include/"	\
+								-I "$(TOOLCHAIN_LIBRARY_SRCPATH)/include/linux/include/arpa/"	\
+								-I "$(TOOLCHAIN_LIBRARY_SRCPATH)/include/linux/include/netinet/"	\
+								-I "$(TOOLCHAIN_LIBRARY_SRCPATH)/include/linux/sys/"
+								
+								
+	export TARGET_LIBRARY_PATH =	$(TOOLCHAIN_LIBRARY_SRCPATH)/lib/newlib-nano-2.1-nds
+	export TARGET_LIBRARY_LINKER_SRC = /linkers
+	export TARGET_LIBRARY_LINKER_DEST = $(TARGET_LIBRARY_PATH)
+	export TARGET_LIBRARY_MAKEFILES_SRC = /TGDSMakefiles
+	export TARGET_LIBRARY_MAKEFILES_DEST = $(TARGET_LIBRARY_PATH)
+	export TARGET_LIBRARY_HEADERS_7 = $(TARGET_LIBRARY_PATH)/headers7
+	export TARGET_LIBRARY_HEADERS_9 = $(TARGET_LIBRARY_PATH)/headers9
+	export TARGET_LIBRARY_HEADERS_7_INC = -I	"$(TARGET_LIBRARY_PATH)/headers7"
+	export TARGET_LIBRARY_HEADERS_9_INC = -I	"$(TARGET_LIBRARY_PATH)/headers9"
+	export TARGET_LIBRARY_LINKER_PATH_LD = $(TARGET_LIBRARY_PATH)$(TARGET_LIBRARY_LINKER_SRC)/
+	export TARGET_LIBRARY_MAKEFILES_SRC7_NOFPIC = $(TARGET_LIBRARY_PATH)$(TARGET_LIBRARY_MAKEFILES_SRC)/$(DIR_ARM7)/Makefile	
+	export TARGET_LIBRARY_MAKEFILES_SRC9_NOFPIC = $(TARGET_LIBRARY_PATH)$(TARGET_LIBRARY_MAKEFILES_SRC)/$(DIR_ARM9)/Makefile
+	export TARGET_LIBRARY_MAKEFILES_SRC7_FPIC = $(TARGET_LIBRARY_PATH)$(TARGET_LIBRARY_MAKEFILES_SRC)/$(PosIndCodeDIR_FILENAME)/$(DIR_ARM7)/Makefile	
+	export TARGET_LIBRARY_MAKEFILES_SRC9_FPIC = $(TARGET_LIBRARY_PATH)$(TARGET_LIBRARY_MAKEFILES_SRC)/$(PosIndCodeDIR_FILENAME)/$(DIR_ARM9)/Makefile
+endif
+
+#global ASM / C / C++ vars used across all TGDS Makefiles (TGDS / Newlib / TGDS project):
+
+#CPU specific
+export GLOBAL_SHARED_FLAGS_7 = -march=armv4t	-mthumb-interwork
+export GLOBAL_SHARED_FLAGS_9 = -march=armv5te	-mthumb-interwork
+
+#CPU code builder settings
+export GLOBAL_AS_COMPILER_FLAGS =	-defsym	readvertoolchain='$(TOOLCHAIN_GENERIC_DS_VER)'	-defsym		NDS='1'
+export GLOBAL_CC_COMPILER_FLAGS =	-Wall	-marm	-O2	-Dreadvertoolchain='$(TOOLCHAIN_GENERIC_DS_VER)'	-nostdinc	-fomit-frame-pointer	-ffast-math	-DNDS
+export GLOBAL_CXX_COMPILER_FLAGS =	-Wall	-marm	-O2	-MMD -MP	-std=c++11	-nostdinc++	-fomit-frame-pointer	-ffast-math	-DNDS	
+
+#CPU code builder settings TGDS project specific
+export SPECIFIC_AS_COMPILER_FLAGS_7		= -defsym	ARM7='1'	-defsym	appver='$(EXECUTABLE_VERSION)'
+export SPECIFIC_CC_COMPILER_FLAGS_7		= -DARM7	-Dappver='$(EXECUTABLE_VERSION)'
+export SPECIFIC_CXX_COMPILER_FLAGS_7	= $(SPECIFIC_CC_COMPILER_FLAGS_7) -fno-exceptions
+
+export SPECIFIC_AS_COMPILER_FLAGS_9		= -defsym	ARM9='1'	-defsym	appver='$(EXECUTABLE_VERSION)'
+export SPECIFIC_CC_COMPILER_FLAGS_9		= -DARM9	-Dappver='$(EXECUTABLE_VERSION)'
+export SPECIFIC_CXX_COMPILER_FLAGS_9	= $(SPECIFIC_CC_COMPILER_FLAGS_9)
+
+
+
+#default built-in rules removal
+MAKEFLAGS += --no-builtin-rules
+
+# Shared end

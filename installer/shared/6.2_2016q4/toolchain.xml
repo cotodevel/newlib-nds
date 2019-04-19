@@ -1,0 +1,97 @@
+<?xml version="1.0"?>
+<Toolchain xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <ToolchainName>ARM</ToolchainName>
+  <ToolchainType>Embedded</ToolchainType>
+  <PathDetectionKeyStrip>0</PathDetectionKeyStrip>
+  <GNUTargetID>arm-eabi</GNUTargetID>
+  <ToolchainID>com.visualgdb.arm-eabi</ToolchainID>
+  <BinaryDirectory>bin</BinaryDirectory>
+  <Prefix>arm-eabi-</Prefix>
+  <Make>make.exe</Make>
+  <BSPIndexUrlFormat>http://visualgdb.com/hwsupport/BSP/?autofetch=1&amp;target=arm-eabi&amp;filter={0}</BSPIndexUrlFormat>
+  <IsCygwinBased>false</IsCygwinBased>
+  <CompilationFlags>
+    <AdditionalLibraries>
+      <string>$$com.sysprogs.toolchainoptions.arm.compactcpp$$</string>
+    </AdditionalLibraries>
+    <LDFLAGS>$$com.sysprogs.toolchainoptions.arm.libctype$$ $$com.sysprogs.toolchainoptions.arm.libnosys$$</LDFLAGS>
+    <EnableLinkerGroups>true</EnableLinkerGroups>
+  </CompilationFlags>
+  <ConfigurableProperties>
+    <PropertyGroups>
+      <PropertyGroup>
+        <Properties>
+          <PropertyEntry xsi:type="Enumerated">
+            <Name>C Library Type</Name>
+            <UniqueID>com.sysprogs.toolchainoptions.arm.libctype</UniqueID>
+            <OmitPrefixIfEmpty>false</OmitPrefixIfEmpty>
+            <SuggestionList>
+              <Suggestion>
+                <UserFriendlyName>Default</UserFriendlyName>
+                <InternalValue />
+              </Suggestion>
+              <Suggestion>
+                <UserFriendlyName>Newlib-nano</UserFriendlyName>
+                <InternalValue>--specs=nano.specs</InternalValue>
+              </Suggestion>
+              <Suggestion>
+                <UserFriendlyName>Newlib-nano with floating point support in printf()</UserFriendlyName>
+                <InternalValue>--specs=nano.specs -u _printf_float</InternalValue>
+              </Suggestion>
+              <Suggestion>
+                <UserFriendlyName>Newlib-nano with floating point support in printf() and scanf()</UserFriendlyName>
+                <InternalValue>--specs=nano.specs -u _printf_float -u _scanf_float</InternalValue>
+              </Suggestion>
+            </SuggestionList>
+            <DefaultEntryIndex>0</DefaultEntryIndex>
+            <AllowFreeEntry>false</AllowFreeEntry>
+          </PropertyEntry>
+          <PropertyEntry xsi:type="Boolean">
+            <Name>Reduce the size of C++ binaries</Name>
+            <UniqueID>com.sysprogs.toolchainoptions.arm.compactcpp</UniqueID>
+            <OmitPrefixIfEmpty>false</OmitPrefixIfEmpty>
+            <DefaultValue>true</DefaultValue>
+            <ValueForTrue>compactcpp</ValueForTrue>
+          </PropertyEntry>
+          <PropertyEntry xsi:type="Boolean">
+            <Name>Provide default stubs for system calls</Name>
+            <UniqueID>com.sysprogs.toolchainoptions.arm.libnosys</UniqueID>
+            <OmitPrefixIfEmpty>false</OmitPrefixIfEmpty>
+            <DefaultValue>false</DefaultValue>
+            <ValueForTrue>--specs=nosys.specs</ValueForTrue>
+          </PropertyEntry>
+        </Properties>
+        <CollapsedByDefault>false</CollapsedByDefault>
+      </PropertyGroup>
+    </PropertyGroups>
+  </ConfigurableProperties>
+  <GCCVersion>4.9.2</GCCVersion>
+  <GDBVersion>7.8.1</GDBVersion>
+  <Revision>1</Revision>
+  <SourcePackages>
+    <DownloadableSourcePackage>
+      <Name>Newlib</Name>
+      <UniqueID>com.sysprogs.newlib</UniqueID>
+      <Version>2.1.0-r1</Version>
+      <OriginalDirectory>q:\gnu\auto\newlib-2.1.0</OriginalDirectory>
+    </DownloadableSourcePackage>
+    <DownloadableSourcePackage>
+      <Name>Newlib-nano</Name>
+      <UniqueID>com.sysprogs.newlib-nano</UniqueID>
+      <Version>2.1.0-r1</Version>
+      <OriginalDirectory>q:\gnu\newlib-nano\newlib-nano-2.1</OriginalDirectory>
+    </DownloadableSourcePackage>
+    <DownloadableSourcePackage>
+      <Name>Libstdc++</Name>
+      <UniqueID>com.sysprogs.libstdcpp</UniqueID>
+      <Version>4.9.2</Version>
+      <OriginalDirectory>q:\gnu\auto\gcc-4.9.2\libstdc++-v3</OriginalDirectory>
+    </DownloadableSourcePackage>
+    <DownloadableSourcePackage>
+      <Name>Libgcc</Name>
+      <UniqueID>com.sysprogs.libgcc</UniqueID>
+      <Version>4.9.2</Version>
+      <OriginalDirectory>q:\gnu\auto\gcc-4.9.2\libgcc</OriginalDirectory>
+    </DownloadableSourcePackage>
+  </SourcePackages>
+</Toolchain>
