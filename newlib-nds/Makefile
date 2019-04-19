@@ -279,7 +279,8 @@ ifeq ($(TGDS_ENV),linux)
 		wget \
 		zip \
 		texlive \
-		texlive-extra-utils
+		texlive-extra-utils	\
+		gcc-multilib
 endif
 
 #rule already validated == linux

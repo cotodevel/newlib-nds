@@ -6,13 +6,13 @@ all :	buildtoolchain
 	
 
 buildtoolchain:	
-	-wget	-O	$(CURDIR)/../installer/linux/toolchain.zip https://bitbucket.org/Coto88/packages/get/eb259ff8ef7cb71c54486339fc723c9e6db161b3.zip	
+	-wget	-O	$(CURDIR)/../installer/linux/toolchain.zip https://bitbucket.org/Coto88/packages/get/da009a7bfeacc96e0bbe5bf49a498cf9692cec6c.zip	
 	-7z	x	$(CURDIR)/../installer/linux/toolchain.zip	-o$(CURDIR)/../installer/linux/
-	-tar	xf		$(CURDIR)/../installer/linux/Coto88-packages-eb259ff8ef7c/newlib-nds-packages/arm-none-eabi-gcc/gcc-arm-none-eabi-6_2-2016q4-20161216-linux.tar.bz2	-C $(CURDIR)/../installer/linux/Coto88-packages-eb259ff8ef7c/newlib-nds-packages/arm-none-eabi-gcc/
-	-chmod a+x -R	$(CURDIR)/../installer/linux/Coto88-packages-eb259ff8ef7c/newlib-nds-packages/arm-none-eabi-gcc/
-	-sudo cp	-a	$(CURDIR)/../installer/linux/Coto88-packages-eb259ff8ef7c/newlib-nds-packages/arm-none-eabi-gcc/gcc-arm-none-eabi-6_2-2016q4/.	/usr/arm-none-eabi/
+	-tar	xf		$(CURDIR)/../installer/linux/Coto88-packages-da009a7bfeac/newlib-nds-packages/arm-none-eabi-gcc/gcc-arm-none-eabi-4_9-2015q3-20150921-linux.tar.bz2	-C $(CURDIR)/../installer/linux/Coto88-packages-da009a7bfeac/newlib-nds-packages/arm-none-eabi-gcc/
+	-chmod a+x -R	$(CURDIR)/../installer/linux/Coto88-packages-da009a7bfeac/newlib-nds-packages/arm-none-eabi-gcc/
+	-sudo cp	-a	$(CURDIR)/../installer/linux/Coto88-packages-da009a7bfeac/newlib-nds-packages/arm-none-eabi-gcc/gcc-arm-none-eabi-4_9-2015q3/.	/usr/arm-none-eabi/
 
 clean:
 	-sudo rm	-fr	/usr/arm-none-eabi/
 	-@rm -fr	$(CURDIR)/toolchain.zip
-	-@rm -fr	$(CURDIR)/../installer/linux/Coto88-packages-eb259ff8ef7c/
+	-@rm -fr	$(CURDIR)/../installer/linux/Coto88-packages-da009a7bfeac/
