@@ -37,7 +37,6 @@
 #ifndef _SYS_SOCKET_H_
 #define	_SYS_SOCKET_H_
 
-#include "typedefsTGDS.h"
 #include <sys/types.h>
 #include <sys/_types.h>
 #include <netinet/in.h>
@@ -208,7 +207,7 @@ struct sockproto {
  * RFC 2553: protocol-independent placeholder for socket addresses
  */
 #define	_SS_MAXSIZE	128U
-#define	_SS_ALIGNSIZE	(sizeof(sint64))
+#define	_SS_ALIGNSIZE	(sizeof(int64_t))
 #define	_SS_PAD1SIZE	(_SS_ALIGNSIZE - sizeof(unsigned char) - sizeof(sa_family_t))
 #define	_SS_PAD2SIZE	(_SS_MAXSIZE - sizeof(unsigned char) - sizeof(sa_family_t) - \
 				_SS_PAD1SIZE - _SS_ALIGNSIZE)
@@ -217,7 +216,7 @@ struct sockaddr_storage {
 	unsigned char		ss_len;		/* address length */
 	sa_family_t	ss_family;	/* address family */
 	char		__ss_pad1[_SS_PAD1SIZE];
-	sint64		__ss_align;	/* force desired structure storage alignment */
+	int64_t		__ss_align;	/* force desired structure storage alignment */
 	char		__ss_pad2[_SS_PAD2SIZE];
 };
 

@@ -152,7 +152,7 @@ typedef	char *	caddr_t;
     defined(__sparc__) || defined(__SPU__)
 typedef	unsigned long	ino_t;
 #else
-typedef	unsigned int	ino_t;
+typedef	unsigned short	ino_t;
 #endif
 #endif /*__CYGWIN__*/
 

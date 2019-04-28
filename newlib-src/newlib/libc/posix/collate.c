@@ -36,7 +36,6 @@
 #include <unistd.h>
 #include <sysexits.h>
 #include "un-namespace.h"
-#include <syslimits.h>
 #include "collate.h"
 
 extern char *_PathLocale;

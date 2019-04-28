@@ -30,11 +30,11 @@
 static char sccsid[] = "@(#)syslog.c        8.4 (Berkeley) 3/18/94";
 #endif /* LIBC_SCCS and not lint */
 #include <sys/types.h>
-#include <sys/socket.h>
-#include <syslog.h>
-#include <sys/uio.h>
-#include <un.h>
-#include <netdb.h>
+//#include <sys/socket.h>
+//#include <syslog.h>
+//#include <sys/uio.h>
+//#include <un.h>
+//#include <netdb.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <paths.h>
@@ -45,14 +45,14 @@ static char sccsid[] = "@(#)syslog.c        8.4 (Berkeley) 3/18/94";
 #include <time.h>
 #include <stdarg.h>
 #include <stdlib.h>
-#include <libc-lock.h>
+//#include <libc-lock.h>
 #include <signal.h>
 #include <locale.h>
 #include <stdarg.h>
 #include <iolibio.h>
 
-#include <math_ldbl_opt.h>
-#include <kernel-features.h>
+//#include <math_ldbl_opt.h>
+//#include <kernel-features.h>
 #define ftell(s) _IO_ftell (s)
 
 
@@ -60,40 +60,8 @@ static char sccsid[] = "@(#)syslog.c        8.4 (Berkeley) 3/18/94";
 #define	FSETLOCKING_INTERNAL	1
 #define	FSETLOCKING_BYCALLER	2
 
-static int        LogType = SOCK_DGRAM;        /* type of socket connection */
-static int        LogFile = -1;                /* fd for log */
-static int        connected;                /* have done connect */
-static int        LogStat;                /* status bits, set by openlog() */
-static const char *LogTag;                /* string to tag the entry with */
-static int        LogFacility = LOG_USER;        /* default facility code */
-static int        LogMask = 0xff;                /* mask of priorities to be logged */
-extern char        *__progname;                /* Program name, from crt0. */
-/* Define the lock.  */
-__libc_lock_define_initialized (static, syslog_lock)
-static void openlog_internal(const char *, int, int);
-static void closelog_internal(void);
-#ifndef NO_SIGPIPE
-static void sigpipe_handler (int);
-#endif
-#ifndef send_flags
-# define send_flags 0
-#endif
-struct cleanup_arg
+static void cancel_handler (void *ptr)
 {
-  void *buf;
-  struct sigaction *oldaction;
-};
-static void
-cancel_handler (void *ptr)
-{
-#ifndef NO_SIGPIPE
-  /* Restore the old signal handler.  */
-  struct cleanup_arg *clarg = (struct cleanup_arg *) ptr;
-  if (clarg != NULL && clarg->oldaction != NULL)
-    __sigaction (SIGPIPE, clarg->oldaction, NULL);
-#endif
-  /* Free the lock.  */
-  __libc_lock_unlock (syslog_lock);
 }
 /*
  * syslog, vsyslog --
@@ -331,48 +299,27 @@ static void openlog_internal(const char *ident, int logstat, int logfac)
 
 void openlog (const char *ident, int logstat, int logfac)
 {
-  // Protect against multiple users and cancellation.
-  __libc_cleanup_push (cancel_handler, NULL);
-  __libc_lock_lock (syslog_lock);
-  openlog_internal (ident, logstat, logfac);
-  __libc_cleanup_pop (1);
 }
 
 #ifndef NO_SIGPIPE
 static void
 sigpipe_handler (int signo)
 {
-  closelog_internal ();
+
 }
 #endif
 static void
 closelog_internal (void)
 {
-  if (!connected)
-    return;
-  __close (LogFile);
-  LogFile = -1;
-  connected = 0;
 }
 
 void closelog (void)
 {
-  // Protect against multiple users and cancellation.  
-  __libc_cleanup_push (cancel_handler, NULL);
-  __libc_lock_lock (syslog_lock);
-  closelog_internal ();
-  LogTag = NULL;
-  LogType = SOCK_DGRAM; // this is the default 
-  // Free the lock.  
-  __libc_cleanup_pop (1);
+
 }
  
 // setlogmask -- set the log mask level 
 int setlogmask (int pmask)
 {
-        int omask;
-        omask = LogMask;
-        if (pmask != 0)
-                LogMask = pmask;
-        return (omask);
+
 }

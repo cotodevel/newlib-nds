@@ -2,7 +2,7 @@
 #define _IOLIBIO_H 1
 
 #include <stdio.h>
-#include <libio.h>
+//#include <libio.h>
 
 #define _IO_clearerr(FP) ((FP)->_flags &= ~(_IO_ERR_SEEN|_IO_EOF_SEEN))
 #define _IO_fseek(__fp, __offset, __whence) \
