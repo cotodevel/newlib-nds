@@ -39,14 +39,14 @@ d_objs_arm9:=	${file_arm9_src_c:.c=.d}	${file_arm9_src_s:.s=.d}	${file_arm9_src_
 #ARM9 specific definitions.	-fno-common so we force initialized data to rodata
 MAPFILE = $(DIR_ARM9).map
 AS_ASFLAGS		=	$(GLOBAL_SHARED_FLAGS_9)	$(SPECIFIC_AS_COMPILER_FLAGS_9)		$(GLOBAL_AS_COMPILER_FLAGS)
-CC_ASFLAGS		=	$(GLOBAL_SHARED_FLAGS_9)	$(SPECIFIC_CC_COMPILER_FLAGS_9)		-Wall	-marm	-Os	-Dreadvertoolchain='$(TOOLCHAIN_GENERIC_DS_VER)'	-fomit-frame-pointer	-ffast-math	-DNDS	-std=c99	-shared
-CPP_FLAGS		=	$(GLOBAL_SHARED_FLAGS_9)	$(SPECIFIC_CXX_COMPILER_FLAGS_9)	-Wall	-marm	-Os	-Dreadvertoolchain='$(TOOLCHAIN_GENERIC_DS_VER)'	-fomit-frame-pointer	-ffast-math	-DNDS	-std=c++11	-shared
+CC_ASFLAGS		=	$(GLOBAL_SHARED_FLAGS_9)	$(SPECIFIC_CC_COMPILER_FLAGS_9)		$(GLOBAL_CC_COMPILER_FLAGS)
+CPP_FLAGS		=	$(GLOBAL_SHARED_FLAGS_9)	$(SPECIFIC_CXX_COMPILER_FLAGS_9)	$(GLOBAL_CXX_COMPILER_FLAGS)
 BUILD			= 	$(BUILD_ARM9)
 DIR_SRC			=	$(DIRS_ARM9_SRC)
 
 #--gc-sections: allows relocatable sections linked (already) to be included, otherwise unused sections are discarded.
 #check arm9.map "Discarded input sections" to see --gc-sections in action.
-LDFLAGS	=	-specs=$(TARGET_LIBRARY_LINKER_PATH_LD)/nds_arm9_ld.specs	-Wl,--no-gc-sections,-Map,$(MAPFILE)	-Wl,-z,defs
+LDFLAGS	=	-specs=$(TARGET_LIBRARY_LINKER_PATH_LD)/nds_arm9_ld.specs	-Wl,--gc-sections,-Map,$(MAPFILE)	-Wl,-z,defs
 LIBRARIES =	-l$(TARGET_LIBRARY_NAME_9)	-lstdc++	-lcnano9	-lgcc
 
 ################################################################################################
