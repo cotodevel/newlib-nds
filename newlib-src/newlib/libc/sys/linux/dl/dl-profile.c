@@ -28,7 +28,6 @@
 #include <unistd.h>
 #include <ldsodefs.h>
 #include <sys/gmon.h>
-#include <sys/gmon_out.h>
 #include <sys/mman.h>
 #include <sys/param.h>
 #include <sys/stat.h>

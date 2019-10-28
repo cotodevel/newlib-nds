@@ -1682,7 +1682,7 @@ format, but not all features are supported with it.  For example,
 basic-block execution counts cannot be accommodated by the old file
 format.
 
-   The new file format is defined in header file `gmon_out.h'.  It
+   The new file format is defined in header file `gmon.h'.  It
 consists of a header containing the magic cookie and a version number,
 as well as some spare bytes available for future extensions.  All data
 in a profile data file is in the native format of the target for which
