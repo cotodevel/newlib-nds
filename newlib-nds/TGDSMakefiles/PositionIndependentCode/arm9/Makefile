@@ -80,7 +80,7 @@ $(OBJDIR)/%.o : %.c
 #Do C++ (CXX) Compile now!
 $(OBJDIR)/%.o : %.cpp
 	-@echo 'C++ Compile start: $@'
-	$(CXX)	$(CPP_FLAGS)	-fPIC	$(DIRLIBS_HDR)	$(DIRLIBS_SRC)	-o $@ -c $<
+	$(CPP)	$(CPP_FLAGS)	-fPIC	$(DIRLIBS_HDR)	$(DIRLIBS_SRC)	-o $@ -c $<
 	-@echo 'C Compile End: $@'
 
 #Coto: Special "exception" rule. Fixes tricky projects such as SnemulDS's opcodes2.s where GCC AS is used, while compatibility with .S is required for newer projects.
@@ -96,7 +96,7 @@ $(OBJDIR)/%.o : %.s
 #Do S (GCC CC) Compile now!
 $(OBJDIR)/%.o : %.S
 	-@echo 'S Compile start: $@'
-	$(CXX)	-x assembler-with-cpp	$(DIRLIBS_HDR)	$(DIRLIBS_SRC)	$(CC_ASFLAGS)	-o $@ -c $<
+	$(CPP)	-x assembler-with-cpp	$(DIRLIBS_HDR)	$(DIRLIBS_SRC)	$(CC_ASFLAGS)	-o $@ -c $<
 	-@echo 'S Compile end: $@'
 ################################################################################################
 $(OBJPROG): $(addprefix $(OBJDIR)/, $(OBJECTS))

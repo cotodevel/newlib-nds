@@ -95,14 +95,14 @@ $(OBJDIR)/%.o : %.s
 #Do S (GCC CC) Compile now!
 $(OBJDIR)/%.o : %.S
 	-@echo 'S Compile start: $@'
-	$(CXX)	-x assembler-with-cpp	$(DIRLIBS_HDR)	$(DIRLIBS_SRC)	$(CC_ASFLAGS)	-o $@ -c $<
+	$(CPP)	-x assembler-with-cpp	$(DIRLIBS_HDR)	$(DIRLIBS_SRC)	$(CC_ASFLAGS)	-o $@ -c $<
 	-@echo 'S Compile end: $@'
 
 #Special rule: compile crt0 for arm9 entrypoint
 $(TARGET_LIBRARY_CRT0_FILE_9).o:	$(TARGET_LIBRARY_LINKER_FILE_9)
 	-@echo 'S Compile start: crt0s'
 	rm -fr $(BUILD)/$(TARGET_LIBRARY_CRT0_FILE_9).o
-	$(CXX)	-x assembler-with-cpp	$(DIRLIBS_HDR)	$(DIRLIBS_SRC)	$(CC_ASFLAGS)	-o $(OBJDIR)/$@ -c $<
+	$(CPP)	-x assembler-with-cpp	$(DIRLIBS_HDR)	$(DIRLIBS_SRC)	$(CC_ASFLAGS)	-o $(OBJDIR)/$@ -c $<
 	cp	-r $(TARGET_LIBRARY_LINKER_PATH_LD)nds_arm9_ld.ld $(CURDIR)
 	cp	-r $(TARGET_LIBRARY_LINKER_PATH_LD)nds_arm9_ld.specs $(CURDIR)
 	-@echo 'S Compile end: crt0s'
@@ -116,7 +116,7 @@ $(OBJPROG): $(addprefix $(OBJDIR)/, $(OBJECTS))
 #xxxx-nonstripped.elf -> xxxx.elf STRIP operation
 $(ELF_ARM9): $(OBJPROG)
 	-@echo '$@ Unstripped. STRIP Start!'
-	$(OBJSTRIP)	-s	$<
+	$(OBJSTRIP)	-s -R .comment -R .gnu.version	$<
 	-mv	$<	$@
 	
 $(BINSTRIP_RULE_9): $(ELF_ARM9)
