@@ -16,8 +16,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301
 USA
 */
 
-/* Coto: ARM7 linker file for NDS ARM7 processor, could be adapted for DSi-3DS */
-OUTPUT_FORMAT("elf32-littlearm")
+/* Coto: linker file for NDS ARM7 processor, could be adapted for DSi-3DS */
 
 /* attributes can actually help in debugging because if you try to move functions to DTCM, for example, compiler will rant since DTCM is DATA only path and not execution*/
 MEMORY
@@ -40,16 +39,27 @@ sp_ABT	= sp_FIQ - 0x100;	/* prefetch / data aborts exception */
 sp_UND	= sp_ABT - 0x100;	/* undefined exception */
 sp_USR	= sp_UND - 0x100;	/* usr / sys stacks */
 
-ENTRY (_start)
+OUTPUT_FORMAT("elf32-littlearm", "elf32-bigarm","elf32-littlearm")
+OUTPUT_ARCH(arm)
+ENTRY(_start)
 SECTIONS
 {
-	.init : ALIGN(4) { 			/* Entrypoint */
-		PROVIDE (__init_start__ = ABSOLUTE(.));
-		KEEP(*(.init*))
-		PROVIDE (__init_end__ = ABSOLUTE(.));
-	} > IWRAM = 0xff
+	.init      :	ALIGN(4)
+	{
+		KEEP(*(.init))
+	} > IWRAM = 0xFF
 	
-	. = ALIGN(4);
+	.text      :	ALIGN(4)
+	{
+		*(.stub)
+		/* .gnu.warning sections are handled specially by elf32.em.  */
+		*(.gnu.warning)
+		*(.gnu.linkonce.t*)
+		*(.glue_7t) *(.glue_7)
+		KEEP(*(COMMON))
+		KEEP(*(.text))
+		KEEP(*(.text.*))
+	} > IWRAM = 0xFF
 	
 	.data : ALIGN(4) {				/* used by TGDS-Newlib C/C++ code */
 		PROVIDE (__data_start__ = ABSOLUTE(.));
@@ -60,8 +70,6 @@ SECTIONS
 		PROVIDE (__data_end__ = ABSOLUTE(.));
 	} > IWRAM = 0xff
 	
-	. = ALIGN(4);
-	
 	.rodata : ALIGN(4) {			/* used by TGDS-Newlib C/C++ code */
 		PROVIDE (__rodata_start__ = ABSOLUTE(.));
 		*(.rdata)
@@ -71,8 +79,6 @@ SECTIONS
 		PROVIDE (__rodata_end__ = ABSOLUTE(.));
 	} > IWRAM = 0xff
 	
-	. = ALIGN(4);
-	
 	.bss (NOLOAD): {				/* used by TGDS-Newlib C/C++ code */
 		PROVIDE (__bss_vma_start = ABSOLUTE(.));
 		*(.dynbss*)
@@ -80,18 +86,7 @@ SECTIONS
 		*(.bss)
 		*(.gnu.linkonce.b*.)
 		PROVIDE (__bss_vma_end = ABSOLUTE(.));
-	} > IWRAM = 0xff
-	
-	. = ALIGN(4);
-	
-	.text : ALIGN(4) {				/* used by TGDS-Newlib C/C++ code */
-		PROVIDE (__text_start__ = ABSOLUTE(.));
-		KEEP(*(.text*))
-		KEEP(*(COMMON))					/* libc requires these for uninitialized objects, include any heap uninit vars*/
-		PROVIDE (__text_end__ = ABSOLUTE(.));
-	} > IWRAM = 0xff
-	
-	. = ALIGN(4);
+	} > IWRAM
 	
 	.ARM.exidx : ALIGN(4) {			/* not used at all, but some code rely on ARM debugging symbols */
 		PROVIDE (__exidx_start = ABSOLUTE(.));
@@ -99,10 +94,8 @@ SECTIONS
 		*(.ARM.exidx*)
 		*(.gnu.linkonce.armexidx.)
 		*(.gnu.linkonce.armexidx.*)
-		PROVIDE (__exidx_end = ABSOLUTE(.));	
+		PROVIDE (__exidx_end = ABSOLUTE(.));
 	} > IWRAM = 0xff
-	
-	. = ALIGN(4);
 	
 	/*
      * Stabs le debugging sections.
@@ -142,14 +135,13 @@ SECTIONS
     .debug_typenames 0 : { *(.debug_typenames) }
     .debug_varnames  0 : { *(.debug_varnames) }
 	
-	. = ALIGN(4);
-	
 	.fini : ALIGN(4) {				/* used by TGDS-Newlib C/C++ code */
 		PROVIDE (__fini_start__ = ABSOLUTE(.));
 		*(.fini)
 		*(.fini*)
 		PROVIDE (__fini_end__ = ABSOLUTE(.));
 		FILL(0x40);
+		. = ALIGN(4);
 	} > IWRAM = 0xff
 	
 	PROVIDE (__lib__end__ = __fini_end__);
