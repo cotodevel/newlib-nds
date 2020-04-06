@@ -1,23 +1,26 @@
 [Newlib for NintendoDS]
-These sources are Newlib + ARM specific drivers, for Nintendo DS and it's the baremetal OS ToolchainGenericDS requires, in order to build ToolchainGenericDS projects.
-You need to rebuild it at least once so then ToolchainGenericDS 1.5 can use it, and subsequently, other TGDS projects.
+These sources are Newlib + ARM specific drivers, for Nintendo DS and it's the baremetal OS ToolchainGenericDS requires, thus, ToolchainGenericDS projects as well.
+You need to rebuild it at least once. And then ToolchainGenericDS and then ToolchainGenericDS project(s).
 
-It relies on ARM EABI components, (and not ARM NONE EABI components, thus any object using that format will not be compatible, and you'll require to recompile the source code using the newer ARM NONE EABI).
-The environment uses , thus it takes less space and it's less cluttered overall. 
+It relies on ARM EABI components, (and not ARM NONE EABI components, thus any object using that format will not be compatible). 
+This decision was made becase it builds smaller binaries and they are 30% faster.
 
 You can check a copy of these steps at:
 https://bitbucket.org/Coto88/newlib-nds
 
+Version: 
+	Windows : GCC 4.9.2 (ARM EABI)
+	Linux : GCC 6.x.x+	(ARM NONE EABI)
+
 Features:
-- Windows Version: GCC 4.9.2 ---- Linux Version: GCC 6.x.x+. All TGDS projects are tested using ARM EABI, and not ARM NONE EABI, which may not work.
 - GAS (Gnu Assembler): .s / .S ARM assembler files, using the GNU syntax.
 - C support (malloc, full POSIX file implementation): .c files, using the GNU syntax.
 - C++ STL support (new / delete operators implemented): .cpp/.hpp files, using the GNU syntax.
 
 Note on C++ projects:
-- It has some overhead. A barebones C TGDS project is roughly 200K, where as C++ using <vector> <iostream> might use about 580K. 
-- 	While classes and templates are working, it new/delete operators rely on malloc/free newlib implementation. 
-	This means there is NO garbage collector, and you MUST keep track of allocated/freed classes or you are guaranteed to get undefined behaviour
+- 	It has overhead. A barebones C TGDS project is roughly 200K, where as C++ using <vector> <iostream> might use about 580K. 
+- 	While classes and templates are working, new/delete operators rely on malloc/free newlib implementation by design, 
+	this means there is NO garbage collector, and you MUST keep track of allocated/freed classes or you are guaranteed to get undefined behaviour.
 
 Requirements: 
 -  Internet Connection (for MinGW setup)
@@ -66,8 +69,8 @@ Steps:
 After a while, Newlib for NintendoDS will be recompiled for ToolchainGenericDS successfully.
 
 
-What's next if you plan on building TGDS projects: 
-You need to build ToolchainGenericDS:
+Next: 
+build ToolchainGenericDS:
 https://bitbucket.org/Coto88/toolchaingenericds
 
 Coto
