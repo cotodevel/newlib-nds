@@ -56,12 +56,13 @@ OUTPUT_ARCH(arm)
 ENTRY(_start)
 SECTIONS
 {
-	.init      :	ALIGN(4)
+	. = ALIGN(4);
+	.init      :	SUBALIGN(4)
 	{
 		KEEP(*(.init))
 	} > EWRAM = 0xFF
 	
-	.text      :	ALIGN(4)
+	.text      :	SUBALIGN(4)
 	{
 		*(.stub)
 		/* .gnu.warning sections are handled specially by elf32.em.  */
@@ -73,7 +74,7 @@ SECTIONS
 		KEEP(*(.text.*))
 	} > EWRAM = 0xFF
 	
-	.data : ALIGN(4) {				/* used by TGDS-Newlib C/C++ code */
+	.data : SUBALIGN(4) {				/* used by TGDS-Newlib C/C++ code */
 		PROVIDE (__data_start__ = ABSOLUTE(.));
 		*(.data)
 		*(.data.*)
@@ -82,7 +83,7 @@ SECTIONS
 		PROVIDE (__data_end__ = ABSOLUTE(.));
 	} > EWRAM = 0xff
 	
-	.rodata : ALIGN(4) {			/* used by TGDS-Newlib C/C++ code */
+	.rodata : SUBALIGN(4) {			/* used by TGDS-Newlib C/C++ code */
 		PROVIDE (__rodata_start__ = ABSOLUTE(.));
 		*(.rdata)
 		*(.rodata)
@@ -91,7 +92,7 @@ SECTIONS
 		PROVIDE (__rodata_end__ = ABSOLUTE(.));
 	} > EWRAM = 0xff
 	
-	.bss (NOLOAD): {				/* used by TGDS-Newlib C/C++ code */
+	.bss (NOLOAD):	SUBALIGN(4) {				/* used by TGDS-Newlib C/C++ code */
 		PROVIDE (__bss_vma_start = ABSOLUTE(.));
 		*(.dynbss*)
 		*(.bss*)
@@ -100,7 +101,7 @@ SECTIONS
 		PROVIDE (__bss_vma_end = ABSOLUTE(.));
 	} > EWRAM
 	
-	.ARM.exidx : ALIGN(4) {			/* not used at all, but some code rely on ARM debugging symbols */
+	.ARM.exidx : SUBALIGN(4) {			/* not used at all, but some code rely on ARM debugging symbols */
 		PROVIDE (__exidx_start = ABSOLUTE(.));
 		*(.ARM.exidx)
 		*(.ARM.exidx*)
@@ -110,14 +111,14 @@ SECTIONS
 	} > EWRAM = 0xff
 	
 	__itcm_vma_start = .;
-	.itcm      : 
+	.itcm      : SUBALIGN(4)
 	{
 		KEEP (*(.itcm*))
 	} > ITCM AT > EWRAM
 	__itcm_vma_end__ = .;
 	
 	__dtcm_vma_start = .;
-	.dtcm      : 
+	.dtcm      : SUBALIGN(4)
 	{
 		KEEP (*(.dtcm*))
 	} > DTCM AT > EWRAM
@@ -161,13 +162,12 @@ SECTIONS
     .debug_typenames 0 : { *(.debug_typenames) }
     .debug_varnames  0 : { *(.debug_varnames) }
 	
-	.fini : ALIGN(4) {				/* used by TGDS-Newlib C/C++ code */
+	.fini : SUBALIGN(4) {				/* used by TGDS-Newlib C/C++ code */
 		PROVIDE (__fini_start__ = ABSOLUTE(.));
 		*(.fini)
 		*(.fini*)
 		PROVIDE (__fini_end__ = ABSOLUTE(.));
 		FILL(0x40);
-		. = ALIGN(4);
 	} > EWRAM = 0xff
 	
 	PROVIDE (__lib__end__ = __fini_end__);
