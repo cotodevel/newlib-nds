@@ -24,20 +24,27 @@ THE SOFTWARE.
 #include <new>
 #include <malloc.h>
 
+#ifdef ARM9
+typedef unsigned char* (*TGDSARM9MallocHandler)(int);
+extern TGDSARM9MallocHandler 			TGDSMalloc9;
+
+typedef void (*TGDSARM9FreeHandler)(void *);
+extern TGDSARM9FreeHandler				TGDSFree9;
+
 void* operator new(std::size_t size) {
-    return malloc(size);
+    return TGDSMalloc9(size);
 }
 
 void* operator new[](std::size_t size) {
-    return malloc(size);
+    return TGDSMalloc9(size);
 }
 
 void operator delete(void* ptr) {
-    free(ptr);
+    TGDSFree9(ptr);
 }
 
 void operator delete[](void* ptr) {
-    free(ptr);
+    TGDSFree9(ptr);
 }
 
 /* Optionally you can override the 'nothrow' versions as well.
@@ -47,22 +54,24 @@ void operator delete[](void* ptr) {
  */
 
 void* operator new(std::size_t size, const std::nothrow_t&) {
-    return malloc(size);
+    return TGDSMalloc9(size);
 }
 
 void* operator new[](std::size_t size, const std::nothrow_t&) {
-    return malloc(size);
+    return TGDSMalloc9(size);
 }
 
 void operator delete(void* ptr, const std::nothrow_t&) {
-    free(ptr);
+    TGDSFree9(ptr);
 }
 
 void operator delete[](void* ptr, const std::nothrow_t&) {
-    free(ptr);
+    TGDSFree9(ptr);
 }
 
 extern "C" void __cxa_pure_virtual()
 {
 	while(1);
 }
+
+#endif
