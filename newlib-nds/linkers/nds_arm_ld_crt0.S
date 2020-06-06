@@ -150,8 +150,14 @@ _start:
 	bl __libc_init_array
 	
 	ldr	lr, =exception_sysexit
-	b	main	@entrypoint
-
+	
+	#ifdef ARM7
+	b	main		@entrypoint
+	#endif
+	
+	#ifdef ARM9
+	b 	mainARGV	@ARGV Support: entrypoint
+	#endif
 @format:	r0 = src_vma, r1 = dest_vma 
 clear:
 	mov	r2, #0
