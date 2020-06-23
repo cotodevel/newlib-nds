@@ -44,7 +44,7 @@ DIR_SRC			= 	$(DIRS_ARM7_SRC)
 
 #--gc-sections: allows relocatable sections linked (already) to be included, otherwise unused sections are discarded.
 #check arm9.map "Discarded input sections" to see --gc-sections in action.
-LDFLAGS	=	-specs=$(TARGET_LIBRARY_LINKER_PATH_LD)/nds_arm7_ld.specs	-Wl,--no-gc-sections,-Map,$(MAPFILE)
+LDFLAGS	=	-specs=$(TARGET_LIBRARY_LINKER_PATH_LD)/nds_arm7_ld.specs	-Wl,--no-gc-sections,-Map,$(MAPFILE),--fix-v4bx
 LIBRARIES =	-liberty	-l$(TARGET_LIBRARY_NAME_7)	-lsupc++	-lstdc++	-lcnano7	-lgcc
 
 ################################################################################################
