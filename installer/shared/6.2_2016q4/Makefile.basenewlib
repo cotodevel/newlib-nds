@@ -113,24 +113,22 @@ endif
 #global ASM / C / C++ vars used across all TGDS Makefiles (TGDS / Newlib / TGDS project):
 
 #CPU specific
-export GLOBAL_SHARED_FLAGS_7 = -mcpu=arm7tdmi	-mfloat-abi=soft	-mthumb-interwork
-export GLOBAL_SHARED_FLAGS_9 = -mcpu=arm946e-s	-mfloat-abi=soft	-mthumb-interwork
+export GLOBAL_SHARED_FLAGS_7 = -march=armv4t	-mthumb-interwork	-mfloat-abi=soft	
+export GLOBAL_SHARED_FLAGS_9 = -march=armv5t	-mthumb-interwork	-mfloat-abi=soft	
 
 #CPU code builder settings
 export GLOBAL_AS_COMPILER_FLAGS =	-defsym	readvertoolchain='$(TOOLCHAIN_GENERIC_DS_VER)'	-defsym		NDS='1'
-export GLOBAL_CC_COMPILER_FLAGS =	-Wall	-marm	-Os	-s	-DNDS	-shared
-export GLOBAL_CXX_COMPILER_FLAGS =	-Wall	-marm	-Os	-s	-fno-exceptions	-fno-rtti	-DNDS	-std=c++98	-shared	
+export GLOBAL_CC_COMPILER_FLAGS =	-marm	-Wall	-Os	-s	-fno-exceptions	-DNDS	-ffunction-sections	-fdata-sections
+export GLOBAL_CXX_COMPILER_FLAGS =	-marm	-Wall	-Os	-s	-fno-exceptions	-DNDS	-std=c++98		-ffunction-sections	-fdata-sections
 
 #CPU code builder settings TGDS project specific
 export SPECIFIC_AS_COMPILER_FLAGS_7		= -defsym	ARM7='1'	-defsym	appver='$(EXECUTABLE_VERSION)'
 export SPECIFIC_CC_COMPILER_FLAGS_7		= -DARM7	-Dappver='$(EXECUTABLE_VERSION)'
-export SPECIFIC_CXX_COMPILER_FLAGS_7	= $(SPECIFIC_CC_COMPILER_FLAGS_7) -fno-exceptions
+export SPECIFIC_CXX_COMPILER_FLAGS_7	= $(SPECIFIC_CC_COMPILER_FLAGS_7)
 
 export SPECIFIC_AS_COMPILER_FLAGS_9		= -defsym	ARM9='1'	-defsym	appver='$(EXECUTABLE_VERSION)'
 export SPECIFIC_CC_COMPILER_FLAGS_9		= -DARM9	-Dappver='$(EXECUTABLE_VERSION)'
 export SPECIFIC_CXX_COMPILER_FLAGS_9	= $(SPECIFIC_CC_COMPILER_FLAGS_9)
-
-
 
 #default built-in rules removal
 MAKEFLAGS += --no-builtin-rules
