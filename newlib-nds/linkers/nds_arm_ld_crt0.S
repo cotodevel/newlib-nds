@@ -78,7 +78,7 @@ _start:
 	#ifdef ARM9
 	mov	r0, #0xdf		@ sys
 	msr	cpsr, r0
-	ldr 	sp, =(0x027FF000 + 0x1000 - 0x800)
+	ldr 	sp, =(0x027FF000 + 0x1000)
 	
 	push {r0-r3,lr}
 	ldr	r3, =MPUSet
@@ -118,7 +118,6 @@ _start:
 	
 	#ifdef ARM9
 	bl DrainWriteBuffer
-	
 	/* copy the VMA sections to each LMA sections for hardware RAM not initialized at self boot crt0 stage*/
 	ldr                 r1,=__itcm_vma_start                 /* point our source register to the start of the .itcm section (VMA)*/
 	ldr                 r2,=_itcm_start                 /* point our destination register to the I-TCM dedicated to our writable data (LMA)*/
@@ -144,6 +143,26 @@ _start:
 	ldr                 r0,=__lib__end__
 	ldr                 r1,=__vma_stub_end__
 	bl clear
+	
+	#ifdef ARM9
+	bl DrainWriteBuffer
+	/* Wait until ARM7 reads firmware and we initialize ARM9 from this flag */
+	ldr r1,=(0x027FF000 + 0x5D)	@(uint8)Console Type: 
+	waitForFirmwareARM7Setup:
+		ldrb r0, [r1]
+		cmp r0, #0xFF		@DS Phat
+		beq FirmwareARM7OK
+		cmp r0, #0x20		@DS Lite
+		beq FirmwareARM7OK
+		cmp r0, #0x57		@DSi
+		beq FirmwareARM7OK
+		cmp r0, #0x43		@iQueDS
+		beq FirmwareARM7OK
+		cmp r0, #0x63		@iQueDS Lite
+		beq FirmwareARM7OK
+		b waitForFirmwareARM7Setup
+	FirmwareARM7OK:
+	#endif
 	
 	bl initHardware
 	bl IRQInit
