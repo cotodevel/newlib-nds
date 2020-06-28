@@ -329,8 +329,10 @@ ifeq ($(TGDS_ENV),linux)
 	-sudo mkdir -p $(TARGET_LIBRARY_LINKER_DEST) && sudo cp	-r $(CURDIR)$(TARGET_LIBRARY_LINKER_SRC) $(TARGET_LIBRARY_LINKER_DEST)
 	-sudo cp	-r $(CURDIR)$(TARGET_LIBRARY_MAKEFILES_SRC) $(TARGET_LIBRARY_MAKEFILES_DEST)
 	$(MAKE)	buildstuff
-	
-	
-
 endif
+
+commitChanges:
+	-@git commit -a	-m '$(COMMITMSG)'
+	-@git push origin HEAD
+	
 
