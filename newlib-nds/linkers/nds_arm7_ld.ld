@@ -16,7 +16,8 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301
 USA
 */
 
-/* Coto: linker file for NDS ARM7 processor, could be adapted for DSi-3DS */
+/* Coto: own linker stuff. Written by me. for NDS hardware (non DSi-3DS)*/
+OUTPUT_FORMAT("elf32-littlearm")
 
 /* attributes can actually help in debugging because if you try to move functions to DTCM, for example, compiler will rant since DTCM is DATA only path and not execution*/
 MEMORY
@@ -32,119 +33,135 @@ _arm7_irqcheckbits = 0x04000000 - 8;	/* __irq_flags */
 _arm7_irqhandler = 0x04000000 - 4;	/* __irq_vector */
 
 /* ARM ABI says stacks are full decreasing */
-sp_SVC	= _iwram_end - 0x300;	/* reset, swi exception*/
-sp_IRQ	= sp_SVC - 0x300;	/*irq exception*/
-sp_FIQ	= sp_IRQ - 0x300;	/* fiq exception */
-sp_ABT	= sp_FIQ - 0x300;	/* prefetch / data aborts exception */
-sp_UND	= sp_ABT - 0x300;	/* undefined exception */
-sp_USR	= sp_UND - 0x300;	/* usr / sys stacks */
+sp_SVC	= _iwram_end - 0x100;
+sp_IRQ	= sp_SVC - 0x100;
+sp_FIQ	= sp_IRQ - 0x100;
+sp_ABT	= sp_FIQ - 0x100;
+sp_UND	= sp_ABT - 0x100;
+sp_USR	= sp_UND - 0x100;
+sp_SYS	= sp_USR - 0x100;
 
-OUTPUT_FORMAT("elf32-littlearm", "elf32-bigarm","elf32-littlearm")
-OUTPUT_ARCH(arm)
-ENTRY(_start)
 SECTIONS
 {
-	. = ALIGN(4);
-	.init      :	SUBALIGN(4)
-	{
-		KEEP(*(.init))
-	} > IWRAM = 0xFF
-	
-	.text      :	SUBALIGN(4)
-	{
-		*(.stub)
-		/* .gnu.warning sections are handled specially by elf32.em.  */
-		*(.gnu.warning)
+	.init : { __init_start__ = .;
+		*(.init*)
+		. = ALIGN(4);
+	} > IWRAM = 0xff
+	__init_end__ = .;
+	__preinit_array_start__ = .;
+	.preinit_array : { 
+		*(.preinit_array*)
+		. = ALIGN(4);
+	} > IWRAM = 0xff
+	__preinit_array_end__ = .;
+	__init_array_start__ = .;
+	.init_array : { 
+		*(.init_array*)
+		. = ALIGN(4);
+	} > IWRAM = 0xff
+	init_array_end__ = .;
+	__fini_array_start__ = .;
+	.fini_array : {
+		*(.fini_array*)
+		. = ALIGN(4);
+	} > IWRAM = 0xff
+	__fini_array_end__ = .;
+	__text_start__ = .;
+	.text : {
+		*(.text)
+		*(.text*)
 		*(.gnu.linkonce.t*)
-		*(.glue_7t) *(.glue_7)
-		KEEP(*(COMMON))
-		KEEP(*(.text))
-		KEEP(*(.text.*))
-	} > IWRAM = 0xFF
-	
-	.data : SUBALIGN(4) {				/* used by TGDS-Newlib C/C++ code */
-		PROVIDE (__data_start__ = ABSOLUTE(.));
+		. = ALIGN(4);
+	} > IWRAM = 0xff
+	__text_end__ = .;
+	__bss_vma_start = .;
+	.bss : {
+		*(.dynbss*)
+		*(.bss)
+		*(.gnu.linkonce.b*.)
+		*(COMMON)					/* libc requires these for uninitialized objects, include any heap uninit vars*/
+		. = ALIGN(4);
+	} > IWRAM = 0xff
+	__bss_vma_end = .;
+	__sbss_start__ = .;
+	.sbss : {
+		*(.sbss*)
+		. = ALIGN(4);
+	}> IWRAM = 0xff
+	__sbss_vma_end = .;
+	__data_start__ = .;
+	.data : {
 		*(.data)
 		*(.data.*)
 		*(.gnu.linkonce.d*)
-		*(.gnu.linkonce.t*)
-		PROVIDE (__data_end__ = ABSOLUTE(.));
+		. = ALIGN(4);
 	} > IWRAM = 0xff
-	
-	.rodata : SUBALIGN(4) {			/* used by TGDS-Newlib C/C++ code */
-		PROVIDE (__rodata_start__ = ABSOLUTE(.));
+	__data_end__ = .;
+	__rodata_start__ = .;
+	.rodata : { 
 		*(.rdata)
 		*(.rodata)
 		*(.rodata.*)
     	*(.gnu.linkonce.r.*)
-		PROVIDE (__rodata_end__ = ABSOLUTE(.));
+		. = ALIGN(4);
 	} > IWRAM = 0xff
-	
-	.bss (NOLOAD): SUBALIGN(4) {				/* used by TGDS-Newlib C/C++ code */
-		PROVIDE (__bss_vma_start = ABSOLUTE(.));
-		*(.dynbss*)
-		*(.bss*)
-		*(.bss)
-		*(.gnu.linkonce.b*.)
-		PROVIDE (__bss_vma_end = ABSOLUTE(.));
-	} > IWRAM
-	
-	.ARM.exidx : SUBALIGN(4) {			/* not used at all, but some code rely on ARM debugging symbols */
-		PROVIDE (__exidx_start = ABSOLUTE(.));
+	__rodata_end__ = .;
+	__eh_frame_start__ = .;
+	.eh_frame : {
+		*(.eh_frame*)
+		. = ALIGN(4);
+	} > IWRAM = 0xff
+	__eh_frame_end__ = .;
+	__jcr_start__ = .;
+	.jcr : {
+		*(.jcr*)
+		. = ALIGN(4);
+	} > IWRAM = 0xff
+	__jcr_end__ = .;
+	__vfp11_veneer_start__ = .;
+	.vfp11_veneer : {
+		*(.vfp11_veneer*)
+		. = ALIGN(4);
+	} > IWRAM = 0xff
+	__vfp11_veneer_end__ = .;
+	__exidx_start = .;
+    .ARM.exidx   : {		/* newlib C++ require these constructors */
 		*(.ARM.exidx)
 		*(.ARM.exidx*)
 		*(.gnu.linkonce.armexidx.)
 		*(.gnu.linkonce.armexidx.*)
-		PROVIDE (__exidx_end = ABSOLUTE(.));
 	} > IWRAM = 0xff
-	
-	/*
-     * Stabs le debugging sections.
-     *
-     */
-
-    .stab          0 : { *(.stab) }
-    .stabstr       0 : { *(.stabstr) }
-    .stab.excl     0 : { *(.stab.excl) }
-    .stab.exclstr  0 : { *(.stab.exclstr) }
-    .stab.index    0 : { *(.stab.index) }
-    .stab.indexstr 0 : { *(.stab.indexstr) }
-    .comment       0 : { *(.comment) }
-    /* DWARF debug sections.
-       Symbols in the DWARF debugging sections are relative to the beginning
-       of the section so we begin them at 0.  */
-    /* DWARF 1 */
-    .debug          0 : { *(.debug) }
-    .line           0 : { *(.line) }
-    /* GNU DWARF 1 extensions */
-    .debug_srcinfo  0 : { *(.debug_srcinfo) }
-    .debug_sfnames  0 : { *(.debug_sfnames) }
-    /* DWARF 1.1 and DWARF 2 */
-    .debug_aranges  0 : { *(.debug_aranges) }
-    .debug_pubnames 0 : { *(.debug_pubnames) }
-    /* DWARF 2 */
-    .debug_info     0 : { *(.debug_info .gnu.linkonce.wi.*) }
-    .debug_abbrev   0 : { *(.debug_abbrev) }
-    .debug_line     0 : { *(.debug_line) }
-    .debug_frame    0 : { *(.debug_frame) }
-    .debug_str      0 : { *(.debug_str) }
-    .debug_loc      0 : { *(.debug_loc) }
-    .debug_macinfo  0 : { *(.debug_macinfo) }
-    /* SGI/MIPS DWARF 2 extensions */
-    .debug_weaknames 0 : { *(.debug_weaknames) }
-    .debug_funcnames 0 : { *(.debug_funcnames) }
-    .debug_typenames 0 : { *(.debug_typenames) }
-    .debug_varnames  0 : { *(.debug_varnames) }
-	
-	.fini : SUBALIGN(4) {				/* used by TGDS-Newlib C/C++ code */
-		PROVIDE (__fini_start__ = ABSOLUTE(.));
-		*(.fini)
+    __exidx_end = .;
+	__v4_bx_start__ = .;
+	.v4_bx : {
+		*(.v4_bx*)
+		. = ALIGN(4);
+	} > IWRAM = 0xff
+	__v4_bx_end__ = .;
+	__iplt_start__ = .;
+	.iplt : {
+		*(.iplt*)
+		. = ALIGN(4);
+	} > IWRAM = 0xff
+	__iplt_end__ = .;
+	__igot_plt_start__ = .;
+	.igot.plt : {
+		*(.igot.plt*)
+		. = ALIGN(4);
+	} > IWRAM = 0xff
+	__igot_plt_end__ = .;
+	__rel_dyn_start__ = .;
+	.rel.dyn : { 
+		*(.rel.dyn*)
+		. = ALIGN(4);
+	} > IWRAM = 0xff
+	__rel_dyn_end__ = .;
+	__fini_start__ = .;
+	.fini : {
 		*(.fini*)
-		PROVIDE (__fini_end__ = ABSOLUTE(.));
-		FILL(0x40);
+		. = ALIGN(4);
 	} > IWRAM = 0xff
-	
-	PROVIDE (__lib__end__ = __fini_end__);
-	. = ALIGN(4);
-	PROVIDE (__vma_stub_end__ = __lib__end__ + 0x40);
+	__fini_end__ = .;
+	__lib__end__ = __fini_end__;
+	__vma_stub_end__ = __lib__end__;
 }

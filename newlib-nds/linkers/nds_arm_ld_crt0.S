@@ -74,9 +74,8 @@ _start:
 	mov r1,#0
 	str r1,[r0]
 	
-	
 	#ifdef ARM9
-	mov	r0, #0xdf		@ sys
+	mov	r0, #0x1f		@ sys
 	msr	cpsr, r0
 	ldr 	sp, =(0x027FF000 + 0x1000)
 	
@@ -114,37 +113,32 @@ _start:
 	
 	mov	r0, #0x1F		@ usr/sys dtcm stacks, irq enable (ignore all exceptions usermode must be excluded here)
 	msr	cpsr, r0
-	ldr	sp, =sp_USR
+	ldr	sp, =sp_SYS
 	
 	#ifdef ARM9
-	bl DrainWriteBuffer
 	/* copy the VMA sections to each LMA sections for hardware RAM not initialized at self boot crt0 stage*/
 	ldr                 r1,=__itcm_vma_start                 /* point our source register to the start of the .itcm section (VMA)*/
 	ldr                 r2,=_itcm_start                 /* point our destination register to the I-TCM dedicated to our writable data (LMA)*/
 	ldr                 r3,=_itcm_end                  /* point r3 after the last byte we will be writing (LMA)*/
 	bl                  copy  
 	
-	bl DrainWriteBuffer
+	ldr                 r1,=__vectors_vma_start                /* point our source register to the start of the .vectors section (VMA)*/
+	ldr                 r2,=_vector_start                 /* point our destination register to the VECTORS dedicated to our writable data (LMA)*/
+	ldr                 r3,=_vector_end                  /* point r3 after the last byte we will be writing (LMA)*/
+	bl                  copy
 	
 	ldr                 r1,=__dtcm_vma_start                /* point our source register to the start of the .dtcm section (VMA)*/
 	ldr                 r2,=_dtcm_start                 /* point our destination register to the D-TCM dedicated to our writable data (LMA)*/
 	ldr                 r3,=_dtcm_end                  /* point r3 after the last byte we will be writing (LMA)*/
 	bl                  copy
-	
-	bl DrainWriteBuffer
 	#endif
 	
-	@Clear BSS
+	/*  Clear BSS */
+	#ifdef ARM9
 	ldr                 r0,=__bss_vma_start
 	ldr                 r1,=__bss_vma_end
 	bl clear
 	
-	@Clear vma sections used before
-	ldr                 r0,=__lib__end__
-	ldr                 r1,=__vma_stub_end__
-	bl clear
-	
-	#ifdef ARM9
 	bl DrainWriteBuffer
 	/* Wait until ARM7 reads firmware and we initialize ARM9 from this flag */
 	ldr r1,=(0x027FF000 + 0x5D)	@(uint8)Console Type: 
@@ -170,11 +164,11 @@ _start:
 	ldr	lr, =exception_sysexit
 	
 	#ifdef ARM7
-	b	main		@entrypoint
+	b	main			@entrypoint
 	#endif
 	
 	#ifdef ARM9
-	b 	mainARGV	@ARGV Support: entrypoint
+	b	mainARGV			@entrypoint
 	#endif
 @format:	r0 = src_vma, r1 = dest_vma 
 clear:

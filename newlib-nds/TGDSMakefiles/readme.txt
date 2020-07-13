@@ -19,5 +19,5 @@ also PositionIndependentCode folder has a copy of the above Makefiles, but the g
 mixing PIC and non-PIC code directly, we give that feature to TGDS directly ;-) . 
 
 What does this mean:
-A TGDS 1.5 project has a PositionIndependentCode folder, where each arm7/arm9 folder PositionIndependentCode is capable of compiling PIC code and linking it directly into
+A TGDS 1.6 project has a PositionIndependentCode folder, where each arm7/arm9 folder PositionIndependentCode is capable of compiling PIC code and linking it directly into
 the TGDS binary. Otherwise leave these blank

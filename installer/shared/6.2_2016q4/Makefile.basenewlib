@@ -1,4 +1,4 @@
-export TOOLCHAIN_GENERIC_DS_VER	=	"TGDS1.5"
+export TOOLCHAIN_GENERIC_DS_VER	=	"TGDS1.6"
 
 # Shared start
 export DIR_ARM7 = arm7
@@ -117,9 +117,9 @@ export GLOBAL_SHARED_FLAGS_7 = -march=armv4t	-mthumb-interwork	-mfloat-abi=soft
 export GLOBAL_SHARED_FLAGS_9 = -march=armv5t	-mthumb-interwork	-mfloat-abi=soft	
 
 #CPU code builder settings
-export GLOBAL_AS_COMPILER_FLAGS =	-defsym	readvertoolchain='$(TOOLCHAIN_GENERIC_DS_VER)'	-defsym		NDS='1'
-export GLOBAL_CC_COMPILER_FLAGS =	-marm	-Wall	-Os	-s	-fno-exceptions	-DNDS	-ffunction-sections	-fdata-sections
-export GLOBAL_CXX_COMPILER_FLAGS =	-marm	-Wall	-Os	-s	-fno-exceptions	-DNDS	-std=c++98		-ffunction-sections	-fdata-sections
+export GLOBAL_AS_COMPILER_FLAGS =	-defsym	TGDSBinVersion='$(TOOLCHAIN_GENERIC_DS_VER)'	-defsym		NDS='1'
+export GLOBAL_CC_COMPILER_FLAGS =	-marm	-Wall	-Os	-s	-fno-exceptions	-DNDS	-ffunction-sections	-fdata-sections	-DTGDSBinVersion='$(TOOLCHAIN_GENERIC_DS_VER)'
+export GLOBAL_CXX_COMPILER_FLAGS =	-marm	-Wall	-Os	-s	-fno-exceptions	-DNDS	-std=c++98		-ffunction-sections	-fdata-sections	-DTGDSBinVersion='$(TOOLCHAIN_GENERIC_DS_VER)'
 
 #CPU code builder settings TGDS project specific
 export SPECIFIC_AS_COMPILER_FLAGS_7		= -defsym	ARM7='1'	-defsym	appver='$(EXECUTABLE_VERSION)'
