@@ -19,7 +19,8 @@ ifeq ($(TGDS_ENV),windows)
 	export OBJSTRIP	=	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)arm-eabi-strip.exe
 	export NDSTOOL	=	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)ndstool.exe
 	export BIN2C	=	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)bin2c.exe
-
+	export BIN2LZSS	=	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)bin2lzss.exe
+	
 	#cleanup default C/C++/ASM flags
 	export ARFLAGS	=''
 	export ASFLAGS	=''
@@ -71,7 +72,8 @@ ifeq ($(TGDS_ENV),linux)
 	export OBJSTRIP	=	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)arm-none-eabi-strip
 	export NDSTOOL	:=	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)ndstool
 	export BIN2C	:=	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)bin2c
-
+	export BIN2LZSS	=	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)bin2lzss
+	
 	#cleanup default C/C++/ASM flags
 	export ARFLAGS	=''
 	export ASFLAGS	=''
