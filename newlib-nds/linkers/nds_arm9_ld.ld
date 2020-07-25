@@ -16,8 +16,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301
 USA
 */
 
-/* Coto: own linker stuff. Written by me. for NDS hardware (non DSi-3DS)*/
-OUTPUT_FORMAT("elf32-littlearm")
+/* Coto: linker file for NDS ARM7 processor, could be adapted for DSi-3DS */
 
 /* attributes can actually help in debugging because if you try to move functions to DTCM, for example, compiler will rant since DTCM is DATA only path and not execution*/
 MEMORY
@@ -27,7 +26,6 @@ MEMORY
 	VECTORS : ORIGIN = 0x01FF8000, LENGTH = 1K - 256
 	GBAROM : ORIGIN = 0x08000000, LENGTH = 32M
 	EWRAM : ORIGIN = 0x02000000, LENGTH = 4M
-	GBAEW   : ORIGIN = 0x02000000, LENGTH = 256k	/* todo... */
 }
 
 _itcm_start = ORIGIN(ITCM);
@@ -41,9 +39,6 @@ _ewram_end = ORIGIN(EWRAM)	+	LENGTH(EWRAM);
 
 _gba_start = ORIGIN(GBAROM);
 _gba_end = ORIGIN(GBAROM)	+	LENGTH(GBAROM);
-
-_gbawram_start = ORIGIN(GBAEW);
-_gbawram_end = ORIGIN(GBAEW)	+	LENGTH(GBAEW);
 
 _dtcm_start = ORIGIN(DTCM);
 _dtcm_end = ORIGIN(DTCM)	+	LENGTH(DTCM);
@@ -59,9 +54,11 @@ sp_FIQ	= sp_IRQ - 0x200;
 sp_ABT	= sp_FIQ - 0x200;
 sp_UND	= sp_ABT - 0x200;
 sp_USR	= sp_UND - 0x200;
-sp_SYS	= sp_USR - 0x200;
-sp_IRQCHANDLER	=	sp_SYS - 0x1000;
+sp_SYS	= sp_USR;
 
+OUTPUT_FORMAT("elf32-littlearm", "elf32-bigarm","elf32-littlearm")
+OUTPUT_ARCH(arm)
+ENTRY(_start)
 SECTIONS
 {
 	.init : { __init_start__ = .;

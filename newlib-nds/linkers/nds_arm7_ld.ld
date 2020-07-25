@@ -16,8 +16,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301
 USA
 */
 
-/* Coto: own linker stuff. Written by me. for NDS hardware (non DSi-3DS)*/
-OUTPUT_FORMAT("elf32-littlearm")
+/* Coto: linker file for NDS ARM7 processor, could be adapted for DSi-3DS */
 
 /* attributes can actually help in debugging because if you try to move functions to DTCM, for example, compiler will rant since DTCM is DATA only path and not execution*/
 MEMORY
@@ -33,14 +32,17 @@ _arm7_irqcheckbits = 0x04000000 - 8;	/* __irq_flags */
 _arm7_irqhandler = 0x04000000 - 4;	/* __irq_vector */
 
 /* ARM ABI says stacks are full decreasing */
-sp_SVC	= _iwram_end - 0x100;
-sp_IRQ	= sp_SVC - 0x100;
-sp_FIQ	= sp_IRQ - 0x100;
-sp_ABT	= sp_FIQ - 0x100;
-sp_UND	= sp_ABT - 0x100;
-sp_USR	= sp_UND - 0x100;
-sp_SYS	= sp_USR - 0x100;
+sp_SVC	= _iwram_end - 0x200;
+sp_IRQ	= sp_SVC - 0x200;
+sp_FIQ	= sp_IRQ - 0x200;
+sp_ABT	= sp_FIQ - 0x200;
+sp_UND	= sp_ABT - 0x200;
+sp_USR	= sp_UND - 0x200;
+sp_SYS	= sp_USR;
 
+OUTPUT_FORMAT("elf32-littlearm", "elf32-bigarm","elf32-littlearm")
+OUTPUT_ARCH(arm)
+ENTRY(_start)
 SECTIONS
 {
 	.init : { __init_start__ = .;
