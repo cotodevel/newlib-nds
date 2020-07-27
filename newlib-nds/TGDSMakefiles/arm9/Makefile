@@ -113,15 +113,16 @@ $(OBJPROG): $(addprefix $(OBJDIR)/, $(OBJECTS))
 	$(CC) $^	$(LDFLAGS)	$(DIRLIBS_HDR)	$(DIRLIBS_SRC)	$(DIRLIBS_SHARED)	-L	$(TARGET_LIBRARY_PATH)/	-L	$(TOOLCHAIN_PATH)/		$(LIBRARIES)	-L	$(TARGET_LIBRARY_LINKER_PATH_LD)	-o $@
 	-@echo 'Leaving Linking phase. Output: $@'
 
-#xxxx-nonstripped.elf -> xxxx.elf STRIP operation
+#xxxx-nonstripped.elf -> xxxx.elf STRIP operation + LZSS VRAM Compression
 $(ELF_ARM9): $(OBJPROG)
-	-@echo '$@ Unstripped. STRIP Start!'
 	$(OBJSTRIP)	-s -R .comment -R .gnu.version	$<
 	-mv	$<	$@
-	
+
+#STRIP End: Remove ELF header and build baremetal Binary executable
 $(BINSTRIP_RULE_9): $(ELF_ARM9)
-	-@echo 'STRIP End: Remove ELF header and build baremetal Binary executable: $<	->	$@ !'
 	$(OBJCOPY) 	-S -O binary	$<	$@
+	$(BIN2LZSS)	-ewo $@
+	-mv	$@ ../common/templateCode/source/$(DECOMPRESSOR_BOOTCODE_9)/data
 	-rm	$<
 ################################################################################################
 
