@@ -25,7 +25,8 @@ MEMORY
 	ITCM : ORIGIN = 0x01FF8300, LENGTH = 32K - 1K + 256
 	VECTORS : ORIGIN = 0x01FF8000, LENGTH = 1K - 256
 	GBAROM : ORIGIN = 0x08000000, LENGTH = 32M
-	EWRAM : ORIGIN = 0x02000000, LENGTH = 4M
+	BOOTCODE : ORIGIN = 0x02000000, LENGTH = 768
+	EWRAM : ORIGIN = 0x02000000 + 768, LENGTH = 4M
 }
 
 _itcm_start = ORIGIN(ITCM);
@@ -64,8 +65,23 @@ SECTIONS
 	.init : { __init_start__ = .;
 		*(.init*)
 		. = ALIGN(4);
-	} > EWRAM = 0xff
+	} > BOOTCODE = 0xff
 	__init_end__ = .;
+	
+	.dldiSection : { 
+		KEEP(*(.dldiSection*));	/* DLDI section is always at this address so it's detected by DLDI patchers */
+		. = ALIGN(4);
+	} > EWRAM = 0xff
+	
+	__text_start__ = .;
+	.text : {
+		*(.text)
+		*(.text*)
+		*(.gnu.linkonce.t*)
+		. = ALIGN(4);
+	} > EWRAM = 0xff
+	__text_end__ = .;
+	
 	__preinit_array_start__ = .;
 	.preinit_array : { 
 		*(.preinit_array*)
@@ -84,14 +100,6 @@ SECTIONS
 		. = ALIGN(4);
 	} > EWRAM = 0xff
 	__fini_array_end__ = .;
-	__text_start__ = .;
-	.text : {
-		*(.text)
-		*(.text*)
-		*(.gnu.linkonce.t*)
-		. = ALIGN(4);
-	} > EWRAM = 0xff
-	__text_end__ = .;
 	__bss_vma_start = .;
 	.bss : {
 		*(.dynbss*)
