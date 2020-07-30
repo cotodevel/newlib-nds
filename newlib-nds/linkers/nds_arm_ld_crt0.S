@@ -133,12 +133,7 @@ _start:
 	bl                  copy
 	#endif
 	
-	/*  Clear BSS */
 	#ifdef ARM9
-	ldr                 r0,=__bss_vma_start
-	ldr                 r1,=__bss_vma_end
-	bl clear
-	
 	bl DrainWriteBuffer
 	/* Wait until ARM7 reads firmware and we initialize ARM9 from this flag */
 	ldr r1,=(0x027FF000 + 0x5D)	@(uint8)Console Type: 
@@ -157,9 +152,7 @@ _start:
 		b waitForFirmwareARM7Setup
 	FirmwareARM7OK:
 	#endif
-	
 	bl initHardware
-	bl __libc_init_array
 	
 	ldr	lr, =exception_sysexit
 	
