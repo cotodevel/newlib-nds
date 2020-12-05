@@ -83,7 +83,7 @@ ifeq ($(TGDS_ENV),linux)
 	export LDFLAGS	=''
 	export VPATH 	=''
 
-	export TOOLCHAIN_LIBRARY_SRCPATH = $(DEFAULT_GCC_PATH)arm-none-eabi
+	export TOOLCHAIN_LIBRARY_SRCPATH = $(DEFAULT_GCC_PATH)arm-eabi
 	export TOOLCHAIN_PATH	= 	$(TOOLCHAIN_LIBRARY_SRCPATH)/lib/
 	export LIBPATH	=	$(TOOLCHAIN_PATH)newlib-nano-2.1-nds
 	export DIRLIBS_PROHIBITED =	
