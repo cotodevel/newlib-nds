@@ -250,45 +250,19 @@ ifeq ($(TGDS_ENV),windows)
 endif
 ifeq ($(TGDS_ENV),linux)
 	- sudo apt-get update
-	- sudo apt-get -f install -y gcc-mingw-w64-i686 g++-mingw-w64-i686 binutils-mingw-w64-i686	\
-		g++	\
-		libmpc-dev	\
-	 	libgmp3-dev	\
-		libmpfr-dev	\
-		zlib1g-dev	\
-		autoconf \
-		autogen \
-		bison \
-		dejagnu \
-		flex \
-		flip \
-		gawk \
-		git \
-		gperf \
-		gzip \
-		nsis \
-		openssh-client \
-		p7zip-full \
-		perl \
-		python-dev \
-		libisl-dev \
-		scons \
-		tcl \
-		texinfo \
-		tofrodos \
-		wget \
-		zip \
-		texlive \
-		texlive-extra-utils	\
-		gcc-multilib
+	- sudo apt-get -f install -y gcc-mingw-w64-i686 g++-mingw-w64-i686 binutils-mingw-w64-i686 \
+		build-essential automake libtool lib32z1 lib32ncurses5 libmpc-dev libgmp3-dev	\
+		libmpfr-dev zlib1g-dev autoconf autogen bison dejagnu flex gcc-7-i686-linux-gnu gcc-i686-linux-gnu \
+		flip gawk git gperf gzip nsis openssh-client p7zip-full perl python-dev libisl-dev \
+		scons tcl texinfo tofrodos wget zip texlive texlive-extra-utils	g++ 
 endif
 
 #rule already validated == linux
 buildbin2c:
 	-@wget	-O $(CURDIR)/temp/bin2c.zip	https://bitbucket.org/Coto88/bin2c/get/master.zip
 	-@7z x $(CURDIR)/temp/bin2c.zip	-o$(CURDIR)/temp
-	-@$(MAKE)	-C	$(CURDIR)/temp/Coto88-bin2c-0e87c53907de/linux
-	-@sudo mv	$(CURDIR)/temp/Coto88-bin2c-0e87c53907de/linux/bin2c	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)bin2c
+	-@$(MAKE)	-C	$(CURDIR)/temp/Coto88-bin2c-57518672635c/linux
+	-@sudo mv	$(CURDIR)/temp/Coto88-bin2c-57518672635c/linux/bin2c	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)bin2c
 	
 #rule already validated == linux
 ndstool:
