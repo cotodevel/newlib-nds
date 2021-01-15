@@ -36,6 +36,8 @@
 
 #include "debug.h"
 #include <signal.h>
+#include <string.h>
+#include "typedefsTGDS.h"
 
 /*
  * buffers that hold the packets while they're being constructed.
@@ -51,7 +53,7 @@ int packet_index;
 volatile int mem_err = 0;
 
 /*
- * 1 means print debugging messages from the target, 0 means be quiet. This is
+ * 1 means printf debugging messages from the target, 0 means be quiet. This is
  * changed by gdb_debug().
  */
 int remote_debug = 0;
@@ -73,17 +75,16 @@ extern struct trap_info hard_trap_info[];
 extern void set_mem_fault_trap();
 
 /*
- * print debugging messages. This uses print, rather than one of the
+ * printf debugging messages. This uses printf, rather than one of the
  * stdio routines, cause if there are stack or memory problems, the
  * stdio routines don't work.
- *	params are the debug level, and the string to print
+ *	params are the debug level, and the string to printf
  *	it doesn't return anything.
  */
 void
 debuglog(int level, char *msg)
 {
   char *p;
-  unsigned char buf[BUFMAX];
   char newmsg[BUFMAX];
   int i;
 
@@ -91,7 +92,7 @@ debuglog(int level, char *msg)
     return;
 
   if ((level <0) || (level > 100)) {
-    print ("ERROR: debug print level out of range");
+    printf ("ERROR: debug printf level out of range");
     return;
   }
 
@@ -99,7 +100,7 @@ debuglog(int level, char *msg)
   p = newmsg;
   for (i = 0 ; msg[i] != '\0'; i++) {
     if (i > BUFMAX)
-      print ("\r\nERROR: Debug message too long\r\n");
+      printf ("\r\nERROR: Debug message too long\r\n");
     switch (msg[i]) {
     case '\n':                                  /* newlines */
       *p++ = '\\';
@@ -137,8 +138,8 @@ debuglog(int level, char *msg)
     }
   }
   *p = '\0';                                    /* terminate the string */
-  print (newmsg);
-  print ("\r\n");
+  printf ("%s", newmsg);
+  printf ("\r\n");
 }
 
 /*
@@ -316,7 +317,7 @@ getpacket(unsigned char *buffer)
 	  outbyte(buffer[0]);
 	  outbyte(buffer[1]);
 	  /* remove sequence chars from buffer */
-	  count = strlen(buffer);
+	  count = strlen((const char*)buffer);
 	  for (i=3; i <= count; i++)
 	    buffer[i-3] = buffer[i];
 	}
@@ -342,7 +343,7 @@ putpacket(unsigned char *buffer)
     checksum = 0;
     count = 0;
     
-    while (ch = buffer[count]) {
+    while ((ch = buffer[count])) {
       if (! outbyte(ch))
 	return;
       checksum += ch;
@@ -366,15 +367,15 @@ gdb_event_loop(int sigval, unsigned long *registers)
   int addr;
   int length;
   unsigned char *ptr;
-  ptr = packet_out_buf;
+  ptr = (unsigned char *)packet_out_buf;
 
   DEBUG (1, "In gdb_event_loop");
 
   while (1) {
     packet_out_buf[0] = 0;
     
-    getpacket(packet_in_buf);      
-    ptr = &packet_in_buf[1];
+    getpacket((unsigned char *)packet_in_buf);      
+    ptr = (unsigned char *)&packet_in_buf[1];
 
     switch (packet_in_buf[0]) {
     case '?':		/* get the last known signal */
@@ -410,7 +411,7 @@ gdb_event_loop(int sigval, unsigned long *registers)
 	  && *ptr++ == ','
 	  && hex2int((char **)&ptr, &length)
 	  && *ptr++ == ':') {
-	gdb_write_memory (addr, length, ptr);
+	gdb_write_memory (addr, length, (char*)ptr);
       } else {
 	make_return_packet(2);
       }
@@ -419,7 +420,7 @@ gdb_event_loop(int sigval, unsigned long *registers)
     case 'c':    /* cAA..AA    Continue at address AA..AA(optional) */
       /* try to read optional parameter, pc unchanged if no parm */
       if (hex2int((char **)&ptr, &addr)) {
-	write_pc(registers, addr);
+		write_pc(registers, addr);
       }
       
       /*
@@ -443,7 +444,7 @@ gdb_event_loop(int sigval, unsigned long *registers)
     }			/* switch */
     
     /* reply to the request */
-    putpacket(packet_out_buf);
+    putpacket((unsigned char*)packet_out_buf);
   }
   DEBUG (1, "Leaving handle_exception()");
 }
@@ -473,7 +474,7 @@ set_debug_traps()
   DEBUG (1, "Entering set_debug_traps()");
 
   if (hard_trap_info->tt == 0) {
-    print ("ERROR: ARG#$@%^&*!! no hard trap info!!\r\n");
+    printf ("ERROR:!! no hard trap info!!\r\n");
   }
 
   for (ht = hard_trap_info; ht->tt && ht->signo; ht++) {
@@ -517,9 +518,9 @@ make_return_packet(int val)
  *	no params.
  *	returns a vector of words, size is NUM_REGS.
  */
-char *
-gdb_read_registers()
+char * gdb_read_registers()
 {
+	return NULL;
 }
 
 /*
@@ -530,6 +531,7 @@ gdb_read_registers()
 char *
 gdb_write_registers(char *regs)
 {
+	return NULL;
 }
 
 /*
@@ -543,7 +545,7 @@ gdb_write_registers(char *regs)
 char *
 gdb_read_memory(long addr, int nbytes)
 {
-  if (mem2hex((char *)addr, packet_out_buf, nbytes, MAY_FAULT))
+  if (mem2hex((unsigned char *)addr, (unsigned char *)packet_out_buf, nbytes, MAY_FAULT))
     return(packet_out_buf);
   else {
     return(make_return_packet(3));
@@ -559,7 +561,7 @@ gdb_read_memory(long addr, int nbytes)
 char *
 gdb_write_memory(long addr, int nbytes, char *mem)
 {
- if (hex2mem(mem, (char *)addr, nbytes, MAY_FAULT))
+ if (hex2mem((unsigned char *)mem, (unsigned char *)addr, nbytes, MAY_FAULT))
     return(make_return_packet(OK));
   else {
     return(make_return_packet(3));
@@ -575,6 +577,7 @@ gdb_write_memory(long addr, int nbytes, char *mem)
 char *
 gdb_continue(int sig, long addr)
 {
+	return NULL;
 }
 
 /*
@@ -586,6 +589,7 @@ gdb_continue(int sig, long addr)
 char *
 gdb_step(int sig, long addr)
 {
+	return NULL;
 }
 
 /*
@@ -649,6 +653,7 @@ gdb_baudrate(int baud)
 char *
 gdb_dump_state()
 {
+	return NULL;
 }
 
 /*
@@ -660,6 +665,7 @@ gdb_dump_state()
 char *
 gdb_detach()
 {
+	return NULL;
 }
 
 /*
@@ -723,6 +729,7 @@ gdb_exited()
 char *
 gdb_terminated()
 {
+	return NULL;
 }
 
 /*
@@ -733,6 +740,7 @@ gdb_terminated()
 char *
 gdb_hex(char *str, int nbytes)
 {
+	return NULL;
 }
 
 /*

@@ -12,6 +12,9 @@
  * they apply.
  */
 
+#ifndef debug_newlib
+#define debug_newlib
+
 static const char hexchars[]="0123456789abcdef";
 
 typedef void (*exception_t)(int);   /* pointer to function with int parm */
@@ -136,10 +139,6 @@ struct gdb_ops {
  * at least NUMREGBYTES*2 are needed for register packets
  */
 #define BUFMAX 2048
-extern char packet_in_buf[BUFMAX];
-extern char packet_out_buf[BUFMAX];
-extern int  packet_index;
-
 #define DEBUG(x, y)		debuglog(x, y);
 #define set_debug_level(x)	remote_debug = x;
 #define OK 0
@@ -148,3 +147,30 @@ extern int  packet_index;
 
 #define MAY_FAULT 1
 #define NO_FAULT 0
+
+#endif
+
+
+#ifdef __cplusplus
+extern "C"{
+#endif
+
+extern char packet_in_buf[BUFMAX];
+extern char packet_out_buf[BUFMAX];
+extern int  packet_index;
+extern int inbyte (void);
+extern int outbyte (int byte);
+extern unsigned long rdtbr();
+extern struct trap_entry fltr_proto;
+extern void trap_low();
+extern void target_reset();
+extern void flush_i_cache();
+extern char *target_read_registers(unsigned long *);
+extern char *target_write_registers(unsigned long *);
+extern char *target_dump_state(unsigned long *);
+
+extern void write_pc(unsigned long *registers, unsigned long addr);
+
+#ifdef __cplusplus
+}
+#endif

@@ -94,6 +94,8 @@ typedef sint16		int16_t;
 extern "C"{
 #endif
 
+extern int printf(const char *, ...);
+
 #ifdef __cplusplus
 }
 #endif

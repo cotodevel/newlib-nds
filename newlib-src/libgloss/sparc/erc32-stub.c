@@ -18,15 +18,8 @@
 #include "asm.h"
 #include "slite.h"
 
-extern unsigned long rdtbr();
-extern struct trap_entry fltr_proto;
-extern void trap_low();
 exception_t default_trap_hook = trap_low;
-void target_reset();
-void flush_i_cache();
-char *target_read_registers(unsigned long *);
-char *target_write_registers(unsigned long *);
-char *target_dump_state(unsigned long *);
+
 
 #define NUMREGS 72
 
