@@ -2,15 +2,12 @@
 These sources are Newlib + ARM specific drivers, for Nintendo DS and it's the baremetal OS ToolchainGenericDS requires, thus, ToolchainGenericDS projects as well.
 You need to rebuild it at least once. And then ToolchainGenericDS and then ToolchainGenericDS project(s).
 
-It relies on ARM EABI components, (and not ARM NONE EABI components, thus any object using that format will not be compatible). 
-This decision was made becase it builds smaller binaries and they are 30% faster.
-
 You can check a copy of these steps at:
 https://bitbucket.org/Coto88/newlib-nds
 
 Version: 
 	Windows : GCC 4.9.2 (ARM EABI)
-	Linux : GCC 6.x.x+	(ARM NONE EABI)
+	Linux : GCC 4.9.3	(ARM NONE EABI)
 
 Features:
 - GAS (Gnu Assembler): .s / .S ARM assembler files, using the GNU syntax.
@@ -46,14 +43,24 @@ Steps:
 
 -	Run setup.bat
 	
-1.b)Once copy is done, a MingGW setup will appear.
+1.b)Right after, a MingGW setup wizard will appear. Click next until the setup wizard ends.
 	
--	The installation Path recommended by default: C:\MinGW
--	While running setup, wait until Continue button appears. Then you must choose: 
-		mingw-developer-toolkit then Mark For Installation. Click: Installation> Apply Changes then Apply. Setup will begin. 
--	Wait for the Close button to appear, close setup. Head to C:/MinGW/msys/1.0/
--	Copy a msys.bat shortcut from the same file here, to your desired place, this is the minimal console required to build ToolchainGenericDS projects. 
-	By default, you can Unzip/make (build) projects from within: C:/MinGW/msys/1.0/home folder.
+Then, open MSYS2 MSYS: and execute these commands.
+
+pacman -Syu
+
+After done, close the console, open it again:
+pacman -Su
+
+Then:
+pacman -S --needed base-devel mingw-w64-x86_64-toolchain
+
+Then:
+pacman -S mingw-w64-x86_64-llvm
+pacman -S mingw-w64-x86_64-clang
+pacman -S git
+
+From now on, use MSYS2 MinGW 64-bit to build TGDS. (or 32-bit if you have a 32bit system).
 
 1.c)Building Newlib for NintendoDS: 
 - Proceed to:
