@@ -8,4 +8,6 @@ typedef int error_t;
 
 #include <sys/errno.h>
 
+extern int __set_errno(int n);
+
 #endif /* !__ERRNO_H__ */
