@@ -12,4 +12,6 @@ _exit (int status)
      Note: The RDI implementation of _kill throws away both its
      arguments.  */
   _kill (status, -1);
+  
+  while(1==1){}	//no return function marked as no return
 }

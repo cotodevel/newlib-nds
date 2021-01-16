@@ -41,7 +41,6 @@
 
 #ifdef __GNUC__
 
-#define _GNU_SOURCE
 #include <_ansi.h>
 #include <limits.h>
 #include <ctype.h>

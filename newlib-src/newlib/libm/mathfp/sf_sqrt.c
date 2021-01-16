@@ -31,6 +31,8 @@
 #include "fdlibm.h"
 #include "zmath.h"
 
+extern int isposf (float x);
+
 float
 _DEFUN (sqrtf, (float),
         float x)

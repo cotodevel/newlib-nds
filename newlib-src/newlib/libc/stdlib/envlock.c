@@ -38,10 +38,6 @@ that it already holds.
 #include "envlock.h"
 #include <sys/lock.h>
 
-#ifndef __SINGLE_THREAD__
-__LOCK_INIT_RECURSIVE(static, __env_lock_object);
-#endif
-
 void
 __env_lock (ptr)
      struct _reent *ptr;

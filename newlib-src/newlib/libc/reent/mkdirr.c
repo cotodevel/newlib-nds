@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <_syslist.h>
 
+extern int _mkdir _PARAMS ((const char *, int));
 /* Some targets provides their own versions of this functions.  Those
    targets should define REENTRANT_SYSCALLS_PROVIDED in TARGET_CFLAGS.  */
 

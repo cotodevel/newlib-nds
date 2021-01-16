@@ -26,6 +26,8 @@
 #endif
 #include "local.h"
 
+extern int _vfprintf_r(void *reent, FILE *fp, const char *fmt, va_list list);
+
 #ifndef _REENT_ONLY
 
 int

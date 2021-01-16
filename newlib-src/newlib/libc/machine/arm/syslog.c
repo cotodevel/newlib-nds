@@ -60,9 +60,6 @@ static char sccsid[] = "@(#)syslog.c        8.4 (Berkeley) 3/18/94";
 #define	FSETLOCKING_INTERNAL	1
 #define	FSETLOCKING_BYCALLER	2
 
-static void cancel_handler (void *ptr)
-{
-}
 /*
  * syslog, vsyslog --
  *        print message on log file; output is intended for syslogd(8).
@@ -72,7 +69,7 @@ __syslog(int pri, const char *fmt, ...)
 {
         va_list ap;
         va_start(ap, fmt);
-        __vsyslog_chk(pri, -1, fmt, ap);
+        //__vsyslog_chk(pri, -1, fmt, ap);
         va_end(ap);
 }
 
@@ -81,7 +78,7 @@ __syslog_chk(int pri, int flag, const char *fmt, ...)
 {
         va_list ap;
         va_start(ap, fmt);
-        __vsyslog_chk(pri, flag, fmt, ap);
+        //__vsyslog_chk(pri, flag, fmt, ap);
         va_end(ap);
 }
 void __vsyslog_chk (int pri, int flag, const char *fmt, va_list ap){
@@ -248,68 +245,7 @@ void __vsyslog(int pri, const char *fmt, va_list ap)
   __vsyslog_chk (pri, -1, fmt, ap);
 }
 
-static struct sockaddr_un SyslogAddr;        // AF_UNIX address of local logger 
-
-static void openlog_internal(const char *ident, int logstat, int logfac)
-{
-/*
-        if (ident != NULL)
-                LogTag = ident;
-        LogStat = logstat;
-        if (logfac != 0 && (logfac &~ LOG_FACMASK) == 0)
-                LogFacility = logfac;
-        int retry = 0;
-        while (retry < 2) {
-                if (LogFile == -1) {
-                        SyslogAddr.sun_family = AF_UNIX;
-                        (void)strncpy(SyslogAddr.sun_path, _PATH_LOG,
-                                      sizeof(SyslogAddr.sun_path));
-                        if (LogStat & LOG_NDELAY) {
-                          LogFile = __socket(AF_UNIX, LogType | SOCK_CLOEXEC, 0);
-                          if (LogFile == -1)
-                            return;
-                        }
-                }
-                if (LogFile != -1 && !connected)
-                {
-                        int old_errno = errno;
-                        if (__connect(LogFile, &SyslogAddr, sizeof(SyslogAddr))
-                            == -1)
-                        {
-                                int saved_errno = errno;
-                                int fd = LogFile;
-                                LogFile = -1;
-                                (void)__close(fd);
-                                __set_errno (old_errno);
-                                if (saved_errno == EPROTOTYPE)
-                                {
-                                        // retry with the other type: 
-                                        LogType = (LogType == SOCK_DGRAM
-                                                   ? SOCK_STREAM : SOCK_DGRAM);
-                                        ++retry;
-                                        continue;
-                                }
-                        } else
-                                connected = 1;
-                }
-                break;
-        }
-		*/
-}
-
 void openlog (const char *ident, int logstat, int logfac)
-{
-}
-
-#ifndef NO_SIGPIPE
-static void
-sigpipe_handler (int signo)
-{
-
-}
-#endif
-static void
-closelog_internal (void)
 {
 }
 
@@ -321,5 +257,5 @@ void closelog (void)
 // setlogmask -- set the log mask level 
 int setlogmask (int pmask)
 {
-
+	return -1;
 }

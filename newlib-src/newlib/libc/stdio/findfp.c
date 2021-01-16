@@ -265,9 +265,6 @@ _DEFUN(__sinit, (s),
 
 #ifndef __SINGLE_THREAD__
 
-__LOCK_INIT_RECURSIVE(static, __sfp_lock);
-__LOCK_INIT_RECURSIVE(static, __sinit_lock);
-
 _VOID
 _DEFUN_VOID(__sfp_lock_acquire)
 {

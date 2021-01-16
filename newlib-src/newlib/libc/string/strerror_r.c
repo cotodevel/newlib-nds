@@ -64,7 +64,6 @@ a non-empty alternate string without assigning into its third argument.
 */
 
 #undef __STRICT_ANSI__
-#define _GNU_SOURCE
 #include <errno.h>
 #include <string.h>
 #undef strerror_r

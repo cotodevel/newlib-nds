@@ -16,6 +16,8 @@
 
 #ifndef REENTRANT_SYSCALLS_PROVIDED
 
+extern int _unlink _PARAMS ((const char *));
+
 /* We use the errno variable used by the system dependent layer.  */
 #undef errno
 extern int errno;

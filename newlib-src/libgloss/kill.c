@@ -13,6 +13,7 @@
  * they apply.
  */
 #include "glue.h"
+#include "typedefsTGDS.h"
 
 /*
  * kill -- go out via exit...

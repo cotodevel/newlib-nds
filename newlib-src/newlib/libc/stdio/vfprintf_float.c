@@ -160,8 +160,7 @@ _printf_float (struct _reent *data,
 	int expt;		/* integer value of exponent */
 	int expsize = 0;	/* character count for expstr */
 	int ndig = 0;		/* actual number of digits returned by cvt */
-	char *cp;
-	int n;
+	char *cp = NULL;
 	int realsz;		/* field size expanded by dprec(not for _printf_float) */
 	char code = pdata->code;
 
@@ -235,10 +234,10 @@ _printf_float (struct _reent *data,
 				pdata->size = expt;
 				if (pdata->flags & ALT)
 					++pdata->size;
-			} else
-				pdata->size = ndig + (expt > 0 ?
-							     1 : 2 - expt);
-				pdata->lead = expt;
+			} else{
+				pdata->size = ndig + (expt > 0 ? 1 : 2 - expt);
+			}
+			pdata->lead = expt;
 		}
 
 		if (softsign)

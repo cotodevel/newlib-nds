@@ -127,9 +127,9 @@ wordexp(const char *__restrict words, wordexp_t *__restrict pwordexp, int flags)
 
           if (flags & WRDE_SHOWERR)
             {
-              fprintf(stderr, tmp);
+              fprintf(stderr, "%s", tmp);
               while(fgets(tmp, MAXLINELEN, f_err))
-                fprintf(stderr, tmp);
+                fprintf(stderr, "%s", tmp);
             }
 
           goto cleanup;

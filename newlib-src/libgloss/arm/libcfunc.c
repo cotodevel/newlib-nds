@@ -44,8 +44,8 @@ pause(void)
 unsigned __attribute__((weak))
 sleep(unsigned seconds)
 {
-	clock_t t0 = 0;	//_clock();
-	clock_t dt = seconds * CLOCKS_PER_SEC;
+	//clock_t t0 = 0;	//_clock();
+	//clock_t dt = seconds * CLOCKS_PER_SEC;
 
 	//while (_clock() - t0  < dt);
 	return 0;
@@ -54,8 +54,8 @@ sleep(unsigned seconds)
 int __attribute__((weak))
 usleep(useconds_t useconds)
 {
-	clock_t t0 = 0;	//_clock();
-	clock_t dt = useconds / (1000000/CLOCKS_PER_SEC);
+	//clock_t t0 = 0;	//_clock();
+	//clock_t dt = useconds / (1000000/CLOCKS_PER_SEC);
 
 	//while (_clock() - t0  < dt);
 	return 0;

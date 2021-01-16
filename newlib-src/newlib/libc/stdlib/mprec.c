@@ -308,7 +308,7 @@ _DEFUN (lo0bits, (y), __ULong *y)
     {
       k++;
       x >>= 1;
-      if (!x & 1)
+      if ((!x) & 1)
 	return 32;
     }
   *y = x;
@@ -767,7 +767,7 @@ _DEFUN (d2b,
   union double_union d;
   _Bigint *b;
   int de, i, k;
-  __ULong *x, y, z;
+  __ULong *x, z;
 #ifdef VAX
   __ULong d0, d1;
 #endif

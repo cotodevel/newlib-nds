@@ -13,6 +13,8 @@
 #endif
 #endif
 
+extern _ssize_t _read _PARAMS ((int, void *, size_t));
+
 #ifndef REENTRANT_SYSCALLS_PROVIDED
 
 /* We use the errno variable used by the system dependent layer.  */

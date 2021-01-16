@@ -23,11 +23,11 @@
 #define DECP	0x04
 
 #ifdef _HAVE_STDC
-int    		__ten_mul(double *acc, int digit);
-double		__adjust(struct _reent *ptr, double *acc, int dexp, int sign);
-double		__exp10(unsigned x);
+extern int    		__ten_mul(double *acc, int digit);
+extern double		__adjust(struct _reent *ptr, double *acc, int dexp, int sign);
+extern double		__exp10(double x);
 #else
-int    		__ten_mul();
-double		__adjust();
-double		__exp10();
+extern int    		__ten_mul();
+extern double		__adjust();
+//extern double		__exp10();
 #endif

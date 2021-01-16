@@ -13,6 +13,7 @@
  * they apply.
  */
 #include "glue.h"
+#include "typedefsTGDS.h"
 
 /*
  * putnum -- print a 32 bit number in hex
@@ -37,5 +38,5 @@ _DEFUN (putnum, (num),
   }
 
   *ptr = (char) 0;
-  print (buf);
+  printf ("%s", buf);
 }

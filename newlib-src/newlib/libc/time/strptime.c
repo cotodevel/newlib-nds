@@ -174,21 +174,21 @@ _DEFUN (strptime, (buf, format, timeptr),
 		c = *++format;
 	    switch (c) {
 	    case 'A' :
-		ret = match_string (&buf, _ctloc (weekday));
+		ret = match_string ((const char **)&buf, _ctloc (weekday));
 		if (ret < 0)
 		    return NULL;
 		timeptr->tm_wday = ret;
 		ymd |= SET_WDAY;
 		break;
 	    case 'a' :
-		ret = match_string (&buf, _ctloc (wday));
+		ret = match_string ((const char **)&buf, _ctloc (wday));
 		if (ret < 0)
 		    return NULL;
 		timeptr->tm_wday = ret;
 		ymd |= SET_WDAY;
 		break;
 	    case 'B' :
-		ret = match_string (&buf, _ctloc (month));
+		ret = match_string ((const char **)&buf, _ctloc (month));
 		if (ret < 0)
 		    return NULL;
 		timeptr->tm_mon = ret;
@@ -196,7 +196,7 @@ _DEFUN (strptime, (buf, format, timeptr),
 		break;
 	    case 'b' :
 	    case 'h' :
-		ret = match_string (&buf, _ctloc (mon));
+		ret = match_string ((const char **)&buf, _ctloc (mon));
 		if (ret < 0)
 		    return NULL;
 		timeptr->tm_mon = ret;
@@ -282,7 +282,7 @@ _DEFUN (strptime, (buf, format, timeptr),
 		    return NULL;
 		break;
 	    case 'p' :
-		ret = match_string (&buf, _ctloc (am_pm));
+		ret = match_string ((const char **)&buf, _ctloc (am_pm));
 		if (ret < 0)
 		    return NULL;
 		if (timeptr->tm_hour == 0) {

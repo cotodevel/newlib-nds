@@ -14,6 +14,8 @@
 #endif
 #endif
 
+extern int _open _PARAMS ((const char *, int, int));
+
 #ifndef REENTRANT_SYSCALLS_PROVIDED
 
 /* We use the errno variable used by the system dependent layer.  */

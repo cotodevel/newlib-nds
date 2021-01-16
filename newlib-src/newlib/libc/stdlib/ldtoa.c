@@ -544,10 +544,10 @@ static void einfin(register short unsigned int *x, register LDPARMS *ldp)
 register int i;
 
 #ifdef USE_INFINITY
-for( i=0; i<NE-1; i++ )
+for( i=0; i<NE-1; i++ ){
 	*x++ = 0;
+}
 *x |= 32767;
-ldp = ldp;
 #else
 for( i=0; i<NE-1; i++ )
 	*x++ = 0xffff;

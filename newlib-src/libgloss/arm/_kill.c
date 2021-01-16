@@ -22,4 +22,6 @@ _kill (int pid, int sig)
 #else
   asm ("swi %a0" :: "i" (SWI_Exit));
 #endif
+
+	while(1==1){}	//no return function marked as no return
 }

@@ -1,7 +1,7 @@
 #include <string.h>
 #include <signal.h>
 #include "debug.h"
-#include "asm.h"
+//#include "asm.h"
 
 //already written in GDB TGDS (gba gdb server stub), so we stub out methods here
 

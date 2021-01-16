@@ -77,7 +77,8 @@ _DEFUN (_setenv_r, (reent_ptr, name, value, rewrite),
         }
       if (strlen (C) >= l_value)
 	{			/* old larger; copy over */
-	  while ((*C++ = *value++) != 0);
+	  while ((*C++ = *value++) != 0){
+	  }
           ENV_UNLOCK;
 	  /* if we are changing the TZ environment variable, update timezone info */
 	  if (strcmp (name, "TZ") == 0)

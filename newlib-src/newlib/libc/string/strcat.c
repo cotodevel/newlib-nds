@@ -70,8 +70,7 @@ _DEFUN (strcat, (s1, s2),
   while (*s1)
     s1++;
 
-  while (*s1++ = *s2++)
-    ;
+  while ((*s1++ = *s2++)){}
   return s;
 #else
   char *s = s1;

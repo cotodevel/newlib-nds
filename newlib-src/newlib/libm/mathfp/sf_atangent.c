@@ -45,7 +45,7 @@ _DEFUN (atangentf, (float, float, float, int),
   /* Preparation for calculating arctan2. */
   if (arctan2)
     {
-      if (u == 0.0)
+      if (u == 0.0){
         if (v == 0.0)
           {
             errno = ERANGE;
@@ -56,7 +56,7 @@ _DEFUN (atangentf, (float, float, float, int),
             branch = 1;
             res = __PI_OVER_TWO;
           }
-
+	  }
       if (!branch)
         {
           int e;

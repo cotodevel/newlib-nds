@@ -23,7 +23,7 @@
 
 #include "fdlibm.h"
 #include "zmath.h"
-
+extern int isnanf(float arg);
 static const float a[] = { -0.5527074855 };
 static const float b[] = { -0.6632718214e+1 };
 static const float C1 = 0.693145752;

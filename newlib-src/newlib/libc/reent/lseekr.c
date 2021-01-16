@@ -4,6 +4,8 @@
 #include <unistd.h>
 #include <_syslist.h>
 
+extern _off_t _lseek _PARAMS ((int, _off_t, int));
+
 /* Some targets provides their own versions of this functions.  Those
    targets should define REENTRANT_SYSCALLS_PROVIDED in TARGET_CFLAGS.  */
 

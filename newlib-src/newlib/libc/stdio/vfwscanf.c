@@ -400,7 +400,6 @@ _DEFUN(__SVFWSCANF_R, (rptr, fp, fmt0, ap),
   size_t nconv;                 /* number of bytes in mb. conversion */
   char mbbuf[MB_LEN_MAX];       /* temporary mb. character buffer */
 
-  char *cp;
   short *sp;
   int *ip;
 #ifdef FLOATING_POINT

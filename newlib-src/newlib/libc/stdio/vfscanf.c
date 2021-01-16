@@ -321,8 +321,7 @@ _DEFUN(__SVFSCANF_R, (rptr, fp, fmt0, ap),
   char *cp;
 
   struct _scan_data_t scan_data;
-  int (*scan_func)(struct _reent*, struct _scan_data_t*, FILE *, va_list *);
-
+  
   _newlib_flockfile_start (fp);
 
   scan_data.nassigned = 0;

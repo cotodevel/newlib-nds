@@ -4,10 +4,12 @@
 
 #include <_ansi.h>
 #include <reent.h>
+#include <math.h>
 #include "std.h"
 
 #define abs(x) (((x) < 0) ? -(x) : (x))
 
+	
 double
 _DEFUN (__adjust, (ptr, acc, dexp, sign),
 	struct _reent *ptr _AND

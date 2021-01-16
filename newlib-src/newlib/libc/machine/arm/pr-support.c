@@ -56,8 +56,7 @@ typedef struct
 /* Calculate the address encoded by a 31-bit self-relative offset at address
    P.  Copy of routine in unwind-arm.c.  */
 
-static inline _uw
-selfrel_offset31 (const _uw *p)
+_uw selfrel_offset31 (const _uw *p)
 {
   _uw offset;
 

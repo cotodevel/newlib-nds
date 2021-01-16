@@ -95,6 +95,8 @@ PORTABILITY
 #include "fdlibm.h"
 #include "zmath.h"
 
+extern int ispos (double x);
+
 static const double q[] = { -0.21108770058106271242e+7,
                              0.36162723109421836460e+5,
                             -0.27773523119650701667e+3 };
@@ -103,7 +105,6 @@ static const double p[] = { -0.35181283430177117881e+6,
                             -0.16375798202630751372e+3,
                             -0.78966127417357099479 };
 static const double LNV = 0.6931610107421875000;
-static const double INV_V2 = 0.24999308500451499336;
 static const double V_OVER2_MINUS1 = 0.13830277879601902638e-4;
 
 double

@@ -21,6 +21,9 @@ int _dummy_link_syscalls = 1;
 
 #else
 
+extern int _kill(int pid, int sig);
+extern int _getpid();
+
 /* We use the errno variable used by the system dependent layer.  */
 #undef errno
 extern int errno;

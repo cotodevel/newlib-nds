@@ -10,7 +10,7 @@
 #include <unistd.h>
 #include "arm.h"
 
-static int _main(int argc, char *argv[]) __attribute__((noreturn));
+//static int _main(int argc, char *argv[]) __attribute__((noreturn));
 
 #if defined(__thumb__) && !defined(THUMB_V7_V6M)
 asm("\n"
@@ -31,12 +31,17 @@ __attribute__((naked))
 void _start(void)
 #endif
 {
-	register int *sp asm("sp");
-	_main(*sp, (char **)(sp + 1));
+	//register int *sp asm("sp");
+	//_main(*sp, (char **)(sp + 1));
+	
+	//this would be better off compiled as thumb code altogether anyway
 }
 
-static int _main(int argc, char *argv[])
+/*
+int _main(int argc, char *argv[])
 {
+	extern int main(int argc, char *argv[]);
 	environ = argv + argc + 1;
-	exit(main(argc, argv, environ));
+	exit(main(argc, argv));
 }
+*/

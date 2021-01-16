@@ -24,6 +24,7 @@
 #include "fdlibm.h"
 #include "zmath.h"
 
+extern int isposf (float x);
 static const float INV_LN2 = 1.442695040;
 static const float LN2 = 0.693147180;
 static const float p[] = { 0.249999999950, 0.00416028863 };

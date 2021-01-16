@@ -124,13 +124,10 @@ _DEFUN(_fseeko_r, (ptr, fp, offset, whence),
        int whence)
 {
   _fpos_t _EXFNPTR(seekfn, (struct _reent *, _PTR, _fpos_t, int));
-  _fpos_t target;
   _fpos_t curoff = 0;
-  size_t n;
 #ifdef __USE_INTERNAL_STAT64
   struct stat64 st;
 #else
-  struct stat st;
 #endif
   int havepos;
 
@@ -354,7 +351,7 @@ _DEFUN(_fseeko_r, (ptr, fp, offset, whence),
    */
 #endif
 
-dumb:
+__attribute__((unused)) dumb:
   if (_fflush_r (ptr, fp)
       || seekfn (ptr, fp->_cookie, offset, whence) == POS_ERR)
     {

@@ -53,10 +53,6 @@ union __ldmath
 #  define INFINITY (__builtin_inff())
 # endif
 
-# ifndef NAN
-#  define NAN (__builtin_nanf(""))
-# endif
-
 #else /* !gcc >= 3.3  */
 
  /*      No builtins.  Use fixed defines instead.  (All 3 HUGE plus the INFINITY

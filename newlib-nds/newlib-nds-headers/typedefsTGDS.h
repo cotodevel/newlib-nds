@@ -95,6 +95,11 @@ extern "C"{
 #endif
 
 extern int printf(const char *, ...);
+extern void _exit(int rc);
+
+extern int read(int fd, void *buf, int count);
+extern int write(int fd, const void *buf, int count);
+extern void abort();
 
 #ifdef __cplusplus
 }

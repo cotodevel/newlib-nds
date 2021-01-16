@@ -39,10 +39,6 @@ that it already holds.
 #include <malloc.h>
 #include <sys/lock.h>
 
-#ifndef __SINGLE_THREAD__
-__LOCK_INIT_RECURSIVE(static, __malloc_lock_object);
-#endif
-
 void
 __malloc_lock (ptr)
      struct _reent *ptr;

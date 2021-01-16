@@ -11,7 +11,7 @@
 /* Make this a weak reference to avoid pulling in free.  */
 void free(void *) _ATTRIBUTE((__weak__));
 
-__LOCK_INIT_RECURSIVE(, __atexit_lock);
+//__LOCK_INIT_RECURSIVE(, __atexit_lock);
 
 #ifdef _REENT_GLOBAL_ATEXIT
 struct _atexit *_global_atexit = _NULL;

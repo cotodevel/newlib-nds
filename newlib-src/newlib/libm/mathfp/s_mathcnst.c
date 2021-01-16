@@ -13,12 +13,12 @@ ufloat z_infinity_f = { 0x7f800000 };
 ufloat z_notanum_f  = { 0xffd00000 };
 
 #ifdef __IEEE_BIG_ENDIAN
-udouble z_hugeval  = { 0x7ff00000, 0 };
-udouble z_infinity = { 0x7ff00000, 0 };
-udouble z_notanum  = { 0xfff80000, 0 };
+udouble z_hugeval  = {{ 0x7ff00000 }};
+udouble z_infinity = {{ 0x7ff00000 }};
+udouble z_notanum  = {{ 0xfff80000 }};
 #else /* __IEEE_LITTLE_ENDIAN  */
-udouble z_hugeval  = { 0, 0x7ff00000 };
-udouble z_infinity = { 0, 0x7ff00000 };
-udouble z_notanum  = { 0, 0xfff80000 };
+udouble z_hugeval  = {{ 0x7ff00000 }};
+udouble z_infinity = {{ 0x7ff00000 }};
+udouble z_notanum  = {{ 0xfff80000 }};
 #endif /* __IEEE_LITTLE_ENDIAN */
 

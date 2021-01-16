@@ -113,7 +113,7 @@ static inline _uw selfrel_offset31 (const _uw *p);
 static _uw __gnu_unwind_get_pr_addr (int idx);
 
 static void _Unwind_DebugHook (void *, void *)
-  __attribute__ ((__noinline__, __used__, __noclone__));
+  __attribute__ ((__noinline__, __used__));
 
 /* This function is called during unwinding.  It is intended as a hook
    for a debugger to intercept exceptions.  CFA is the CFA of the

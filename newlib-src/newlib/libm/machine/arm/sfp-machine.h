@@ -5,7 +5,7 @@
 
 /* The type of the result of a floating point comparison.  This must
    match `__libgcc_cmp_return__' in GCC for the target.  */
-typedef int __gcc_CMPtype __attribute__ ((mode (__libgcc_cmp_return__)));
+typedef int __gcc_CMPtype;
 #define CMPtype __gcc_CMPtype
 
 #define _FP_MUL_MEAT_S(R,X,Y)				\

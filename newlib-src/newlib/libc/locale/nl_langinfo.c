@@ -221,7 +221,7 @@ _DEFUN(nl_langinfo, (item),
 #ifdef __CYGWIN__
 		ret = __locale_charset ();
 #endif
-do_codeset:
+__attribute__((unused)) do_codeset:
 #ifdef __CYGWIN__
 		/* Convert charset to Linux compatible codeset string. */
 		if (ret[0] == 'A'/*SCII*/)

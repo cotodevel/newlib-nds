@@ -1,1 +1,1 @@
-void __sync_synchronize(void) { }
+//void __sync_synchronize(void) { }

@@ -3,6 +3,8 @@
 #include <reent.h>
 #include <unistd.h>
 
+extern int _isatty(int __fildes);
+
 int
 _DEFUN (isatty, (fd),
      int fd)

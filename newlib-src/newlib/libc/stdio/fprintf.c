@@ -21,8 +21,9 @@
 #include <stdio.h>
 #include <stdarg.h>
 
-int
-_DEFUN(_fprintf_r, (ptr, fp, fmt),
+extern int _vfprintf_r(struct _reent *reent, FILE *fp, const char *fmt, va_list list);
+
+int _DEFUN(_fprintf_r, (ptr, fp, fmt),
        struct _reent *ptr _AND
        FILE *__restrict fp _AND
        const char *__restrict fmt _DOTS)

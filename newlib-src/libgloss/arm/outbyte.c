@@ -1,4 +1,5 @@
 #include "debug.h"
+#include "typedefsTGDS.h"
 
 int outbyte (int byte)
 {

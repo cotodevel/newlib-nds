@@ -34,7 +34,7 @@ getlogin ()
 	{
 	  close (utmp_fd);
 	  memset (buf, 0, sizeof (buf));
-	  strncpy (buf, utmp_buf.ut_user, sizeof (utmp_buf.ut_user));
+	  strncpy (buf, utmp_buf.ut_user, sizeof (buf));
 	  return buf;
 	}
     }
