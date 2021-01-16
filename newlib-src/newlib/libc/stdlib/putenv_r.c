@@ -24,7 +24,7 @@
 #include <reent.h>
 #include <stdlib.h>
 #include <string.h>
-
+#include <malloc.h>
 #include "envlock.h"
 
 /* _putenv_r - reentrant version of putenv that either adds

@@ -33,7 +33,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-
+#include <malloc.h>
 #include <sys/param.h>
 #if defined(LIBC_SCCS) && !defined(lint)
 static char sccsid[] = "@(#)hash_page.c	8.7 (Berkeley) 8/16/94";

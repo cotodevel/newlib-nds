@@ -12,6 +12,7 @@ DESCRIPTION
 
 #include <stdlib.h>
 #include <reent.h>
+#include <malloc.h>
 
 #ifdef _REENT_ONLY
 #ifndef REENTRANT_SYSCALLS_PROVIDED

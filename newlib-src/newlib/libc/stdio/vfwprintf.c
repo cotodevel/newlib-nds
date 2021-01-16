@@ -92,6 +92,7 @@ SEEALSO
  *
  * This code is large and complicated...
  */
+#include <malloc.h>
 #include <newlib.h>
 
 #define VFWPRINTF vfwprintf

@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include <argz.h>
 #include <envz.h>
+#include <malloc.h>
 
 void
 _DEFUN (envz_strip, (envz, envz_len),

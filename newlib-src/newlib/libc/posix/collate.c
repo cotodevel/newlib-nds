@@ -30,6 +30,7 @@
 #include "namespace.h"
 #include <rune.h>
 #include <stdio.h>
+#include <malloc.h>
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
@@ -130,7 +131,7 @@ __collate_substitute(s)
 		nlen = len + strlen((const char *)
 				    __collate_substitute_table[*s]);
 		if (dest_len <= nlen) {
-			dest_str = reallocf(dest_str, dest_len = nlen + delta);
+			dest_str = realloc(dest_str, dest_len = nlen + delta);
 			if(dest_str == NULL)
 				__collate_err(EX_OSERR, __FUNCTION__);
 		}

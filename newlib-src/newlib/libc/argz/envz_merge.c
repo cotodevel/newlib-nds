@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include <argz.h>
 #include <envz.h>
+#include <malloc.h>
 
 error_t
 _DEFUN (envz_merge, (envz, envz_len, envz2, envz2_len, override),

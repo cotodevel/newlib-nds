@@ -49,6 +49,7 @@ These functions are not portable to any standard.
 No supporting OS subroutines are required.
 */
 
+#include <malloc.h>
 #include <_ansi.h>
 #include <stdio.h>
 #ifndef __rtems__

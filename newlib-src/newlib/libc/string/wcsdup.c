@@ -40,7 +40,7 @@ QUICKREF
 #include <reent.h>
 #include <stdlib.h>
 #include <wchar.h>
-
+#include <malloc.h>
 wchar_t *
 _wcsdup_r (struct _reent *p, const wchar_t *str)
 {

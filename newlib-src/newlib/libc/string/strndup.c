@@ -4,6 +4,7 @@
 #include <reent.h>
 #include <stdlib.h>
 #include <string.h>
+#include <malloc.h>
 
 char *
 _DEFUN (strndup, (str, n), 

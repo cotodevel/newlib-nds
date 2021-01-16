@@ -34,6 +34,7 @@
  * SUCH DAMAGE.
  */
 
+#include <malloc.h>
 #include <sys/param.h>
 #if defined(LIBC_SCCS) && !defined(lint)
 static char sccsid[] = "@(#)hash_bigkey.c	8.3 (Berkeley) 5/31/94";

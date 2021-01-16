@@ -31,6 +31,7 @@
 #include <limits.h>
 #include <stdlib.h>
 #include <string.h>
+#include <malloc.h>
 
 #include "lctype.h"
 #include "timelocal.h"

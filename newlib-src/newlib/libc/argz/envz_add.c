@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include <argz.h>
 #include <envz.h>
+#include <malloc.h>
 
 error_t
 _DEFUN (envz_add, (envz, envz_len, name, value),

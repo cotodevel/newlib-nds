@@ -16,6 +16,7 @@
  */
 /* No user fns here.  Pesch 15apr92. */
 
+#include <malloc.h>
 #include <_ansi.h>
 #include <stdio.h>
 #include <string.h>

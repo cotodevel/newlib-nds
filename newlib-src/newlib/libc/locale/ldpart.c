@@ -33,6 +33,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <malloc.h>
 
 #include "setlocale.h"
 #include "ldpart.h"

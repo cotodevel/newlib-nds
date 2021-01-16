@@ -85,6 +85,7 @@ Supporting OS subroutines required: <<sbrk>>.
 #include <stdio.h>
 #include <errno.h>
 #include <sys/lock.h>
+#include <malloc.h>
 #include "local.h"
 
 typedef struct fccookie {

@@ -150,6 +150,7 @@ Supporting OS subroutines required:
 #include <stdarg.h>
 #include <errno.h>
 #include "local.h"
+#include <malloc.h>
 #include "../stdlib/local.h"
 
 #include "vfscanf_local.h"

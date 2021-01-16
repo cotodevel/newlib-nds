@@ -84,6 +84,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <reent.h>
+#include <malloc.h>
 #include "mprec.h"
 
 /* This is defined in sys/reent.h as (sizeof (size_t) << 3) now, as in NetBSD.

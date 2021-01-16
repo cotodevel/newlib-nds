@@ -22,7 +22,7 @@ __RCSID("$NetBSD: tdelete.c,v 1.2 1999/09/16 11:45:37 lukem Exp $");
 #define _SEARCH_PRIVATE
 #include <search.h>
 #include <stdlib.h>
-
+#include <malloc.h>
 
 /* delete node with given key */
 void *

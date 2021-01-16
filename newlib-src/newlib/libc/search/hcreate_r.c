@@ -40,7 +40,7 @@
  * I tried to look at Knuth (as cited by the Solaris manual page), but
  * nobody had a copy in the office, so...
  */
-
+#include <malloc.h>
 #include <sys/cdefs.h>
 #if 0
 #if defined(LIBC_SCCS) && !defined(lint)

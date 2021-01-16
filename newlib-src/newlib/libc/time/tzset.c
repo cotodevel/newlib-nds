@@ -66,7 +66,7 @@ Supporting OS subroutine required: None
 #include <reent.h>
 #include <time.h>
 #include "local.h"
-
+#include <malloc.h>
 _VOID
 _DEFUN_VOID (tzset)
 {

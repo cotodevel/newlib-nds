@@ -42,6 +42,7 @@ No supporting OS subroutines are directly required.
 #include <stdio.h>
 #include <stdlib.h>
 #include <errno.h>
+#include <malloc.h>
 #include "local.h"
 
 #define MIN_LINE_SIZE 4

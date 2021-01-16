@@ -62,6 +62,7 @@ This function is being added to POSIX 200x, but is not in POSIX 2001.
 Supporting OS subroutines required: <<sbrk>>.
 */
 
+#include <malloc.h>
 #include <stdio.h>
 #include <errno.h>
 #include <string.h>

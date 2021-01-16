@@ -9,6 +9,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <argz.h>
+#include <malloc.h>
 
 #include "buf_findstr.h"
 

@@ -6,6 +6,7 @@
 #include <reent.h>
 #include <string.h>
 #include <stdlib.h>
+#include <malloc.h>
 #include "mprec.h"
 
 /* These are the externally visible entries. */

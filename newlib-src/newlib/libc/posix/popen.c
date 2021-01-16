@@ -78,6 +78,7 @@ of just <<r>> or <<w>>.  Where <<sh>> is found is left unspecified.
 Supporting OS subroutines required: <<_exit>>, <<_execve>>, <<_fork_r>>,
 <<_wait_r>>, <<pipe>>, <<fcntl>>, <<sbrk>>.
 */
+#include <malloc.h>
 
 #ifndef _NO_POPEN
 

@@ -19,6 +19,7 @@
 #include <unistd.h>
 #include <sys/wait.h>
 #include <sys/queue.h>
+#include <malloc.h>
 
 #include <wordexp.h>
 #include "wordexp2.h"

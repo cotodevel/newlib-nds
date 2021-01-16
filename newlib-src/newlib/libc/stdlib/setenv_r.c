@@ -28,6 +28,7 @@
 #include <string.h>
 #include <time.h>
 #include <errno.h>
+#include <malloc.h>
 #include "envlock.h"
 
 extern char **environ;

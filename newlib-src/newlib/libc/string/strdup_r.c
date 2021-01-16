@@ -1,7 +1,7 @@
 #include <reent.h>
 #include <stdlib.h>
 #include <string.h>
-
+#include <malloc.h>
 char *
 _DEFUN (_strdup_r, (reent_ptr, str), 
         struct _reent *reent_ptr  _AND

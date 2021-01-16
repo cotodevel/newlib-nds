@@ -123,7 +123,7 @@ Supporting OS subroutines required: <<close>>, <<fstat>>, <<isatty>>,
 #include <wctype.h>
 #include <locale.h>
 #include <math.h>
-
+#include <malloc.h>
 double
 _DEFUN (_wcstod_r, (ptr, nptr, endptr),
 	struct _reent *ptr _AND

@@ -22,6 +22,7 @@ __RCSID("$NetBSD: tsearch.c,v 1.3 1999/09/16 11:45:37 lukem Exp $");
 #define _SEARCH_PRIVATE
 #include <search.h>
 #include <stdlib.h>
+#include <malloc.h>
 
 /* find or insert datum into search tree */
 void *

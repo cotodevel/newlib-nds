@@ -9,6 +9,7 @@
 #include <sys/types.h>
 #include <string.h>
 #include <stdlib.h>
+#include <malloc.h>
 
 error_t
 _DEFUN (argz_add, (argz, argz_len, str),

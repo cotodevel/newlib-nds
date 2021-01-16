@@ -11,6 +11,7 @@
 #include <argz.h>
 #define __need_ptrdiff_t
 #include <stddef.h>
+#include <malloc.h>
 
 error_t
 _DEFUN (argz_insert, (argz, argz_len, before, entry),

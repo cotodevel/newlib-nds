@@ -24,6 +24,7 @@
 #include <string.h>
 #include <fcntl.h>
 #include <sys/lock.h>
+#include <malloc.h>
 #include "local.h"
 
 #ifdef _REENT_SMALL

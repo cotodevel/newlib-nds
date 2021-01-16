@@ -71,6 +71,7 @@ Supporting OS subroutines required: <<close>>, <<fstat>>, <<isatty>>,
 #include <stdlib.h>
 #include <string.h>
 #include <reent.h>
+#include <malloc.h>
 #include "mprec.h"
 #include "local.h"
 

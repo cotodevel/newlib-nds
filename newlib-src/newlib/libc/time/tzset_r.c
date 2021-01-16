@@ -5,6 +5,7 @@
 #include <string.h>
 #include <sys/types.h>
 #include <sys/time.h>
+#include <malloc.h>
 #include "local.h"
 
 #define sscanf siscanf	/* avoid to pull in FP functions. */

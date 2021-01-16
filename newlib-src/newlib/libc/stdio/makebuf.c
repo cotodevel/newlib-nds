@@ -22,6 +22,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <sys/unistd.h>
+#include <malloc.h>
 #include "local.h"
 
 #define _DEFAULT_ASPRINTF_BUFSIZE 64

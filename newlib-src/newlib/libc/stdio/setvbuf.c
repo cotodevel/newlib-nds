@@ -86,6 +86,7 @@ Supporting OS subroutines required: <<close>>, <<fstat>>, <<isatty>>,
 <<lseek>>, <<read>>, <<sbrk>>, <<write>>.
 */
 
+#include <malloc.h>
 #include <_ansi.h>
 #include <stdio.h>
 #include <stdlib.h>

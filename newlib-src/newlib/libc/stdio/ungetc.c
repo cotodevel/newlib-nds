@@ -66,6 +66,7 @@ static char sccsid[] = "%W% (Berkeley) %G%";
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <malloc.h>
 #include "local.h"
 
 /*

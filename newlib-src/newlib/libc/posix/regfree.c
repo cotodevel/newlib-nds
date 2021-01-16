@@ -34,6 +34,7 @@
  */
 
 #ifndef _NO_REGEX
+#include <malloc.h>
 
 #if defined(LIBC_SCCS) && !defined(lint)
 static char sccsid[] = "@(#)regfree.c	8.3 (Berkeley) 3/20/94";

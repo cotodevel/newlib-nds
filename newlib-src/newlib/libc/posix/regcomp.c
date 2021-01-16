@@ -35,6 +35,8 @@
 
 #ifndef _NO_REGEX
 
+#include <malloc.h>
+
 #if defined(LIBC_SCCS) && !defined(lint)
 static char sccsid[] = "@(#)regcomp.c	8.5 (Berkeley) 3/20/94";
 #endif /* LIBC_SCCS and not lint */
@@ -1204,12 +1206,12 @@ struct parse *p;
 		if (p->g->sets == NULL)
 			p->g->sets = (cset *)malloc(nc * sizeof(cset));
 		else
-			p->g->sets = (cset *)reallocf((char *)p->g->sets,
+			p->g->sets = (cset *)realloc((char *)p->g->sets,
 							nc * sizeof(cset));
 		if (p->g->setbits == NULL)
 			p->g->setbits = (uch *)malloc(nbytes);
 		else {
-			p->g->setbits = (uch *)reallocf((char *)p->g->setbits,
+			p->g->setbits = (uch *)realloc((char *)p->g->setbits,
 								nbytes);
 			/* xxx this isn't right if setbits is now NULL */
 			for (i = 0; i < no; i++)

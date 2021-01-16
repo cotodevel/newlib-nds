@@ -79,10 +79,8 @@ _PTR	_EXFUN(bsearch,(const _PTR __key,
 		       size_t __nmemb,
 		       size_t __size,
 		       __compar_fn_t _compar));
-_PTR	_EXFUN_NOTHROW(calloc,(size_t __nmemb, size_t __size));
 div_t	_EXFUN(div,(int __numer, int __denom));
 _VOID	_EXFUN(exit,(int __status) _ATTRIBUTE ((noreturn)));
-_VOID	_EXFUN_NOTHROW(free,(_PTR));
 char *  _EXFUN(getenv,(const char *__string));
 char *	_EXFUN(_getenv_r,(struct _reent *, const char *__string));
 char *	_EXFUN(_findenv,(_CONST char *, int *));
@@ -93,7 +91,6 @@ int	_EXFUN(getsubopt,(char **, char * const *, char **));
 #endif
 long	_EXFUN(labs,(long));
 ldiv_t	_EXFUN(ldiv,(long __numer, long __denom));
-_PTR	_EXFUN_NOTHROW(malloc,(size_t __size));
 int	_EXFUN(mblen,(const char *, size_t));
 int	_EXFUN(_mblen_r,(struct _reent *, const char *, size_t, _mbstate_t *));
 int	_EXFUN(mbtowc,(wchar_t *__restrict, const char *__restrict, size_t));
@@ -122,7 +119,6 @@ char *	_EXFUN(_mktemp_r, (struct _reent *, char *));
 #endif
 _VOID	_EXFUN(qsort,(_PTR __base, size_t __nmemb, size_t __size, __compar_fn_t _compar));
 int	_EXFUN(rand,(_VOID));
-_PTR	_EXFUN_NOTHROW(realloc,(_PTR __r, size_t __size));
 #ifndef __STRICT_ANSI__
 _PTR	_EXFUN(reallocf,(_PTR __r, size_t __size));
 char *	_EXFUN(realpath, (const char *__restrict path, char *__restrict resolved_path));
@@ -220,10 +216,6 @@ int _EXFUN(posix_memalign,(void **, size_t, size_t));
 
 char *	_EXFUN(_dtoa_r,(struct _reent *, double, int, int, int *, int*, char**));
 #ifndef __CYGWIN__
-_PTR	_EXFUN_NOTHROW(_malloc_r,(struct _reent *, size_t));
-_PTR	_EXFUN_NOTHROW(_calloc_r,(struct _reent *, size_t, size_t));
-_VOID	_EXFUN_NOTHROW(_free_r,(struct _reent *, _PTR));
-_PTR	_EXFUN_NOTHROW(_realloc_r,(struct _reent *, _PTR, size_t));
 _VOID	_EXFUN(_mstats_r,(struct _reent *, char *));
 #endif
 int	_EXFUN(_system_r,(struct _reent *, const char *));

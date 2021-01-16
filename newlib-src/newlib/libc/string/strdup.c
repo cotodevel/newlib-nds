@@ -3,6 +3,7 @@
 #include <reent.h>
 #include <stdlib.h>
 #include <string.h>
+#include <malloc.h>
 
 char *
 _DEFUN (strdup, (str), _CONST char *str)
