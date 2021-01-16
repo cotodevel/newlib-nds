@@ -52,7 +52,7 @@ OBJPROG =	$(addprefix $(OBJDIR)/, $(TARGET_LIBRARY_FILE_7))
 
 #------------------------------------------ CLANG START
 CC = clang
-
+AR = llvm-ar
 DEP_DIR = $(BUILD_DIR)/dep
 DEP_CFLAGS = -MT $@ -MMD -MP 
 
@@ -136,6 +136,7 @@ $(OBJDIR)/%.o : %.S
 #Builder.
 $(OBJPROG): $(addprefix $(OBJDIR)/, $(OBJECTS))
 	-@echo 'Entering Build phase. Should have the librarian packer here'
+	$(AR) rc	$@	$^
 	-@echo 'Leaving Linking phase. Output: $@'
 
 #build *.o into $(TARGET_LIBRARY_FILE_7)
