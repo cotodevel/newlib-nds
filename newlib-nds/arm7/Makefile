@@ -66,8 +66,9 @@ CLI_LDFLAG_OVERRIDES ?=
 # the specific architecture target when we use the
 # generic --target=arm-none-eabi
 ARCH_CFLAGS += \
-  -mthumb -mcpu=arm7tdmi \
-  -mfloat-abi=soft
+  -marm -mcpu=arm7tdmi \
+  -mfloat-abi=soft	\
+  -mfpu=none
   
 ARM_CORTEXM_SYSROOT = \
   $(shell $(ARM_GNU_CC) $(ARCH_CFLAGS) -print-sysroot 2>&1)
@@ -147,4 +148,4 @@ $(TARGET_LIBRARY_FILE_7): $(OBJPROG)
 ################################################################################################
 clean:
 	-@echo 'cleanup $(TARGET_LIBRARY_FILE_7)'
-	-@rm -fr $(OBJDIR)	$(TARGET_LIBRARY_FILE_7)	$(MAPFILE)
+	-@rm -fr $(OBJDIR)	$(TARGET_LIBRARY_FILE_7)	$(MAPFILE)	$(TARGET_LIBRARY_PATH)/$(TARGET_LIBRARY_FILE_7)

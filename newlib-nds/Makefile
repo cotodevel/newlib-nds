@@ -220,7 +220,7 @@ ifeq ($(TGDS_ENV),linux)
 	sudo chmod -R 777	$(DEFAULT_GCC_PATH)../../
 endif
 	$(MAKE)	-R	-C	$(DIR_ARM7)/
-
+	$(MAKE)	-R	-C	$(DIR_ARM9)/
 
 #---------------------------------------------------------------------------------
 # Clean
@@ -228,6 +228,10 @@ clean:
 	$(MAKE)	clean	-C	$(DIR_ARM7)/
 ifeq ($(SOURCE_MAKEFILE7),default)
 	-@rm -rf $(CURDIR)/$(DIR_ARM7)/Makefile
+endif
+	$(MAKE)	clean	-C	$(DIR_ARM9)/
+ifeq ($(SOURCE_MAKEFILE9),default)
+	-@rm -rf $(CURDIR)/$(DIR_ARM9)/Makefile
 endif
 ifeq ($(TGDS_ENV),windows)
 	-@rm -rf $(TARGET_LIBRARY_HEADERS_7)	$(TARGET_LIBRARY_HEADERS_9)	$(TARGET_LIBRARY_PATH)$(TARGET_LIBRARY_LINKER_SRC)
