@@ -6,6 +6,7 @@
 #include <utmp.h>
 #include <fcntl.h>
 #include <_syslist.h>
+#include <typedefsTGDS.h>
 
 char *
 getlogin ()

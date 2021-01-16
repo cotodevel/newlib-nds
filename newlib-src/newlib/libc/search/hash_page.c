@@ -39,6 +39,7 @@
 static char sccsid[] = "@(#)hash_page.c	8.7 (Berkeley) 8/16/94";
 #endif /* LIBC_SCCS and not lint */
 #include <sys/cdefs.h>
+#include <typedefsTGDS.h>
 
 /*
  * PACKAGE:  hashing

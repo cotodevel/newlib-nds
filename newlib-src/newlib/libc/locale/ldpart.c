@@ -25,7 +25,6 @@
  */
 
 #include <sys/cdefs.h>
-
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <sys/syslimits.h>
@@ -37,6 +36,7 @@
 
 #include "setlocale.h"
 #include "ldpart.h"
+#include <typedefsTGDS.h>
 
 static int split_lines(char *, const char *);
 static void set_from_buf(const char *, int, const char **);

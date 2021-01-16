@@ -7,6 +7,7 @@
 #include <utmp.h>
 #include <_syslist.h>
 #include <_ansi.h>
+#include <typedefsTGDS.h>
 
 static int utmp_fd = -2;
 static char *utmp_file = UTMP_FILE;

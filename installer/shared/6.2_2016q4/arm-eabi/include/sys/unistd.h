@@ -141,7 +141,6 @@ int     _EXFUN(pipe2, (int __fildes[2], int flags));
 #endif
 ssize_t _EXFUN(pread, (int __fd, void *__buf, size_t __nbytes, off_t __offset));
 ssize_t _EXFUN(pwrite, (int __fd, const void *__buf, size_t __nbytes, off_t __offset));
-_READ_WRITE_RETURN_TYPE _EXFUN(read, (int __fd, void *__buf, size_t __nbyte ));
 #if defined(__CYGWIN__)
 int	_EXFUN(rresvport, (int *__alport));
 int	_EXFUN(revoke, (char *__path));
@@ -186,7 +185,6 @@ int     _EXFUN(ttyname_r, (int, char *, size_t));
 int     _EXFUN(unlink, (const char *__path ));
 int 	_EXFUN(usleep, (useconds_t __useconds));
 int     _EXFUN(vhangup, (void ));
-_READ_WRITE_RETURN_TYPE _EXFUN(write, (int __fd, const void *__buf, size_t __nbyte ));
 
 #ifdef __CYGWIN__
 # define __UNISTD_GETOPT__
@@ -284,7 +282,9 @@ int	_EXFUN(unlinkat, (int, const char *, int));
 #define _SC_SAVED_IDS                     6
 #define _SC_VERSION                       7
 #define _SC_PAGESIZE                      8
+#ifndef _SC_PAGE_SIZE
 #define _SC_PAGE_SIZE                     _SC_PAGESIZE
+#endif
 /* These are non-POSIX values we accidentally introduced in 2000 without
    guarding them.  Keeping them unguarded for backward compatibility. */
 #define _SC_NPROCESSORS_CONF              9
