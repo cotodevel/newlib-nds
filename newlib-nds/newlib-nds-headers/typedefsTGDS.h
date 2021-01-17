@@ -28,6 +28,9 @@ USA
 #include <stdint.h>
 #include <stdbool.h>
 
+#include <time.h>
+#include <sys/time.h>
+
 typedef	unsigned	short	ushort;
 typedef	unsigned	char	uchar;
 
@@ -100,6 +103,8 @@ extern void _exit(int rc);
 extern int read(int fd, void *buf, int count);
 extern int write(int fd, const void *buf, int count);
 extern void abort();
+extern int _isatty(int fd);
+extern int _gettimeofday(struct timeval *tv, struct timezone *tz);
 
 #ifdef __cplusplus
 }

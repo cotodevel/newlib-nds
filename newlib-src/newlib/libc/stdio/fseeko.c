@@ -352,7 +352,10 @@ _DEFUN(_fseeko_r, (ptr, fp, offset, whence),
    */
 #endif
 
-__attribute__((unused)) dumb:
+#ifdef __clang__
+__attribute__((unused)) 
+#endif
+dumb:
   if (_fflush_r (ptr, fp)
       || seekfn (ptr, fp->_cookie, offset, whence) == POS_ERR)
     {
