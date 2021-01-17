@@ -634,10 +634,12 @@ hash_delete(dbp, key, flag)
  * Assume that hashp has been set in wrapper routine.
  */
 static int
-hash_access(hashp, action, key, val)
-	HTAB *hashp;
-	ACTION action;
-	DBT *key, *val;
+hash_access(
+HTAB *hashp,
+ACTION action,
+DBT *key, 
+DBT *val
+)
 {
 	BUFHEAD *rbufp;
 	BUFHEAD *bufp, *save_bufp;
