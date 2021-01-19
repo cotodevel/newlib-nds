@@ -3,10 +3,6 @@
 
 #include "_clangmem.h"
 
-void __aeabi_memmove (void *dest, const void *src, size_t n){
-	memmove (dest, src, n);
-}
-
 uint64_t __aeabi_lmul(uint32_t a, uint32_t b){
     uint32_t hia = a >> 16,
         hib = b >> 16,
