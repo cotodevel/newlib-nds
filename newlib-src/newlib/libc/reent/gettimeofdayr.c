@@ -22,6 +22,8 @@
 #include <sys/lock.h>
 #include <fcntl.h>
 
+extern int _gettimeofday(struct timeval *tv, struct timezone *tz);
+
 /* Some targets provides their own versions of these functions.  Those
    targets should define REENTRANT_SYSCALLS_PROVIDED in TARGET_CFLAGS.  */
 
