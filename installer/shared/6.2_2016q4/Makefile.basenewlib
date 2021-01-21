@@ -1,12 +1,13 @@
 export TOOLCHAIN_GENERIC_DS_VER	=	"TGDS1.6"
 
 # Shared start
+
 export DIR_ARM7 = arm7
 export DIR_ARM9 = arm9
 export PosIndCodeDIR_FILENAME = PositionIndependentCode
 
 ifeq ($(TGDS_ENV),windows)
-	export GCC_BUILD_ENV	= $(DEFAULT_GCC_PATH)
+	export GCC_BUILD_ENV	= $(DEFAULT_GCC_PATH_WIN)
 	export GCC_BIN_PATH	= bin/
 	export AR	=	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)arm-eabi-ar.exe
 	export AS	=	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)arm-eabi-as.exe
@@ -30,8 +31,8 @@ ifeq ($(TGDS_ENV),windows)
 	export LDFLAGS	=''
 	export VPATH 	=''
 
-	export TOOLCHAIN_LIBRARY_SRCPATH = $(DEFAULT_GCC_PATH)arm-eabi
-	export TOOLCHAIN_PATH	= 	$(TOOLCHAIN_LIBRARY_SRCPATH)/lib/
+	export TOOLCHAIN_LIBRARY_SRCPATH = $(DEFAULT_GCC_PATH_WIN)arm-eabi
+	export TOOLCHAIN_PATH	:= 	$(TOOLCHAIN_LIBRARY_SRCPATH)/lib/
 	export LIBPATH	=	$(TOOLCHAIN_PATH)newlib-nano-2.1-nds
 	export DIRLIBS_PROHIBITED =	
 	export DIRLIBS_ALLOWED =	-I "$(TOOLCHAIN_PATH)newlib-nano-2.1-nds/include/"	\
@@ -44,10 +45,16 @@ ifeq ($(TGDS_ENV),windows)
 								-I	"$(TOOLCHAIN_LIBRARY_SRCPATH)/include/"
 								
 	export TARGET_LIBRARY_PATH =	$(TOOLCHAIN_LIBRARY_SRCPATH)/lib/newlib-nano-2.1-nds
+	export TARGET_LIBRARY_PATH_WIN = $(DEFAULT_GCC_PATH_WIN)arm-eabi/lib/newlib-nano-2.1-nds
+	
 	export TARGET_LIBRARY_LINKER_SRC = /linkers
 	export TARGET_LIBRARY_LINKER_DEST = $(TARGET_LIBRARY_PATH)
+	export TARGET_LIBRARY_LINKER_DEST_WIN = $(TARGET_LIBRARY_PATH_WIN)
+	
 	export TARGET_LIBRARY_MAKEFILES_SRC = /TGDSMakefiles
 	export TARGET_LIBRARY_MAKEFILES_DEST = $(TARGET_LIBRARY_PATH)
+	export TARGET_LIBRARY_MAKEFILES_DEST_WIN = $(TARGET_LIBRARY_PATH_WIN)
+	
 	export TARGET_LIBRARY_HEADERS_7 = $(TARGET_LIBRARY_PATH)/headers7
 	export TARGET_LIBRARY_HEADERS_9 = $(TARGET_LIBRARY_PATH)/headers9
 	export TARGET_LIBRARY_HEADERS_7_INC = -I	"$(TARGET_LIBRARY_PATH)/headers7"

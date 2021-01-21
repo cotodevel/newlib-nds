@@ -6,13 +6,13 @@ You can check a copy of these steps at:
 https://bitbucket.org/Coto88/newlib-nds
 
 Version: 
-	Windows : GCC 4.9.2 (ARM EABI)
+	Windows : Clang 8.0.1
 	Linux : GCC 4.9.3	(ARM NONE EABI)
 
 Features:
 - GAS (Gnu Assembler): .s / .S ARM assembler files, using the GNU syntax.
-- C support (malloc, full POSIX file implementation): .c files, using the GNU syntax.
-- C++ STL support (new / delete operators implemented): .cpp/.hpp files, using the GNU syntax.
+- Clang 8.0.1 / GCC: C support (malloc, full POSIX file implementation): .c files, using the GNU syntax.
+- Clang 8.0.1 / GCC: C++ STL support (new / delete operators implemented): .cpp/.hpp files, using the GNU syntax.
 
 Note on C++ projects:
 - 	It has overhead. A barebones C TGDS project is roughly 200K, where as C++ using <vector> <iostream> might use about 580K. 
@@ -43,24 +43,24 @@ Steps:
 
 -	Run setup.bat
 	
-1.b)Right after, a MingGW setup wizard will appear. Click next until the setup wizard ends.
-	
-Then, open MSYS2 MSYS: and execute these commands.
+1.b)Right after, a CYGWIN setup wizard will appear. Click next until a list of mirrors appear, choose the first one or subsequently the others if the first didn't work.
 
-pacman -Syu
+- Then type "make" in the package, choose the vanilla make (4.3-1). The "Skip" checkbox will change and instead the version will appear.
 
-After done, close the console, open it again:
-pacman -Su
+- Cleanup and write "clang" and repeat the same steps. Choose mingw64-x86_64-clang (8.0.1-1).
 
-Then:
-pacman -S --needed base-devel mingw-w64-x86_64-toolchain
+- Cleanup and write "llvm" and repeat the same steps. Choose mingw64-x86_64-llvm (5.0.1-1).
 
-Then:
-pacman -S mingw-w64-x86_64-llvm
-pacman -S mingw-w64-x86_64-clang
-pacman -S git
 
-From now on, use MSYS2 MinGW 64-bit to build TGDS. (or 32-bit if you have a 32bit system).
+Click next until the setup ends.
+
+Finally, place ";C:\cygwin64\bin" at the end of the "Path" SYSTEM variable, semicolon included, so that the Cygwin toolset is available for use.
+Right-click Start (lower-left on Start menu)
+Click Search
+Type env into search box
+Click Edit the system environment variables/Control Panel
+
+From now on, use CYGWIN terminal to build TGDS projects.
 
 1.c)Building Newlib for NintendoDS: 
 - Proceed to:

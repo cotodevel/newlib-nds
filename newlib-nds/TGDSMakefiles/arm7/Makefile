@@ -59,7 +59,7 @@ OBJPROG =	$(addprefix $(OBJDIR)/, $(NONSTRIPELF_ARM7))
 
 #------------------------------------------ CLANG START
 LD2 := $(CC)
-CC := clang
+CC := clang-8
 AR := llvm-ar
 DEP_DIR := $(BUILD_DIR)/dep
 DEP_CFLAGS := -MP 

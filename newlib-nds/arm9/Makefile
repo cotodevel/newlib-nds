@@ -50,10 +50,10 @@ VPATH 	=	$(DIR_SRC)
 OBJPROG = 	$(addprefix $(OBJDIR)/, $(TARGET_LIBRARY_FILE_9))
 
 #------------------------------------------ CLANG START
-CC = clang
-AR = llvm-ar
-DEP_DIR = $(BUILD_DIR)/dep
-DEP_CFLAGS = -MT $@ -MMD -MP 
+CC := clang-8
+AR := llvm-ar
+DEP_DIR := $(BUILD_DIR)/dep
+DEP_CFLAGS := -MT $@ -MMD -MP 
 
 # CFLAGS which can provided from the CLI
 # They will be appended last and will consequently override
@@ -80,6 +80,7 @@ CFLAGS = \
   -g3 \
   -nostdlib \
   -fPIC	\
+  -Wunused-label	\
   -fshort-enums	\
   $(COMPILER_SPECIFIC_CFLAGS) \
   $(ARCH_CFLAGS) \
@@ -139,7 +140,12 @@ $(OBJPROG): $(addprefix $(OBJDIR)/, $(OBJECTS))
 
 #build *.o into $(TARGET_LIBRARY_FILE_9)
 $(TARGET_LIBRARY_FILE_9): $(OBJPROG)
+ifeq ($(TGDS_ENV),windows)	
+	-cp	$(OBJPROG)	$(TARGET_LIBRARY_PATH_WIN)
+endif
+ifeq ($(TGDS_ENV),linux)
 	-cp	$(OBJPROG)	$(TARGET_LIBRARY_PATH)
+endif
 	-@echo 'build done: $(TARGET_LIBRARY_FILE_9)'
 	
 ################################################################################################

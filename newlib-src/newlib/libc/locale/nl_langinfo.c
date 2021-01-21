@@ -223,10 +223,6 @@ _DEFUN(nl_langinfo, (item),
 		ret = __locale_charset ();
 #endif
 
-#ifdef __clang__
-__attribute__((unused)) 
-#endif
-
 do_codeset:
 #ifdef __CYGWIN__
 		/* Convert charset to Linux compatible codeset string. */

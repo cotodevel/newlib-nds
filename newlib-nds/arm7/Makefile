@@ -16,12 +16,11 @@
 #USA
 #
 
-
 # relative path (if you are outside arm9 folder then $(DIR_ARM9), arm7 is $(DIR_ARM7))
 RELATIVE_PATH =	
 
 #Prepare ARM7 dirs
-DIRLIBS_HDR = $(foreach dirres,$(DIRS_ARM7_HEADER),-I "$(CURDIR)/$(RELATIVE_PATH)$(dirres)" )	$(DIRLIBS_ALLOWED)
+DIRLIBS_HDR = $(foreach dirres,$(DIRS_ARM7_HEADER),-I "$(CURDIR)/$(RELATIVE_PATH)$(dirres)" )	$(DIRLIBS_ALLOWED)	
 DIRLIBS_SRC = $(foreach dirres,$(DIRS_ARM7_SRC),-I "$(CURDIR)/$(RELATIVE_PATH)$(dirres)" )
 
 file_arm7_src_c=  $(foreach dir,$(DIRS_ARM7_SRC), $(subst $(CURDIR)/$(RELATIVE_PATH)/$(dir)/,,$(wildcard $(CURDIR)/$(RELATIVE_PATH)/$(dir)/*.c))  )
@@ -51,10 +50,10 @@ OBJPROG =	$(addprefix $(OBJDIR)/, $(TARGET_LIBRARY_FILE_7))
 
 
 #------------------------------------------ CLANG START
-CC = clang
-AR = llvm-ar
-DEP_DIR = $(BUILD_DIR)/dep
-DEP_CFLAGS = -MT $@ -MMD -MP 
+CC := clang-8
+AR := llvm-ar
+DEP_DIR := $(BUILD_DIR)/dep
+DEP_CFLAGS := -MT $@ -MMD -MP 
 
 # CFLAGS which can provided from the CLI
 # They will be appended last and will consequently override
@@ -81,7 +80,7 @@ CFLAGS = \
   -ffunction-sections -fdata-sections \
   -fPIC	\
   -Wall \
-  -Werror \
+  -Wunused-label	\
   -nostdlib \
   -fshort-enums	\
   $(COMPILER_SPECIFIC_CFLAGS) \
@@ -142,7 +141,12 @@ $(OBJPROG): $(addprefix $(OBJDIR)/, $(OBJECTS))
 
 #build *.o into $(TARGET_LIBRARY_FILE_7)
 $(TARGET_LIBRARY_FILE_7): $(OBJPROG)
+ifeq ($(TGDS_ENV),windows)	
+	-cp	$(OBJPROG)	$(TARGET_LIBRARY_PATH_WIN)
+endif
+ifeq ($(TGDS_ENV),linux)
 	-cp	$(OBJPROG)	$(TARGET_LIBRARY_PATH)
+endif
 	-@echo 'build done: $(TARGET_LIBRARY_FILE_7)'
 	
 ################################################################################################
