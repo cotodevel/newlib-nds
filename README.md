@@ -49,7 +49,7 @@ Steps:
 
 - Cleanup and write "clang" and repeat the same steps. Choose mingw64-x86_64-clang (8.0.1-1).
 
-- Cleanup and write "llvm" and repeat the same steps. Choose mingw64-x86_64-llvm (5.0.1-1).
+- Cleanup and write "llvm" and repeat the same steps. Choose mingw64-x86_64-llvm (5.0.1-1) and llvm (5.0.1-1).
 
 
 Click next until the setup ends.
