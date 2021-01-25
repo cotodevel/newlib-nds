@@ -38,3 +38,13 @@ DEFINE_COMPILERRT_FUNCTION(__aeabi_memmove)
         b       memmove
 DEFINE_AEABI_FUNCTION_ALIAS(__aeabi_memmove4, __aeabi_memmove)
 DEFINE_AEABI_FUNCTION_ALIAS(__aeabi_memmove8, __aeabi_memmove)
+
+
+#ifdef ARM9
+//  uint32 __sync_val_compare_and_swap(volatile uint32* ptr, uint32 oldval, uint32 newval);
+        .align 4
+DEFINE_COMPILERRT_FUNCTION(__sync_val_compare_and_swap)
+        b       q_atomic_test_and_set_int
+DEFINE_AEABI_FUNCTION_ALIAS(__sync_val_compare_and_swap_1, __sync_val_compare_and_swap)
+DEFINE_AEABI_FUNCTION_ALIAS(__sync_val_compare_and_swap_2, __sync_val_compare_and_swap)
+#endif
