@@ -1,3 +1,4 @@
+#ifdef ARM9
 /* Support functions for the unwinder.
    Copyright (C) 2003-2019 Free Software Foundation, Inc.
    Contributed by Paul Brook
@@ -360,3 +361,4 @@ UNWIND_WRAPPER _Unwind_ForcedUnwind 3
 UNWIND_WRAPPER _Unwind_Backtrace 2
 
 #endif  /* ndef __symbian__ */
+#endif

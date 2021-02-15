@@ -1,3 +1,4 @@
+#ifdef ARM9
 /* ARM EABI compliant unwinding routines.
    Copyright (C) 2004-2019 Free Software Foundation, Inc.
    Contributed by Paul Brook
@@ -530,4 +531,5 @@ _Unwind_SetIP (struct _Unwind_Context *context, _Unwind_Ptr val)
 {
   _Unwind_SetGR (context, 15, val | (_Unwind_GetGR (context, 15) & 1));
 }
+#endif
 #endif
