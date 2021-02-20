@@ -67,6 +67,12 @@ SECTIONS
 		KEEP(*(.init))
 	} > EWRAM = 0xFF
 	
+	.dldiSection      :	SUBALIGN(4)
+	{
+		KEEP(*(.initDldiSection))
+		KEEP(*(.dldiSection))
+	} > EWRAM = 0xFF
+	
 	.text      :	SUBALIGN(4)
 	{
 		*(.stub)
