@@ -22,6 +22,7 @@ ifeq ($(TGDS_ENV),windows)
 	export BIN2C	=	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)bin2c.exe
 	export BIN2LZSS	=	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)bin2lzss.exe
 	export ADPCMENCODER	=	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)adpcm_xq.exe
+	export TGDSPKGBUILDER	=	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)TGDSPKGBuilder.exe
 	
 	#cleanup default C/C++/ASM flags
 	export ARFLAGS	=''
@@ -82,6 +83,7 @@ ifeq ($(TGDS_ENV),linux)
 	export BIN2C	:=	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)bin2c
 	export BIN2LZSS	=	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)bin2lzss
 	export ADPCMENCODER	=	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)adpcm_xq
+	export TGDSPKGBUILDER	=	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)TGDSPKGBuilder
 	
 	#cleanup default C/C++/ASM flags
 	export ARFLAGS	=''
