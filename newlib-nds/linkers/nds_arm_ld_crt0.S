@@ -122,11 +122,6 @@ _start:
 	ldr                 r3,=_itcm_end                  /* point r3 after the last byte we will be writing (LMA)*/
 	bl                  copy  
 	
-	ldr                 r1,=__vectors_vma_start                /* point our source register to the start of the .vectors section (VMA)*/
-	ldr                 r2,=_vector_start                 /* point our destination register to the VECTORS dedicated to our writable data (LMA)*/
-	ldr                 r3,=_vector_end                  /* point r3 after the last byte we will be writing (LMA)*/
-	bl                  copy
-	
 	ldr                 r1,=__dtcm_vma_start                /* point our source register to the start of the .dtcm section (VMA)*/
 	ldr                 r2,=_dtcm_start                 /* point our destination register to the D-TCM dedicated to our writable data (LMA)*/
 	ldr                 r3,=_dtcm_end                  /* point r3 after the last byte we will be writing (LMA)*/

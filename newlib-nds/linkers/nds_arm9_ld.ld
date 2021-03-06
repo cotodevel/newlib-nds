@@ -22,7 +22,6 @@ USA
 MEMORY
 {
 	DTCM : ORIGIN = 0x0b000000, LENGTH = 16K
-	VECTORS : ORIGIN = 0x01FFC000, LENGTH = 256	
 	ITCM : ORIGIN = 0x01FF8000, LENGTH = 32K
 	GBAROM : ORIGIN = 0x08000000, LENGTH = 32M
 	EWRAM : ORIGIN = 0x02000000, LENGTH = 4M
@@ -30,9 +29,6 @@ MEMORY
 
 _itcm_start = ORIGIN(ITCM);
 _itcm_end = ORIGIN(ITCM)	+	LENGTH(ITCM);
-
-_vector_start = ORIGIN(VECTORS);
-_vector_end = ORIGIN(VECTORS)	+	LENGTH(VECTORS);
 
 _ewram_start = ORIGIN(EWRAM);
 _ewram_end = ORIGIN(EWRAM)	+	LENGTH(EWRAM);
@@ -124,17 +120,13 @@ SECTIONS
 	__itcm_vma_start = .;
 	.itcm      : SUBALIGN(4)
 	{
+		__vectors_vma_start = .;
+		KEEP (*(.vectors*))
+		__vectors_vma_end__ = .;
 		KEEP (*(.itcm*))
 	} > ITCM AT > EWRAM
 	__itcm_vma_end__ = .;
 	
-	__vectors_vma_start = .;
-	.vectors : SUBALIGN(4) {
-		KEEP (*(.vectors*))
-		. = ALIGN(4);
-	} > VECTORS AT > EWRAM
-	__vectors_vma_end__ = .;
-
 	__dtcm_vma_start = .;
 	.dtcm      : SUBALIGN(4)
 	{
