@@ -129,11 +129,11 @@ _start:
 	#endif
 	
 	#ifdef ARM9
-	bl DrainWriteBuffer
 	/* Wait until ARM7 reads firmware and we initialize ARM9 from this flag */
-	ldr r1,=(0x027FF000 + 0x5D)	@(uint8)Console Type: 
 	waitForFirmwareARM7Setup:
-		ldrb r0, [r1]
+		ldr r0,=(0x027FF000 + 0x5D)	@(uint8)Console Type: 
+		blx getValueSafe
+		and r0,r0,#0xFF
 		cmp r0, #0xFF		@DS Phat
 		beq FirmwareARM7OK
 		cmp r0, #0x20		@DS Lite
