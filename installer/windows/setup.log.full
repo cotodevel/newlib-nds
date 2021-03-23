@@ -1,0 +1,5 @@
+2021/03/17 22:45:20 Starting cygwin install, version 2.905
+2021/03/17 22:45:20 User has backup/restore rights
+2021/03/17 22:45:20 Current Directory: C:\bitbucket_clone\newlib-nds\installer\windows
+2021/03/17 22:45:20 Could not open service McShield for query, start and stop. McAfee may not be installed, or we don't have access.
+2021/03/17 22:45:23 Ending cygwin install

@@ -15,6 +15,7 @@ ifeq ($(TGDS_ENV),windows)
 	export CXX 	= 	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)arm-eabi-g++.exe
 	export CPP 	= 	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)arm-eabi-c++.exe
 	export LD	=	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)arm-eabi-ld.exe
+	export GRITTOOL	=	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)grit/grit.exe
 	export OBJCOPY	=	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)arm-eabi-objcopy.exe
 	export OBJDUMP	=	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)arm-eabi-objdump.exe
 	export OBJSTRIP	=	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)arm-eabi-strip.exe
