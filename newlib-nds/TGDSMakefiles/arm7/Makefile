@@ -46,7 +46,8 @@ DIR_SRC			= 	$(DIRS_ARM7_SRC)
 
 #--gc-sections: allows relocatable sections linked (already) to be included, otherwise unused sections are discarded.
 #check arm9.map "Discarded input sections" to see --gc-sections in action.
-LDFLAGS	=	-specs=$(TARGET_LIBRARY_LINKER_PATH_LD)/nds_arm7_ld.specs	-Wl,--no-gc-sections,-Map,$(MAPFILE)
+LDFLAGS	:=	-specs=$(TARGET_LIBRARY_LINKER_PATH_LD)/nds_arm7_ld.specs	-Wl,--no-gc-sections,-Map,$(MAPFILE)
+LDFLAGS_DSI	:=	-specs=$(TARGET_LIBRARY_LINKER_PATH_LD)/dsi_arm7_ld.specs	-Wl,--no-gc-sections,-Map,arm7-nonstripped_dsi.map
 LIBRARIES =	-l$(TARGET_LIBRARY_NAME_7)	-lstdc++	-lcnano7	-lgcc
 
 ################################################################################################
@@ -147,17 +148,22 @@ $(TARGET_LIBRARY_CRT0_FILE_7).o:	$(TARGET_LIBRARY_LINKER_FILE_7)
 	$(CC) $(DEP_CFLAGS) $(CFLAGS) $(DIRLIBS_HDR) $(DIRLIBS_SRC)	-c -o $(OBJDIR)/$@	$< 
 	cp	-r $(TARGET_LIBRARY_LINKER_PATH_LD)nds_arm7_ld.ld $(CURDIR)
 	cp	-r $(TARGET_LIBRARY_LINKER_PATH_LD)nds_arm7_ld.specs $(CURDIR)
+	cp	-r $(TARGET_LIBRARY_LINKER_PATH_LD)dsi_arm7.ld $(CURDIR)
+	cp	-r $(TARGET_LIBRARY_LINKER_PATH_LD)dsi_arm7_ld.specs $(CURDIR)
+	
 	-@echo 'S Compile end: crt0s'
 
 #Linkage.
 $(OBJPROG): $(addprefix $(OBJDIR)/, $(OBJECTS))
 	-@echo 'Entering Linking phase'
-	$(LD2) $^	$(LDFLAGS)	$(DIRLIBS_HDR)	$(DIRLIBS_SRC)	$(DIRLIBS_SHARED)	-L	$(TARGET_LIBRARY_PATH)/	-L	$(TOOLCHAIN_PATH)/		$(LIBRARIES)	-L	$(TARGET_LIBRARY_LINKER_PATH_LD)	-o $@
+	-$(LD2) $^	$(LDFLAGS)	$(DIRLIBS_HDR)	$(DIRLIBS_SRC)	$(DIRLIBS_SHARED)	-L	$(TARGET_LIBRARY_PATH)/	-L	$(TOOLCHAIN_PATH)/		$(LIBRARIES)	-L	$(TARGET_LIBRARY_LINKER_PATH_LD)	-o $@
+	-$(LD2) $^	$(LDFLAGS_DSI)	$(DIRLIBS_HDR)	$(DIRLIBS_SRC)	$(DIRLIBS_SHARED)	-L	$(TARGET_LIBRARY_PATH)/	-L	$(TOOLCHAIN_PATH)/		$(LIBRARIES)	-L	$(TARGET_LIBRARY_LINKER_PATH_LD)	-o	${@:.elf=_dsi.elf}
 	-@echo 'Leaving Linking phase. Output: $@'
 
 #xxxx-nonstripped.elf -> xxxx.elf STRIP operation
 $(ELF_ARM7): $(OBJPROG)
 	-@echo '$@ Unstripped. STRIP Start!'
+	-mv build/${@:.elf=-nonstripped_dsi.elf}	$(CURDIR)
 	$(OBJSTRIP)	-s -R .comment -R .gnu.version	$<
 	-mv	$<	$@
 	
@@ -169,4 +175,4 @@ $(BINSTRIP_RULE_7): $(ELF_ARM7)
 	
 clean:
 	-@echo 'cleanup $(DIR_ARM7)'
-	-@rm -fr $(BINSTRIP_RULE_7)	$(MAPFILE)	$(CURDIR)/nds_arm7_ld.specs	$(CURDIR)/nds_arm7_ld.ld
+	-@rm -fr $(BINSTRIP_RULE_7)	$(MAPFILE)	$(CURDIR)/nds_arm7_ld.specs	$(CURDIR)/nds_arm7_ld.ld	$(CURDIR)/dsi_arm7_ld.specs	$(CURDIR)/dsi_arm7.ld	$(CURDIR)/arm7-nonstripped_dsi.elf $(CURDIR)/arm7-nonstripped_dsi.map

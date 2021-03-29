@@ -22,16 +22,22 @@ MEMORY {
 	twl_iwram : ORIGIN = 0x03000000, LENGTH = 256K
 }
 
-__iwram_start	=	ORIGIN(iwram);
-__iwram_top	=	ORIGIN(iwram)+ LENGTH(iwram);
+_iwram_start =	ORIGIN(iwram);
+_iwram_end  =	ORIGIN(iwram)+ LENGTH(iwram);
 
-__sp_irq	=	__iwram_top - 0x100;
-__sp_svc	=	__sp_irq - 0x100;
-__sp_usr	=	__sp_svc - 0x100;
-
-__irq_flags	=	0x04000000 - 8;
+/* ARM7 Specific */
+_arm7_irqcheckbits = 0x04000000 - 8;	/* __irq_flags */
 __irq_flagsaux	=	0x04000000 - 0x40;
-__irq_vector	=	0x04000000 - 4;
+_arm7_irqhandler = 0x04000000 - 4;	/* __irq_vector */
+
+/* ARM ABI says stacks are full decreasing */
+sp_SVC	= _iwram_end - 0x200;
+sp_IRQ	= sp_SVC - 0x200;
+sp_FIQ	= sp_IRQ - 0x200;
+sp_ABT	= sp_FIQ - 0x200;
+sp_UND	= sp_ABT - 0x200;
+sp_USR	= sp_UND - 0x200;
+sp_SYS	= sp_USR;
 
 SECTIONS
 {
@@ -189,6 +195,7 @@ SECTIONS
 		. = ALIGN(4);    /* REQUIRED. LD is flaky without it. */
 		__bss_end__ = ABSOLUTE(.);
 		__end__ = ABSOLUTE(.);
+		__vma_stub_end__ = __end__;
 	} >iwram
 
 	/* Stabs debugging sections.  */
