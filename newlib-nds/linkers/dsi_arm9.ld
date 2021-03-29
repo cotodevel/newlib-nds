@@ -11,27 +11,38 @@ PHDRS {
 	main    PT_LOAD FLAGS(7);
 	dtcm    PT_LOAD FLAGS(7);
 	itcm    PT_LOAD FLAGS(7);
-	vectors PT_LOAD FLAGS(7);
 	twl     PT_LOAD FLAGS(0x100007);
 }
 
 MEMORY {
 	ewram	: ORIGIN = 0x02000000, LENGTH = 4M - 512k
 	dtcm	: ORIGIN = 0x0b000000, LENGTH = 16K
-	vectors	: ORIGIN = 0x01000000, LENGTH = 256
-	itcm	: ORIGIN = 0x01000100, LENGTH = 32K - 256
+	itcm	: ORIGIN = 0x01000000, LENGTH = 32K
+	gbarom : ORIGIN = 0x08000000, LENGTH = 32M
 }
 
-__ewram_end	=	ORIGIN(ewram) + LENGTH(ewram);
-__eheap_end	=	ORIGIN(ewram) + LENGTH(ewram);
+_itcm_start = ORIGIN(itcm);
+_itcm_end = ORIGIN(itcm)	+	LENGTH(itcm);
 
-__dtcm_top	=	ORIGIN(dtcm) + LENGTH(dtcm);
-__irq_flags	=	__dtcm_top - 0x08;
-__irq_vector	=	__dtcm_top - 0x04;
+_ewram_start = ORIGIN(ewram);
+_ewram_end	=	ORIGIN(ewram) + LENGTH(ewram);
 
-__sp_svc	=	__dtcm_top - 0x100;
-__sp_irq	=	__sp_svc - 0x100;
-__sp_usr	=	__sp_irq - 0x100;
+_gba_start = ORIGIN(gbarom);
+_gba_end = ORIGIN(gbarom)	+	LENGTH(gbarom);
+
+_dtcm_start = ORIGIN(dtcm);
+_dtcm_end	=	ORIGIN(dtcm) + LENGTH(dtcm);
+_arm9_irqcheckbits	=	_dtcm_end - 0x08;	/* __irq_flags */
+_arm9_irqhandler	=	_dtcm_end - 0x04;	/* __irq_vector */
+
+/* ARM ABI says stacks are full decreasing */
+sp_SVC	= _dtcm_end  - 0x200;	/* reset, swi exception*/
+sp_IRQ	= sp_SVC - 0x200;	/*irq exception*/
+sp_FIQ	= sp_IRQ - 0x200;	/* fiq exception */
+sp_ABT	= sp_FIQ - 0x200;	/* prefetch / data aborts exception */
+sp_UND	= sp_ABT - 0x200;	/* undefined exception */
+sp_USR	= sp_UND - 0x200;	/* usr / sys stacks */
+sp_SYS = sp_USR;
 
 SECTIONS
 {
@@ -173,7 +184,7 @@ SECTIONS
 	} >ewram :main = 0xff
 
 	__bss_vma = . ;
-
+	__dtcm_vma_start = .;
 	.dtcm :
 	{
 		__dtcm_lma = LOADADDR(.dtcm);
@@ -183,7 +194,8 @@ SECTIONS
 		. = ALIGN(4);
 		__dtcm_end = ABSOLUTE(.);
 	} >dtcm AT>ewram :dtcm = 0xff
-
+	
+	__itcm_vma_start = .;
 	.itcm :
 	{
 		__itcm_lma = LOADADDR(.itcm);
@@ -202,7 +214,7 @@ SECTIONS
 		*.vectors*(.text .stub .text.*)
 		. = ALIGN(4);
 		__vectors_end = ABSOLUTE(.);
-	} >vectors AT>ewram :vectors = 0xff
+	} >itcm AT>ewram :itcm = 0xff
 	
 	.sbss __dtcm_end (NOLOAD): 
 	{
@@ -253,7 +265,11 @@ SECTIONS
 		__twl_bss_end__ = ABSOLUTE(.);
 		__twl_end__ = ABSOLUTE(.);
 	} :NONE
-
+	
+	PROVIDE (__lib__end__ = __twl_end__);
+	. = ALIGN(4);
+	PROVIDE (__vma_stub_end__ = __lib__end__ + 0x40);
+	
 	/* Stabs debugging sections.  */
 	.stab 0 : { *(.stab) }
 	.stabstr 0 : { *(.stabstr) }
