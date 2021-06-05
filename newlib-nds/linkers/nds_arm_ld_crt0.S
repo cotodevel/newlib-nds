@@ -71,20 +71,6 @@ _start:
 	bl                  copy  
 	#endif
 
-looper:
-	#ifdef ARM7
-	ldr r0,=0xFFFFC171
-	ldr r1,=0x03000000
-	str r0,[r1]
-	#endif
-	
-	#ifdef ARM9
-	ldr r0,=0xFFFFC878
-	ldr r1,=0x02000000
-	str r0,[r1]
-	#endif
-	b looper
-
 	@Info from: http://problemkaputt.de/gbatek.htm
 	@DS BIOS RAM Usage
 	@Below memory at 27FFxxxh is mirrored to 23FFxxxh (on retail consoles with 4MB RAM), however, it should be accessed via address 27FFxxxh 
@@ -153,9 +139,7 @@ looper:
 	ldr                 r2,=_dtcm_start                 /* point our destination register to the D-TCM dedicated to our writable data (LMA)*/
 	ldr                 r3,=_dtcm_end                  /* point r3 after the last byte we will be writing (LMA)*/
 	bl                  copy
-	#endif
 	
-	#ifdef ARM9
 	/* Wait until ARM7 reads firmware and we initialize ARM9 from this flag */
 	waitForFirmwareARM7Setup:
 		ldr r0,=(0x027FF000 + 0x5D)	@(uint8)Console Type: 

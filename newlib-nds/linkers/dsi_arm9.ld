@@ -1,39 +1,47 @@
-/*--------------------------------------------------------------------------------
-	This Source Code Form is subject to the terms of the Mozilla Public License,
-	v. 2.0. If a copy of the MPL was not distributed with this file, You can
-	obtain one at https://mozilla.org/MPL/2.0/.
---------------------------------------------------------------------------------*/
-OUTPUT_FORMAT("elf32-littlearm", "elf32-bigarm", "elf32-littlearm")
-OUTPUT_ARCH(arm)
-ENTRY(_start)
+/*
+			Copyright (C) 2017  Coto
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
 
-PHDRS {
-	main    PT_LOAD FLAGS(7);
-	dtcm    PT_LOAD FLAGS(7);
-	itcm    PT_LOAD FLAGS(7);
-	twl     PT_LOAD FLAGS(0x100007);
+This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301
+USA
+*/
+
+/* Coto: linker file for NDS ARM9 processor, could be adapted for DSi-3DS */
+
+/* attributes can actually help in debugging because if you try to move functions to DTCM, for example, compiler will rant since DTCM is DATA only path and not execution*/
+MEMORY
+{
+	DTCM : ORIGIN = 0x0b000000, LENGTH = 16K
+	ITCM : ORIGIN = 0x01FF8000, LENGTH = 32K
+	GBAROM : ORIGIN = 0x08000000, LENGTH = 32M
+	EWRAM : ORIGIN = 0x02000000, LENGTH = 4M
 }
 
-MEMORY {
-	ewram	: ORIGIN = 0x02000000, LENGTH = 4M - 512k
-	dtcm	: ORIGIN = 0x0b000000, LENGTH = 16K
-	itcm	: ORIGIN = 0x01000000, LENGTH = 32K
-	gbarom : ORIGIN = 0x08000000, LENGTH = 32M
-}
+_itcm_start = ORIGIN(ITCM);
+_itcm_end = ORIGIN(ITCM)	+	LENGTH(ITCM);
 
-_itcm_start = ORIGIN(itcm);
-_itcm_end = ORIGIN(itcm)	+	LENGTH(itcm);
+_ewram_start = ORIGIN(EWRAM);
+_ewram_end = ORIGIN(EWRAM)	+	LENGTH(EWRAM);
 
-_ewram_start = ORIGIN(ewram);
-_ewram_end	=	ORIGIN(ewram) + LENGTH(ewram);
+_gba_start = ORIGIN(GBAROM);
+_gba_end = ORIGIN(GBAROM)	+	LENGTH(GBAROM);
 
-_gba_start = ORIGIN(gbarom);
-_gba_end = ORIGIN(gbarom)	+	LENGTH(gbarom);
+_dtcm_start = ORIGIN(DTCM);
+_dtcm_end = ORIGIN(DTCM)	+	LENGTH(DTCM);
 
-_dtcm_start = ORIGIN(dtcm);
-_dtcm_end	=	ORIGIN(dtcm) + LENGTH(dtcm);
-_arm9_irqcheckbits	=	_dtcm_end - 0x08;	/* __irq_flags */
-_arm9_irqhandler	=	_dtcm_end - 0x04;	/* __irq_vector */
+/* ARM9 Specific */
+_arm9_irqcheckbits = ORIGIN(DTCM) + 0x3FF8;	/* __irq_flags */
+_arm9_irqhandler = ORIGIN(DTCM) + 0x3FFC;	/* __irq_vector */
 
 /* ARM ABI says stacks are full decreasing */
 sp_SVC	= _dtcm_end  - 0x200;	/* reset, swi exception*/
@@ -44,265 +52,136 @@ sp_UND	= sp_ABT - 0x200;	/* undefined exception */
 sp_USR	= sp_UND - 0x200;	/* usr / sys stacks */
 sp_SYS = sp_USR;
 
+OUTPUT_FORMAT("elf32-littlearm", "elf32-bigarm","elf32-littlearm")
+OUTPUT_ARCH(arm)
+ENTRY(_start)
 SECTIONS
 {
-	/* Secure area crap */
-	.secure : { *(.secure) } >ewram :main = 0
-
-	.crt0	:
+	. = ALIGN(4);
+	.init      :	SUBALIGN(4)
 	{
-		__text_start = . ;
-		KEEP (*(.crt0))
-		. = ALIGN(4);  /* REQUIRED. LD is flaky without it. */
-	} >ewram :main = 0x00
-
-	.plt : { *(.plt) } >ewram :main = 0xff
-
-	.init :
+		KEEP(*(.init))
+	} > EWRAM = 0xFF
+	
+	.dldiSection      :	SUBALIGN(4)
 	{
-		KEEP (*(SORT_NONE(.init)))
-	} >ewram :main
-
-	.text :   /* ALIGN (4): */
+		KEEP(*(.initDldiSection))
+		KEEP(*(.dldiSection))
+	} > EWRAM = 0xFF
+	
+	.text      :	SUBALIGN(4)
 	{
-		*(EXCLUDE_FILE(*.itcm* *.vectors* *.twl*) .text)
-		*(EXCLUDE_FILE(*.itcm* *.vectors* *.twl*) .stub)
-		*(EXCLUDE_FILE(*.itcm* *.vectors* *.twl*) .text.*)
+		*(.stub)
 		/* .gnu.warning sections are handled specially by elf32.em.  */
-		*(EXCLUDE_FILE(*.twl*) .gnu.warning)
-		*(EXCLUDE_FILE(*.twl*) .gnu.linkonce.t*)
-		*(.glue_7)
-		*(.glue_7t)
-		. = ALIGN(4);  /* REQUIRED. LD is flaky without it. */
-	} >ewram :main = 0xff
-
-	.fini           :
-	{
-		KEEP (*(.fini))
-	} >ewram :main =0xff
-
-	__text_end = . ;
-
-	.rodata :
-	{
-		*(EXCLUDE_FILE(*.twl*) .rodata)
-		*all.rodata*(*)
-		*(EXCLUDE_FILE(*.twl*) .roda)
-		*(EXCLUDE_FILE(*.twl*) .rodata.*)
-		*(EXCLUDE_FILE(*.twl*) .gnu.linkonce.r*)
-		SORT(CONSTRUCTORS)
-		. = ALIGN(4);   /* REQUIRED. LD is flaky without it. */
-	} >ewram :main = 0xff
-
-	.ARM.extab   : { *(.ARM.extab* .gnu.linkonce.armextab.*) } >ewram :main
- 	__exidx_start = .;
-	ARM.exidx   : { *(.ARM.exidx* .gnu.linkonce.armexidx.*) } >ewram :main
- 	__exidx_end = .;
-
-	/*	Ensure the __preinit_array_start label is properly aligned.  We
-		could instead move the label definition inside the section, but
-		the linker would then create the section even if it turns out to
-		be empty, which isn't pretty.  */
-
-	. = ALIGN(32 / 8);
-
-	PROVIDE (__preinit_array_start = .);
-	.preinit_array     : { KEEP (*(.preinit_array)) } >ewram :main = 0xff
-	PROVIDE (__preinit_array_end = .);
-	PROVIDE (__init_array_start = .);
-	.init_array     :
-	{
-		KEEP (*(SORT(.init_array.*)))
-		KEEP (*(.init_array))
-	} >ewram :main = 0xff
-	PROVIDE (__init_array_end = .);
-	PROVIDE (__fini_array_start = .);
-	.fini_array     :
-	{
-		KEEP (*(.fini_array))
-		KEEP (*(SORT(.fini_array.*)))
-	} >ewram :main = 0xff
-
-	PROVIDE (__fini_array_end = .);
-
-	.ctors :
-	{
-	/*	gcc uses crtbegin.o to find the start of the constructors, so
-		we make sure it is first.  Because this is a wildcard, it
-		doesn't matter if the user does not actually link against
-		crtbegin.o; the linker won't look for a file to match a
-		wildcard.  The wildcard also means that it doesn't matter which
-		directory crtbegin.o is in.  */
-		KEEP (*crtbegin.o(.ctors))
-		KEEP (*(EXCLUDE_FILE (*crtend.o) .ctors))
-		KEEP (*(SORT(.ctors.*)))
-		KEEP (*(.ctors))
-		. = ALIGN(4);   /* REQUIRED. LD is flaky without it. */
-	} >ewram :main = 0xff
-
-	.dtors :
-	{
-		KEEP (*crtbegin.o(.dtors))
-		KEEP (*(EXCLUDE_FILE (*crtend.o) .dtors))
-		KEEP (*(SORT(.dtors.*)))
-		KEEP (*(.dtors))
-		. = ALIGN(4);   /* REQUIRED. LD is flaky without it. */
-	} >ewram :main = 0xff
-
-	.eh_frame :
-	{
-		KEEP (*(.eh_frame))
-		. = ALIGN(4);   /* REQUIRED. LD is flaky without it. */
-	} >ewram :main = 0xff
-
-	.gcc_except_table :
-	{
-		*(.gcc_except_table)
-		. = ALIGN(4);   /* REQUIRED. LD is flaky without it. */
-	} >ewram :main = 0xff
-	.jcr            : { KEEP (*(.jcr)) } >ewram :main = 0
-	.got            : { *(.got.plt) *(.got) *(.rel.got) } >ewram :main = 0
-
-	.ewram ALIGN(4) : 
-	{
-		__ewram_start = ABSOLUTE(.) ;
-		*(.ewram)
-		*ewram.*(.text)
-		. = ALIGN(4);   /* REQUIRED. LD is flaky without it. */
-	} >ewram :main = 0xff
-
-
-	.data ALIGN(4) :
-	{
-		__data_start = ABSOLUTE(.);
-		*(EXCLUDE_FILE(*.twl*) .data)
-		*(EXCLUDE_FILE(*.twl*) .data.*)
-		*(EXCLUDE_FILE(*.twl*) .gnu.linkonce.d*)
-		CONSTRUCTORS
-		. = ALIGN(4);
-		__data_end = ABSOLUTE(.) ;
-	} >ewram :main = 0xff
-
-	__bss_vma = . ;
-	__dtcm_vma_start = .;
-	.dtcm :
-	{
-		__dtcm_lma = LOADADDR(.dtcm);
-		__dtcm_start = ABSOLUTE(.);
-		*(.dtcm)
-		*(.dtcm.*)
-		. = ALIGN(4);
-		__dtcm_end = ABSOLUTE(.);
-	} >dtcm AT>ewram :dtcm = 0xff
+		*(.gnu.warning)
+		*(.gnu.linkonce.t*)
+		*(.glue_7t) *(.glue_7)
+		KEEP(*(COMMON))
+		KEEP(*(.text))
+		KEEP(*(.text.*))
+	} > EWRAM = 0xFF
 	
-	__itcm_vma_start = .;
-	.itcm :
-	{
-		__itcm_lma = LOADADDR(.itcm);
-		__itcm_start = ABSOLUTE(.);
-		*(.itcm)
-		*.itcm*(.text .stub .text.*)
-		. = ALIGN(4);
-		__itcm_end = ABSOLUTE(.);
-	} >itcm AT>ewram :itcm = 0xff
-
-	.vectors :
-	{
-		__vectors_lma = LOADADDR(.vectors);
-		__vectors_start = ABSOLUTE(.);
-		*(.vectors)
-		*.vectors*(.text .stub .text.*)
-		. = ALIGN(4);
-		__vectors_end = ABSOLUTE(.);
-	} >itcm AT>ewram :itcm = 0xff
+	.data : SUBALIGN(4) {				/* used by TGDS-Newlib C/C++ code */
+		PROVIDE (__data_start__ = ABSOLUTE(.));
+		*(.data)
+		*(.data.*)
+		*(.gnu.linkonce.d*)
+		*(.gnu.linkonce.t*)
+		PROVIDE (__data_end__ = ABSOLUTE(.));
+	} > EWRAM = 0xff
 	
-	.sbss __dtcm_end (NOLOAD): 
-	{
-		__sbss_start = ABSOLUTE(.);
-		__sbss_start__ = ABSOLUTE(.);
-		*(.sbss)
-		. = ALIGN(4);    /* REQUIRED. LD is flaky without it. */
-		__sbss_end = ABSOLUTE(.);
-	} >dtcm :NONE
-
-	.bss __bss_vma (NOLOAD): 
-	{
-		__bss_start = ABSOLUTE(.);
-		__bss_start__ = ABSOLUTE(.);
-		*(EXCLUDE_FILE(*.twl*) .dynbss)
-		*(EXCLUDE_FILE(*.twl*) .gnu.linkonce.b*)
-		*(EXCLUDE_FILE(*.twl*) .bss*)
-		*(EXCLUDE_FILE(*.twl*) COMMON)
-		. = ALIGN(4);    /* REQUIRED. LD is flaky without it. */
-		__bss_end__ = ABSOLUTE(.) ;
-		__end__ = ABSOLUTE(.) ;
-	} >ewram :NONE
-
-	.twl __end__ : AT(MAX(0x2400000,MAX(__end__,LOADADDR(.vectors)+SIZEOF(.vectors))))
-	{
-		__arm9i_lma__ = LOADADDR(.twl);
-		__arm9i_start__ = ABSOLUTE(.);
-		*(.twl)
-		*.twl*(.text .stub .text.* .gnu.linkonce.t.*)
-		*.twl*(.rodata)
-		*.twl*(.roda)
-		*.twl*(.rodata.*)
-		*.twl*(.data)
-		*.twl*(.data.*)
-		*.twl*(.gnu.linkonce.d*)
-		__arm9i_end__ = ABSOLUTE(.);
-	} :twl
-
-	.twl_bss __arm9i_end__ (NOLOAD):
-	{
-		__twl_bss_start__ = ABSOLUTE(.);
-		*(.twl_bss)
-		*.twl*(.dynbss)
-		*.twl*(.gnu.linkonce.b*)
-		*.twl*(.bss*)
-		*.twl*(COMMON)
-		. = ALIGN(4);    /* REQUIRED. LD is flaky without it. */
-		__twl_bss_end__ = ABSOLUTE(.);
-		__twl_end__ = ABSOLUTE(.);
-	} :NONE
+	.rodata : SUBALIGN(4) {			/* used by TGDS-Newlib C/C++ code */
+		PROVIDE (__rodata_start__ = ABSOLUTE(.));
+		*(.rdata)
+		*(.rodata)
+		*(.rodata.*)
+    	*(.gnu.linkonce.r.*)
+		PROVIDE (__rodata_end__ = ABSOLUTE(.));
+	} > EWRAM = 0xff
 	
-	PROVIDE (__lib__end__ = __twl_end__);
+	.bss (NOLOAD):	SUBALIGN(4) {				/* used by TGDS-Newlib C/C++ code */
+		PROVIDE (__bss_vma_start = ABSOLUTE(.));
+		*(.dynbss*)
+		*(.bss*)
+		*(.bss)
+		*(.gnu.linkonce.b*.)
+		PROVIDE (__bss_vma_end = ABSOLUTE(.));
+	} > EWRAM
+	
+	.ARM.exidx : SUBALIGN(4) {			/* not used at all, but some code rely on ARM debugging symbols */
+		PROVIDE (__exidx_start = ABSOLUTE(.));
+		*(.ARM.exidx)
+		*(.ARM.exidx*)
+		*(.gnu.linkonce.armexidx.)
+		*(.gnu.linkonce.armexidx.*)
+		PROVIDE (__exidx_end = ABSOLUTE(.));
+	} > EWRAM = 0xff
+	
+	__itcm_vma_start = LOADADDR(.itcm);
+	.itcm      : SUBALIGN(4)
+	{
+		__vectors_vma_start = .;
+		KEEP (*(.vectors*))
+		__vectors_vma_end__ = .;
+		KEEP (*(.itcm*))
+	} > ITCM AT > EWRAM
+	__itcm_vma_end__ = __itcm_vma_start + SIZEOF(.itcm);
+	
+	__dtcm_vma_start = LOADADDR(.dtcm);
+	.dtcm      : SUBALIGN(4)
+	{
+		KEEP (*(.dtcm*))
+	} > DTCM AT > EWRAM
+	
+	.fini : SUBALIGN(4) {				/* used by TGDS-Newlib C/C++ code */
+		PROVIDE (__fini_start__ = ABSOLUTE(.));
+		*(.fini)
+		*(.fini*)
+		PROVIDE (__fini_end__ = ABSOLUTE(.));
+		FILL(0x40);
+	} > EWRAM = 0xff
+	__dtcm_vma_end__ = __dtcm_vma_start + SIZEOF(.dtcm);
+	
+	PROVIDE (__lib__end__ = __fini_end__);
 	. = ALIGN(4);
 	PROVIDE (__vma_stub_end__ = __lib__end__ + 0x40);
+
+	/*
+     	* Stabs le debugging sections.
+     	*
+     	*/
+
+    	.stab          0 : { *(.stab) }
+    	.stabstr       0 : { *(.stabstr) }
+    	.stab.excl     0 : { *(.stab.excl) }
+    	.stab.exclstr  0 : { *(.stab.exclstr) }
+    	.stab.index    0 : { *(.stab.index) }
+    	.stab.indexstr 0 : { *(.stab.indexstr) }
+    	.comment       0 : { *(.comment) }
+    	/* DWARF debug sections.
+       	Symbols in the DWARF debugging sections are relative to the beginning
+       	of the section so we begin them at 0.  */
+    	/* DWARF 1 */
+    	.debug          0 : { *(.debug) }
+    	.line           0 : { *(.line) }
+    	/* GNU DWARF 1 extensions */
+    	.debug_srcinfo  0 : { *(.debug_srcinfo) }
+    	.debug_sfnames  0 : { *(.debug_sfnames) }
+    	/* DWARF 1.1 and DWARF 2 */
+    	.debug_aranges  0 : { *(.debug_aranges) }
+    	.debug_pubnames 0 : { *(.debug_pubnames) }
+    	/* DWARF 2 */
+    	.debug_info     0 : { *(.debug_info .gnu.linkonce.wi.*) }
+    	.debug_abbrev   0 : { *(.debug_abbrev) }
+    	.debug_line     0 : { *(.debug_line) }
+    	.debug_frame    0 : { *(.debug_frame) }
+    	.debug_str      0 : { *(.debug_str) }
+    	.debug_loc      0 : { *(.debug_loc) }
+    	.debug_macinfo  0 : { *(.debug_macinfo) }
+    	/* SGI/MIPS DWARF 2 extensions */
+    	.debug_weaknames 0 : { *(.debug_weaknames) }
+    	.debug_funcnames 0 : { *(.debug_funcnames) }
+    	.debug_typenames 0 : { *(.debug_typenames) }
+    	.debug_varnames  0 : { *(.debug_varnames) }
 	
-	/* Stabs debugging sections.  */
-	.stab 0 : { *(.stab) }
-	.stabstr 0 : { *(.stabstr) }
-	.stab.excl 0 : { *(.stab.excl) }
-	.stab.exclstr 0 : { *(.stab.exclstr) }
-	.stab.index 0 : { *(.stab.index) }
-	.stab.indexstr 0 : { *(.stab.indexstr) }
-	.comment 0 : { *(.comment) }
-	/*	DWARF debug sections.
-		Symbols in the DWARF debugging sections are relative to the beginning
-		of the section so we begin them at 0.  */
-	/* DWARF 1 */
-	.debug          0 : { *(.debug) }
-	.line           0 : { *(.line) }
-	/* GNU DWARF 1 extensions */
-	.debug_srcinfo  0 : { *(.debug_srcinfo) }
-	.debug_sfnames  0 : { *(.debug_sfnames) }
-	/* DWARF 1.1 and DWARF 2 */
-	.debug_aranges  0 : { *(.debug_aranges) }
-	.debug_pubnames 0 : { *(.debug_pubnames) }
-	/* DWARF 2 */
-	.debug_info     0 : { *(.debug_info) }
-	.debug_abbrev   0 : { *(.debug_abbrev) }
-	.debug_line     0 : { *(.debug_line) }
-	.debug_frame    0 : { *(.debug_frame) }
-	.debug_str      0 : { *(.debug_str) }
-	.debug_loc      0 : { *(.debug_loc) }
-	.debug_macinfo  0 : { *(.debug_macinfo) }
-	/* SGI/MIPS DWARF 2 extensions */
-	.debug_weaknames 0 : { *(.debug_weaknames) }
-	.debug_funcnames 0 : { *(.debug_funcnames) }
-	.debug_typenames 0 : { *(.debug_typenames) }
-	.debug_varnames  0 : { *(.debug_varnames) }
-	.stack 0x80000 : { _stack = .; *(.stack) }
-	/* These must appear regardless of  .  */
 }
