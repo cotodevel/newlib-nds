@@ -58,6 +58,33 @@ USA
 .global _start
 _start:
 @---------------------------------------------------------------------------------
+	#ifdef ARM7
+	@Copy ARM7i sections from VMA to LMA
+	ldr                 r1,=__arm7i_lma__                 /* point our source register to the start of the .itcm section (VMA)*/
+	ldr                 r2,=__arm7i_start__                 /* point our destination register to the I-TCM dedicated to our writable data (LMA)*/
+	ldr                 r3,=__arm7i_end__                  /* point r3 after the last byte we will be writing (LMA)*/
+	bl                  copy  
+	
+	ldr                 r1,=__arm7_lma__                 /* point our source register to the start of the .itcm section (VMA)*/
+	ldr                 r2,=__arm7_start__                 /* point our destination register to the I-TCM dedicated to our writable data (LMA)*/
+	ldr                 r3,=__arm7_end__                  /* point r3 after the last byte we will be writing (LMA)*/
+	bl                  copy  
+	#endif
+
+looper:
+	#ifdef ARM7
+	ldr r0,=0xFFFFC171
+	ldr r1,=0x03000000
+	str r0,[r1]
+	#endif
+	
+	#ifdef ARM9
+	ldr r0,=0xFFFFC878
+	ldr r1,=0x02000000
+	str r0,[r1]
+	#endif
+	b looper
+
 	@Info from: http://problemkaputt.de/gbatek.htm
 	@DS BIOS RAM Usage
 	@Below memory at 27FFxxxh is mirrored to 23FFxxxh (on retail consoles with 4MB RAM), however, it should be accessed via address 27FFxxxh 

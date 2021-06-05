@@ -28,8 +28,8 @@ _iwram_start = ORIGIN(IWRAM);
 _iwram_end = ORIGIN(IWRAM)	+	LENGTH(IWRAM);
 
 /* ARM7 Specific */
-_arm7_irqcheckbits = 0x04000000 - 8;	/* __irq_flags */
-_arm7_irqhandler = 0x04000000 - 4;	/* __irq_vector */
+_arm7_irqcheckbits = 0x0380FFF8;	/* __irq_flags */
+_arm7_irqhandler = 0x0380FFFC;	/* __irq_vector */
 
 /* ARM ABI says stacks are full decreasing */
 sp_SVC	= _iwram_end - 0x200;
@@ -166,4 +166,14 @@ SECTIONS
 	__fini_end__ = .;
 	__lib__end__ = __fini_end__;
 	__vma_stub_end__ = __lib__end__;
+	
+	/* stubbed for ARM7i binaries crt0 in NTR mode, but actually used in TWL mode */
+	__arm7i_lma__ = __vma_stub_end__ + 4;
+	__arm7i_start__ = __arm7i_lma__ + 4;
+	__arm7i_end__ = __arm7i_start__ + 4;
+	
+	__arm7_lma__ = __arm7i_end__ + 4;
+	__arm7_start__ = __arm7_lma__ + 4;
+	__arm7_end__ = __arm7_start__ + 4;
+	
 }

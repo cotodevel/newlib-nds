@@ -8,7 +8,7 @@ OUTPUT_ARCH(arm)
 ENTRY(_start)
 
 PHDRS {
-	crt0  PT_LOAD FLAGS(7);
+	init  PT_LOAD FLAGS(7);
 	arm7  PT_LOAD FLAGS(7);
 	arm7i PT_LOAD FLAGS(0x100007);
 }
@@ -26,17 +26,17 @@ _iwram_start =	ORIGIN(iwram);
 _iwram_end  =	ORIGIN(iwram)+ LENGTH(iwram);
 
 /* ARM7 Specific */
-_arm7_irqcheckbits = 0x04000000 - 8;	/* __irq_flags */
+_arm7_irqcheckbits = 0x0380FFF8;	/* __irq_flags */
 __irq_flagsaux	=	0x04000000 - 0x40;
-_arm7_irqhandler = 0x04000000 - 4;	/* __irq_vector */
+_arm7_irqhandler = 0x0380FFFC;	/* __irq_vector */
 
 /* ARM ABI says stacks are full decreasing */
-sp_SVC	= _iwram_end - 0x200;
-sp_IRQ	= sp_SVC - 0x200;
-sp_FIQ	= sp_IRQ - 0x200;
-sp_ABT	= sp_FIQ - 0x200;
-sp_UND	= sp_ABT - 0x200;
-sp_USR	= sp_UND - 0x200;
+sp_SVC	= _iwram_end - 0x400;
+sp_IRQ	= sp_SVC - 0x400;
+sp_FIQ	= sp_IRQ - 0x400;
+sp_ABT	= sp_FIQ - 0x400;
+sp_UND	= sp_ABT - 0x400;
+sp_USR	= sp_UND - 0x400;
 sp_SYS	= sp_USR;
 
 SECTIONS
@@ -68,17 +68,16 @@ SECTIONS
 		__twl_bss_end__ = .;
 	} >twl_iwram :NONE
 
-	.crt0	:
+	.init	:
 	{
-		KEEP (*(.crt0))
+		KEEP (*(SORT_NONE(.init)))
 		. = ALIGN(4);  /* REQUIRED. LD is flaky without it. */
-	} >ewram :crt0
+	} >ewram :init
 
 	.text :
 	{
 		__arm7_lma__ = LOADADDR(.text);
 		__arm7_start__ = .;
-		KEEP (*(SORT_NONE(.init)))
 		*(.plt)
 		*(.text .stub .text.* .gnu.linkonce.t.*)
 		KEEP (*(.text.*personality*))
