@@ -83,7 +83,7 @@ ARCH_CFLAGS += \
 COMPILER_SPECIFIC_CFLAGS += \
   --target=arm-none-eabi \
   --sysroot= \
-  -Oz	\
+  -Os	\
   -fno-rtti	-fno-exceptions \
   -DARM7
   
