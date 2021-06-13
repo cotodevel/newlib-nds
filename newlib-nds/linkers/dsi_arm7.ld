@@ -46,6 +46,8 @@ SECTIONS
 	{
 		__arm7i_lma__ = LOADADDR(.twl);
 		__arm7i_start__ = .;
+		
+		/* Moved to IWRAM to allow to use backwards compatible NTR 32K Shared WRAM so it doesn't cause IO conflicts
 		*(.twl)
 		*.twl*(.text .stub .text.* .gnu.linkonce.t.*)
 		*.twl*(.rodata)
@@ -54,11 +56,14 @@ SECTIONS
 		*.twl*(.data)
 		*.twl*(.data.*)
 		*.twl*(.gnu.linkonce.d*)
+		*/
 		__arm7i_end__ = .;
 	} >twl_iwram AT>twl_ewram :arm7i
 
 	.twl_bss ALIGN(4) (NOLOAD) :
 	{
+		/* (Moved) BSS Section Start */
+		/*
 		__twl_bss_start__ = .;
 		*(.twl_bss)
 		*.twl.*(.dynbss)
@@ -66,6 +71,9 @@ SECTIONS
 		*.twl.*(.bss*)
 		*.twl.*(COMMON)
 		__twl_bss_end__ = .;
+		*/
+		/* (Moved) BSS Section End */
+		
 	} >twl_iwram :NONE
 
 	.init	:
@@ -85,6 +93,19 @@ SECTIONS
 		*(.gnu.warning)
 		*(.glue_7t) *(.glue_7) *(.vfp11_veneer)
 		. = ALIGN(4);  /* REQUIRED. LD is flaky without it. */
+		
+		
+		/* ARM7i code moved from .twl section to it allows to use backwards compatible NTR 32K Shared WRAM so it doesn't cause IO conflicts */
+		*(.twl)
+		*.twl*(.text .stub .text.* .gnu.linkonce.t.*)
+		*.twl*(.rodata)
+		*.twl*(.roda)
+		*.twl*(.rodata.*)
+		*.twl*(.data)
+		*.twl*(.data.*)
+		*.twl*(.gnu.linkonce.d*)
+		. = ALIGN(4);  /* REQUIRED. LD is flaky without it. */
+		
 	} >iwram AT>ewram :arm7
 
 	.fini           :
@@ -185,6 +206,17 @@ SECTIONS
 	.bss ALIGN(4) (NOLOAD) :
 	{
 		__arm7_end__ = .;
+		
+		/* (Moved) TWL BSS Section Start */
+		__twl_bss_start__ = .;
+		*(.twl_bss)
+		*.twl.*(.dynbss)
+		*.twl.*(.gnu.linkonce.b*)
+		*.twl.*(.bss*)
+		*.twl.*(COMMON)
+		__twl_bss_end__ = .;
+		/* (Moved) TWL BSS Section End */
+		
 		__bss_start = ABSOLUTE(.);
 		__bss_start__ = ABSOLUTE(.);
 		*(.dynbss)
