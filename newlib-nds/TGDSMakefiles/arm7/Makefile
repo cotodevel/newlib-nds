@@ -97,7 +97,6 @@ CFLAGS = \
   -fshort-enums	\
   $(COMPILER_SPECIFIC_CFLAGS) \
   $(ARCH_CFLAGS) \
-  $(NEWLIB_NANO_COMPILE_FLAGS_C)	\
   $(CLI_CFLAG_OVERRIDES)
 	
 #------------------------------------------ CLANG END
