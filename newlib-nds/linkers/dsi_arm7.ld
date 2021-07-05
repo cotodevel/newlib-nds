@@ -31,12 +31,12 @@ __irq_flagsaux	=	0x04000000 - 0x40;
 _arm7_irqhandler = 0x0380FFFC;	/* __irq_vector */
 
 /* ARM ABI says stacks are full decreasing */
-sp_SVC	= _iwram_end - 0x400;
-sp_IRQ	= sp_SVC - 0x400;
-sp_FIQ	= sp_IRQ - 0x400;
-sp_ABT	= sp_FIQ - 0x400;
-sp_UND	= sp_ABT - 0x400;
-sp_USR	= sp_UND - 0x400;
+sp_SVC	= _iwram_end - 0x200;
+sp_IRQ	= sp_SVC - 0x200;
+sp_FIQ	= sp_IRQ - 0x200;
+sp_ABT	= sp_FIQ - 0x200;
+sp_UND	= sp_ABT - 0x200;
+sp_USR	= sp_UND - 0x200;
 sp_SYS	= sp_USR;
 
 SECTIONS
