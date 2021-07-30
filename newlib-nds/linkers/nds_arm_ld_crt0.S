@@ -140,6 +140,12 @@ _start:
 	ldr                 r3,=_dtcm_end                  /* point r3 after the last byte we will be writing (LMA)*/
 	bl                  copy
 	
+	@TGDS-MB intra argv save-restore
+	ldr                 r1,=0x02FFFE70                /* point our source register to the start of the .dtcm section (VMA)*/
+	ldr                 r2,=argvIntraTGDSMB                 /* point our destination register to the D-TCM dedicated to our writable data (LMA)*/
+	add                 r3,r2,#(256)                  /* point r3 after the last byte we will be writing (LMA)*/
+	bl                  copy
+	
 	/* Wait until ARM7 reads firmware and we initialize ARM9 from this flag */
 	waitForFirmwareARM7Setup:
 		ldr r0,=(0x027FF000 + 0x5D)	@(uint8)Console Type: 
@@ -167,6 +173,10 @@ _start:
 	#endif
 	
 	#ifdef ARM9
+	ldr                 r1,=argvIntraTGDSMB                /* point our source register to the start of the .dtcm section (VMA)*/
+	ldr                 r2,=0x02FFFE70                 /* point our destination register to the D-TCM dedicated to our writable data (LMA)*/
+	add                 r3,r2,#(256)                  /* point r3 after the last byte we will be writing (LMA)*/
+	bl                  copy
 	b	mainARGV			@entrypoint
 	#endif
 @format:	r0 = src_vma, r1 = dest_vma 
@@ -184,6 +194,10 @@ copy:
 	strlo               r0,[r2],#4                  /* if end not reached, store word and advance destination pointer */
 	blo                 copy                        /* if end not reached, branch back to loop */
 	bx                  lr                          /* return to caller */
+
+.global argvIntraTGDSMB
+argvIntraTGDSMB:
+	.skip 0x100
 
 .pool
 .align
