@@ -80,7 +80,7 @@ typedef vuint16		vuint16_t;
 typedef vuint8		vuint8_t;
 
 typedef uint64		uint64_t;
-//typedef uint32		uint32_t;
+typedef uint32		uint32_t;
 typedef uint16		uint16_t;
 typedef uint8		uint8_t;
 
