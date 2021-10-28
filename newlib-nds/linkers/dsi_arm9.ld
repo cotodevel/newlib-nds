@@ -57,11 +57,12 @@ OUTPUT_ARCH(arm)
 ENTRY(_start)
 SECTIONS
 {
-	. = ALIGN(4);
 	.init      :	SUBALIGN(4)
 	{
 		KEEP(*(.init))
 	} > EWRAM = 0xFF
+	
+	. = ALIGN(4);
 	
 	.dldiSection      :	SUBALIGN(4)
 	{
@@ -69,81 +70,94 @@ SECTIONS
 		KEEP(*(.dldiSection))
 	} > EWRAM = 0xFF
 	
+	. = ALIGN(4);
+	
 	.text      :	SUBALIGN(4)
 	{
-		*(.stub)
+		KEEP(*(.stub))
 		/* .gnu.warning sections are handled specially by elf32.em.  */
-		*(.gnu.warning)
-		*(.gnu.linkonce.t*)
-		*(.glue_7t) *(.glue_7)
+		KEEP(*(.gnu.warning))
+		KEEP(*(.gnu.linkonce.t*))
+		KEEP(*(.glue_7t)) 
+		KEEP(*(.glue_7))
 		KEEP(*(COMMON))
 		KEEP(*(.text))
 		KEEP(*(.text.*))
 	} > EWRAM = 0xFF
 	
+	. = ALIGN(4);
+	
 	.data : SUBALIGN(4) {				/* used by TGDS-Newlib C/C++ code */
 		PROVIDE (__data_start__ = ABSOLUTE(.));
-		*(.data)
-		*(.data.*)
-		*(.gnu.linkonce.d*)
-		*(.gnu.linkonce.t*)
+		KEEP(*(.data))
+		KEEP(*(.data.*))
+		KEEP(*(.gnu.linkonce.d*))
+		KEEP(*(.gnu.linkonce.t*))
 		PROVIDE (__data_end__ = ABSOLUTE(.));
 	} > EWRAM = 0xff
 	
+	. = ALIGN(4);
+	
 	.rodata : SUBALIGN(4) {			/* used by TGDS-Newlib C/C++ code */
 		PROVIDE (__rodata_start__ = ABSOLUTE(.));
-		*(.rdata)
-		*(.rodata)
-		*(.rodata.*)
-    	*(.gnu.linkonce.r.*)
+		KEEP(*(.rdata))
+		KEEP(*(.rodata))
+		KEEP(*(.rodata.*))
+    	KEEP(*(.gnu.linkonce.r.*))
 		PROVIDE (__rodata_end__ = ABSOLUTE(.));
 	} > EWRAM = 0xff
 	
-	.bss (NOLOAD):	SUBALIGN(4) {				/* used by TGDS-Newlib C/C++ code */
+	. = ALIGN(4);
+	
+	.bss :	SUBALIGN(4) {				/* used by TGDS-Newlib C/C++ code */
 		PROVIDE (__bss_vma_start = ABSOLUTE(.));
-		*(.dynbss*)
-		*(.bss*)
-		*(.bss)
-		*(.gnu.linkonce.b*.)
+		KEEP(*(.dynbss*))
+		KEEP(*(.bss*))
+		KEEP(*(.bss))
+		KEEP(*(.gnu.linkonce.b*.))
 		PROVIDE (__bss_vma_end = ABSOLUTE(.));
 	} > EWRAM
 	
+	. = ALIGN(4);
+	
 	.ARM.exidx : SUBALIGN(4) {			/* not used at all, but some code rely on ARM debugging symbols */
 		PROVIDE (__exidx_start = ABSOLUTE(.));
-		*(.ARM.exidx)
-		*(.ARM.exidx*)
-		*(.gnu.linkonce.armexidx.)
-		*(.gnu.linkonce.armexidx.*)
+		KEEP(*(.ARM.exidx))
+		KEEP(*(.ARM.exidx*))
+		KEEP(*(.gnu.linkonce.armexidx.))
+		KEEP(*(.gnu.linkonce.armexidx.*))
 		PROVIDE (__exidx_end = ABSOLUTE(.));
 	} > EWRAM = 0xff
 	
+	. = ALIGN(4);
+	
 	__itcm_vma_start = LOADADDR(.itcm);
+	__vectors_vma_start = __itcm_vma_start;
 	.itcm      : SUBALIGN(4)
 	{
-		__vectors_vma_start = .;
 		KEEP (*(.vectors*))
-		__vectors_vma_end__ = .;
 		KEEP (*(.itcm*))
 	} > ITCM AT > EWRAM
-	__itcm_vma_end__ = __itcm_vma_start + SIZEOF(.itcm);
+	__itcm_vma_end__ = .;
 	
 	__dtcm_vma_start = LOADADDR(.dtcm);
 	.dtcm      : SUBALIGN(4)
 	{
 		KEEP (*(.dtcm*))
 	} > DTCM AT > EWRAM
+	__dtcm_vma_end__ = .;
+	
+	. = ALIGN(4);
 	
 	.fini : SUBALIGN(4) {				/* used by TGDS-Newlib C/C++ code */
 		PROVIDE (__fini_start__ = ABSOLUTE(.));
 		*(.fini)
 		*(.fini*)
 		PROVIDE (__fini_end__ = ABSOLUTE(.));
-		FILL(0x40);
 	} > EWRAM = 0xff
-	__dtcm_vma_end__ = __dtcm_vma_start + SIZEOF(.dtcm);
 	
 	PROVIDE (__lib__end__ = __fini_end__);
-	. = ALIGN(4);
+	. = ALIGN(0x40);
 	PROVIDE (__vma_stub_end__ = __lib__end__ + 0x40);
 
 	/*
