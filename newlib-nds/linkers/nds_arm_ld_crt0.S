@@ -90,7 +90,7 @@ _start:
 	#ifdef ARM9
 	mov	r0, #0x1f		@ sys
 	msr	cpsr, r0
-	ldr 	sp, =(0x027FF000 + 0x1000)
+	ldr 	sp, =(0x027FF000)
 	
 	push {r0-r3,lr}
 	ldr	r3, =MPUSet
@@ -180,20 +180,24 @@ _start:
 	FirmwareARM7OK:
 	#endif
 	bl initHardware
-	
 	ldr	lr, =exception_sysexit
-	
-	#ifdef ARM7
-	b	main			@entrypoint
-	#endif
 	
 	#ifdef ARM9
 	ldr                 r1,=argvIntraTGDSMB                /* point our source register to the start of the .dtcm section (VMA)*/
 	ldr                 r2,=0x02FFFE70                 /* point our destination register to the D-TCM dedicated to our writable data (LMA)*/
 	add                 r3,r2,#(256)                  /* point r3 after the last byte we will be writing (LMA)*/
 	bl                  copy
-	b	mainARGV			@entrypoint
-	#endif
+	
+	blx handleARGV		@generates argv buffer ok
+	bl getGlobalArgv
+	mov r1,r0
+	push {r1}
+	bl getGlobalArgc
+	pop {r1}
+	#endif	
+	
+	b	main			@entrypoint
+	
 @format:	r0 = src_vma, r1 = dest_vma 
 clear:
 	mov	r2, #0
