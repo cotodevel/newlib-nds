@@ -21,21 +21,18 @@
 #treat this session as a TGDS1.6 ARM7 Makefile, for the loader part.
 #for the rest, just use linux to compile
 
-#Translate paths to windows with forward slashes
-cpath := $(shell pwd)
-ifeq ($(shell uname -o), Cygwin)
-    CURDIR := '$(shell cygpath -w -p ${cpath})'
-endif
-
 #Shared
 ifeq ($(TGDS_ENV),windows)	
-	include $(CURDIR)/../../../../installer/shared/6.2_2016q4/Makefile.basenewlib
+	include $(DEFAULT_GCC_PATH)../../../Makefile.basenewlib
 endif
 ifeq ($(TGDS_ENV),linux)
 	include $(CURDIR)/../../../../installer/shared/6.2_2016q4/Makefile.basenewlib
 endif
 
+
 BINSTRIP_RULE_7	= loader
+
+
 DIRS_ARM7_HEADER = /
 DIRS_ARM7_SRC	=	/
 

@@ -43,24 +43,15 @@ Steps:
 
 -	Run setup.bat
 	
-1.b)Right after, a CYGWIN setup wizard will appear. Click next until a list of mirrors appear, choose the first one or subsequently the others if the first didn't work.
+1.b)Once copy is done, a MingGW setup will appear.
+	
+-	The installation Path recommended by default: C:\MinGW
+-	While running setup, wait until Continue button appears. Then you must choose: 
+		mingw-developer-toolkit then Mark For Installation. Click: Installation> Apply Changes then Apply. Setup will begin. 
+-	Wait for the Close button to appear, close setup. Head to C:/MinGW/msys/1.0/
+-	Copy a msys.bat shortcut from the same file here, to your desired place, this is the minimal console required to build ToolchainGenericDS projects. 
+	By default, you can Unzip/make (build) projects from within: C:/MinGW/msys/1.0/home folder.
 
-- Then type "make" in the package, choose the vanilla make (4.3-1). The "Skip" checkbox will change and instead the version will appear.
-
-- Cleanup and write "clang" and repeat the same steps. Choose mingw64-x86_64-clang (8.0.1-1).
-
-- Cleanup and write "llvm" and repeat the same steps. Choose mingw64-x86_64-llvm (5.0.1-1) and llvm (5.0.1-1).
-
-
-Click next until the setup ends.
-
-Finally, place ";C:\cygwin64\bin" at the end of the "Path" SYSTEM variable, semicolon included, so that the Cygwin toolset is available for use.
-Right-click Start (lower-left on Start menu)
-Click Search
-Type env into search box
-Click Edit the system environment variables/Control Panel
-
-From now on, use CYGWIN terminal to build TGDS projects.
 
 1.c)Building Newlib for NintendoDS: 
 - Proceed to:

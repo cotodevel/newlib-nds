@@ -24,7 +24,7 @@ export SOURCE_MAKEFILE9 = custom
 
 #Shared
 ifeq ($(TGDS_ENV),windows)	
-	include $(DEFAULT_GCC_PATH_WIN)/Makefile.basenewlib
+	include $(DEFAULT_GCC_PATH)/Makefile.basenewlib
 endif
 ifeq ($(TGDS_ENV),linux)
 	include $(CURDIR)/../installer/shared/6.2_2016q4/Makefile.basenewlib
@@ -285,11 +285,11 @@ cleanstuff:
 #when we force -nostdinc++ and -nostdinc. So the files inside TGDS are used
 copylibs:
 ifeq ($(TGDS_ENV),windows)	
-	-mkdir -p $(TARGET_LIBRARY_PATH_WIN)
-	-cp	-r $(CURDIR)/../newlib-src/newlib/libc/include/	$(TARGET_LIBRARY_PATH_WIN)
-	-cp	-r $(CURDIR)/../newlib-nds/newlib-nds-headers/	$(TARGET_LIBRARY_PATH_WIN)
-	-mkdir -p $(TARGET_LIBRARY_LINKER_DEST_WIN) && cp	-r $(CURDIR)$(TARGET_LIBRARY_LINKER_SRC) $(TARGET_LIBRARY_LINKER_DEST_WIN)
-	-cp	-r $(CURDIR)$(TARGET_LIBRARY_MAKEFILES_SRC) $(TARGET_LIBRARY_MAKEFILES_DEST_WIN)
+	-mkdir -p $(TARGET_LIBRARY_PATH)
+	-cp	-r $(CURDIR)/../newlib-src/newlib/libc/include/	$(TARGET_LIBRARY_PATH)
+	-cp	-r $(CURDIR)/../newlib-nds/newlib-nds-headers/	$(TARGET_LIBRARY_PATH)
+	-mkdir -p $(TARGET_LIBRARY_LINKER_DEST) && cp	-r $(CURDIR)$(TARGET_LIBRARY_LINKER_SRC) $(TARGET_LIBRARY_LINKER_DEST)
+	-cp	-r $(CURDIR)$(TARGET_LIBRARY_MAKEFILES_SRC) $(TARGET_LIBRARY_MAKEFILES_DEST)
 endif
 ifeq ($(TGDS_ENV),linux)
 	-sudo chmod -R 777	$(DEFAULT_GCC_PATH)../../
