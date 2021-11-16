@@ -17,27 +17,29 @@
 #
 
 
-# relative path (if you are outside arm9 folder then $(DIR_ARM9), arm7 is $(DIR_ARM7))
+# relative path 
 RELATIVE_PATH =	
 
 #Prepare ARM9 dirs
-DIRLIBS_HDR = $(foreach dirres,$(DIRS_ARM9_HEADER),-I "$(CURDIR)/$(RELATIVE_PATH)$(dirres)" )	$(DIRLIBS_ALLOWED)
-DIRLIBS_SRC = $(foreach dirres,$(DIRS_ARM9_SRC),-I "$(CURDIR)/$(RELATIVE_PATH)$(dirres)" )
+DIRLIBS_HDR = $(foreach dirres,$(DIRS_ARM9_HEADER),-I "$(dirres)" )	$(DIRLIBS_ALLOWED)
+DIRLIBS_SRC = $(foreach dirres,$(DIRS_ARM9_SRC),-I "$(dirres)" )
 
+dir_arm9_src_h=  $(foreach dir,$(DIRS_ARM9_HEADER), $(wildcard $(RELATIVE_PATH)$(dir)*.h))
 file_arm9_src_c=  $(foreach dir,$(DIRS_ARM9_SRC), $(subst $(CURDIR)/$(RELATIVE_PATH)/$(dir)/,,$(wildcard $(CURDIR)/$(RELATIVE_PATH)/$(dir)/*.c))  )
 file_arm9_src_s=  $(foreach dir,$(DIRS_ARM9_SRC), $(subst $(CURDIR)/$(RELATIVE_PATH)/$(dir)/,,$(wildcard $(CURDIR)/$(RELATIVE_PATH)/$(dir)/*.s))  )
 file_arm9_src_SUPP=  $(foreach dir,$(DIRS_ARM9_SRC), $(subst $(CURDIR)/$(RELATIVE_PATH)/$(dir)/,,$(wildcard $(CURDIR)/$(RELATIVE_PATH)/$(dir)/*.S))  )
 file_arm9_src_cpp=  $(foreach dir,$(DIRS_ARM9_SRC), $(subst $(CURDIR)/$(RELATIVE_PATH)/$(dir)/,,$(wildcard $(CURDIR)/$(RELATIVE_PATH)/$(dir)/*.cpp))  )
+file_arm9_src_bin=  $(foreach dir,$(DIRS_ARM9_SRC), $(subst $(CURDIR)/$(RELATIVE_PATH)/$(dir)/,,$(wildcard $(CURDIR)/$(RELATIVE_PATH)/$(dir)/*.bin))  )
 
 # Object Target
-objs_arm9:=	${file_arm9_src_c:.c=.o}	${file_arm9_src_s:.s=.o}	${file_arm9_src_SUPP:.S=.o}	${file_arm9_src_cpp:.cpp=.o}
+objs_arm9:=	${file_arm9_src_bin:.bin=.o}	${file_arm9_src_c:.c=.o}	${file_arm9_src_s:.s=.o}	${file_arm9_src_SUPP:.S=.o}		${file_arm9_src_cpp:.cpp=.o}
 d_objs_arm9:=	${file_arm9_src_c:.c=.d}	${file_arm9_src_s:.s=.d}	${file_arm9_src_SUPP:.S=.d}	${file_arm9_src_cpp:.cpp=.d}
 
 #ARM9 specific definitions. -fno-common so we force initialized data to rodata
 MAPFILE = $(DIR_ARM9).map
 AS_ASFLAGS		=	$(GLOBAL_SHARED_FLAGS_9)	$(SPECIFIC_AS_COMPILER_FLAGS_9)		$(GLOBAL_AS_COMPILER_FLAGS)	$(NEWLIB_NANO_COMPILE_FLAGS_ASM9)
-CC_ASFLAGS		=	$(GLOBAL_SHARED_FLAGS_9)	$(SPECIFIC_CXX_COMPILER_FLAGS_9)	$(GLOBAL_CC_COMPILER_FLAGS)	$(NEWLIB_NANO_COMPILE_FLAGS_C_9)	-fPIC
-CPP_FLAGS		=	$(GLOBAL_SHARED_FLAGS_9)	$(SPECIFIC_CXX_COMPILER_FLAGS_9)	$(GLOBAL_CXX_COMPILER_FLAGS)	$(LIBSTDCPPFLAGS)	$(NEWLIB_NANO_COMPILE_FLAGS_C_9)	-fPIC
+CC_ASFLAGS		=	$(GLOBAL_SHARED_FLAGS_9)	$(SPECIFIC_CXX_COMPILER_FLAGS_9)	$(GLOBAL_CC_COMPILER_FLAGS)	$(NEWLIB_NANO_COMPILE_FLAGS_C_9)	-fPIC	-std=c++11
+CPP_FLAGS		=	$(GLOBAL_SHARED_FLAGS_9)	$(SPECIFIC_CXX_COMPILER_FLAGS_9)	$(GLOBAL_CXX_COMPILER_FLAGS)	$(LIBSTDCPPFLAGS)	$(NEWLIB_NANO_COMPILE_FLAGS_C_9)	-fPIC	-std=c++11
 BUILD			= 	$(BUILD_ARM9)
 DIR_SRC			=	$(DIRS_ARM9_SRC)
 
@@ -49,47 +51,8 @@ OBJDIR 	=	./$(BUILD)
 VPATH 	=	$(DIR_SRC)
 OBJPROG = 	$(addprefix $(OBJDIR)/, $(TARGET_LIBRARY_FILE_9))
 
-#------------------------------------------ CLANG START
-CC := clang-8
-AR := llvm-ar
-DEP_DIR := $(BUILD_DIR)/dep
-DEP_CFLAGS := -MT $@ -MMD -MP 
-
-# CFLAGS which can provided from the CLI
-# They will be appended last and will consequently override
-# any pre-existing settings
-CLI_CFLAG_OVERRIDES ?=
-CLI_LDFLAG_OVERRIDES ?=
-
-# Note: These arguments will be used by clang to select
-# the specific architecture target when we use the
-# generic --target=arm-none-eabi
-ARCH_CFLAGS += \
-  -marm 	\
-  -mcpu=arm946e-s \
-  -mfloat-abi=soft	\
-  -mfpu=none	
-  
-COMPILER_SPECIFIC_CFLAGS += \
-  --target=arm-none-eabi \
-  --sysroot= \
-  -O2 \
-  -DARM9
-  
-CFLAGS = \
-  -g3 \
-  -nostdlib \
-  -fPIC	\
-  -Wunused-label	\
-  -fshort-enums	\
-  $(COMPILER_SPECIFIC_CFLAGS) \
-  $(ARCH_CFLAGS) \
-  $(NEWLIB_NANO_COMPILE_FLAGS_C_9)	\
-  $(CLI_CFLAG_OVERRIDES)
-	
-#------------------------------------------ CLANG END
-
 all: $(OBJDIR)|$(TARGET_LIBRARY_FILE_9)
+
 #all: debug
 
 #Check $(OBJDIR) if not exists: create it
@@ -101,22 +64,21 @@ $(OBJDIR):
 $(OBJDIR)/%.o : %.bin
 	-@echo 'trying to convert .BIN ($<) -> .C output: ${@:.o=.c} : arrayName: $(subst build/,,${@:.o=})'
 	$(BIN2C)	$<	${@:.o=.c}	$(subst build/,,${@:.o=})
-	$(CC) $(DEP_CFLAGS) $(CFLAGS) $(DIRLIBS_HDR) $(DIRLIBS_SRC)	-c -o $@ $<
+	$(CC)	$(CC_ASFLAGS)	$(DIRLIBS_HDR)	$(DIRLIBS_SRC)	$(DIRLIBS_PROHIBITED)	-o $@ -c ${@:.o=.c}
 
-#libcnano9 doesn't work if compiled with Clang for some reason, todo, fix this.
 #Do C Compile now!
 $(OBJDIR)/%.o : %.c
 	-@echo 'C Compile start: $@'
-	$(CC) $(DEP_CFLAGS) $(CFLAGS) $(DIRLIBS_HDR) $(DIRLIBS_SRC)	-c -o $@ $< 
+	$(CC)	$(CC_ASFLAGS)	$(DIRLIBS_HDR)	$(DIRLIBS_SRC)	$(DIRLIBS_PROHIBITED)	-o $@ -c $<
 	-@echo 'C Compile End: $@'
 
 #Do C++ (CXX) Compile now!
 $(OBJDIR)/%.o : %.cpp
 	-@echo 'C++ Compile start: $@'
-	$(CC) $(LIBSTDCPPFLAGS)	$(DEP_CFLAGS) $(CFLAGS) $(DIRLIBS_HDR) $(DIRLIBS_SRC)	-c -o $@ $<
+	$(CPP)	$(CPP_FLAGS)	$(DIRLIBS_HDR)	$(DIRLIBS_SRC)	-o $@ -c $<
 	-@echo 'C Compile End: $@'
 
-#Coto: Special "exception" rule. Fixes tricky projects such as SnemulDS's opcodes2.s where GCC AS is used, while compatibility with .S is required for newer projects.
+#Coto: Special "exception" rule. Assembler (.s) support ie: .ifdef/.endif (which differs from CPP-like syntax Assembler: ie: #ifdef/#endif by .S)
 #.S is GCC CC/CPP for compiling assembler with cpp headers
 #.s is GCC AS Assembler for compiling assembler the usual way
 
@@ -129,14 +91,14 @@ $(OBJDIR)/%.o : %.s
 #Do S (GCC CC) Compile now!
 $(OBJDIR)/%.o : %.S
 	-@echo 'S Compile start: $@'
-	$(CPP)	$(CPP_FLAGS)	$(DIRLIBS_HDR)	$(DIRLIBS_SRC)	$(CC_ASFLAGS)	-o $@ -c $<
+	$(CPP)	-x assembler-with-cpp	$(DIRLIBS_HDR)	$(DIRLIBS_SRC)	$(CC_ASFLAGS)	-o $@ -c $<
 	-@echo 'S Compile end: $@'
 
 #Builder.
 $(OBJPROG): $(addprefix $(OBJDIR)/, $(OBJECTS))
-	-@echo 'Entering Build phase'
-	$(AR) rc	$@	$^
-	-@echo 'Leaving Linking phase. Output: $@'
+	-@echo 'Entering Linking phase'
+	$(AR) rvs	$@	$^
+	-@echo 'Leaving Linking phase. $(OBJPROG)'
 
 #build *.o into $(TARGET_LIBRARY_FILE_9)
 $(TARGET_LIBRARY_FILE_9): $(OBJPROG)
@@ -151,4 +113,9 @@ endif
 ################################################################################################
 clean:
 	-@echo 'cleanup $(TARGET_LIBRARY_FILE_9)'
-	-@rm -fr $(OBJDIR)	$(TARGET_LIBRARY_FILE_9)	$(MAPFILE)
+ifeq ($(TGDS_ENV),windows)
+	-@rm -fr $(OBJDIR)	$(TARGET_LIBRARY_FILE_9)	$(MAPFILE)	$(TARGET_LIBRARY_PATH)/$(TARGET_LIBRARY_FILE_9)
+endif
+ifeq ($(TGDS_ENV),linux)
+	-@sudo rm -fr $(OBJDIR)	$(TARGET_LIBRARY_FILE_9)	$(MAPFILE)	$(TARGET_LIBRARY_PATH)/$(TARGET_LIBRARY_FILE_9)
+endif
