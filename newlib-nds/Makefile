@@ -262,7 +262,13 @@ buildbin2c:
 	-@7z x $(CURDIR)/temp/bin2c.zip	-o$(CURDIR)/temp
 	-@$(MAKE)	-C	$(CURDIR)/temp/Coto88-bin2c-8baa565f6c46/linux
 	-@sudo mv	$(CURDIR)/temp/Coto88-bin2c-8baa565f6c46/linux/bin2c	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)bin2c
-	
+
+buildbin2lzss:
+	-@wget	-O $(CURDIR)/temp/bin2lzss.zip	https://bitbucket.org/Coto88/bin2lzss/get/master.zip
+	-@7z x $(CURDIR)/temp/bin2lzss.zip	-o$(CURDIR)/temp
+	-@$(MAKE)	-C	$(CURDIR)/temp/Coto88-bin2lzss-2a4bca55d295/linux
+	-@sudo mv	$(CURDIR)/temp/Coto88-bin2lzss-2a4bca55d295/linux/bin2lzss	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)bin2lzss
+
 #rule already validated == linux
 ndstool:
 	-$(MAKE)	-C	$(CURDIR)/misc/ndstool1.31src/
@@ -273,12 +279,14 @@ buildstuff:
 	-mkdir -p $(CURDIR)/temp
 	-$(MAKE)	-f	$(CURDIR)/../installer/linux/Makefile-tgds
 	-$(MAKE)	buildbin2c
+	-$(MAKE)	buildbin2lzss	
 	-$(MAKE)	ndstool
 
 #order is important here. 
 cleanstuff:
 	-$(MAKE)	-C	$(CURDIR)/misc/ndstool1.31src/	clean	
 	-$(MAKE)	-C	$(CURDIR)/temp/bin2c-master/linux	clean
+	-$(MAKE)	-C	$(CURDIR)/temp/buildbin2lzss-master/linux	clean
 	-$(MAKE)	-f	$(CURDIR)/../installer/linux/Makefile-tgds	clean
 	
 #files renamed to -excluded is because the current toolchain paths are being included (for default GNU ARM tools), EVEN
