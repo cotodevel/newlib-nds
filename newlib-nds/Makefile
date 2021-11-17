@@ -260,8 +260,8 @@ endif
 buildbin2c:
 	-@wget	-O $(CURDIR)/temp/bin2c.zip	https://bitbucket.org/Coto88/bin2c/get/master.zip
 	-@7z x $(CURDIR)/temp/bin2c.zip	-o$(CURDIR)/temp
-	-@$(MAKE)	-C	$(CURDIR)/temp/Coto88-bin2c-57518672635c/linux
-	-@sudo mv	$(CURDIR)/temp/Coto88-bin2c-57518672635c/linux/bin2c	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)bin2c
+	-@$(MAKE)	-C	$(CURDIR)/temp/Coto88-bin2c-8baa565f6c46/linux
+	-@sudo mv	$(CURDIR)/temp/Coto88-bin2c-8baa565f6c46/linux/bin2c	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)bin2c
 	
 #rule already validated == linux
 ndstool:
