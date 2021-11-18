@@ -270,8 +270,8 @@ buildbin2lzss:
 	-@sudo mv	$(CURDIR)/temp/Coto88-bin2lzss-2a4bca55d295/linux/bin2lzss	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)bin2lzss
 
 buildgrit:
-	-@sudo	$(MAKE) -C 	$(CURDIR)/temp/Coto88-packages-d0c249eaa357/tgds-packages/grit_linux_18_04/FreeImage all
-	-@sudo	$(MAKE) -C 	$(CURDIR)/temp/Coto88-packages-d0c249eaa357/tgds-packages/grit_linux_18_04/grit_src all
+	-@sudo	$(MAKE) -C 	$(CURDIR)/../installer/linux/Coto88-packages-d0c249eaa357/tgds-packages/grit_linux_18_04/FreeImage all
+	-@sudo	$(MAKE) -C 	$(CURDIR)/../installer/linux/Coto88-packages-d0c249eaa357/tgds-packages/grit_linux_18_04/grit_src all
 	-@sudo mv	$(CURDIR)/temp/Coto88-packages-d0c249eaa357/tgds-packages/grit_linux_18_04/grit_src/grit	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)grit
 
 #rule already validated == linux
