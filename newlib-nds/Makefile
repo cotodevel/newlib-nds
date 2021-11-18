@@ -274,11 +274,13 @@ buildgrit:
 	-@sudo	$(MAKE) -C 	$(CURDIR)/../installer/linux/Coto88-packages-d0c249eaa357/tgds-packages/grit_linux_18_04/grit_src all
 	-@sudo mv	$(CURDIR)/../installer/linux/Coto88-packages-d0c249eaa357/tgds-packages/grit_linux_18_04/grit_src/grit	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)grit
 
-#rule already validated == linux
-ndstool:
-	-$(MAKE)	-C	$(CURDIR)/misc/ndstool1.31src/
-	-sudo mv	$(CURDIR)/misc/ndstool1.31src/ndstool	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)ndstool
-	
+buildndstool:
+	-@7z x $(CURDIR)/misc/ndstool-lat.zip	-o$(CURDIR)/misc
+	-@sudo $(MAKE)	-C	$(CURDIR)/misc/Coto88-ndstool-fa6b6d018813
+	-@sudo $(MAKE)	-C	$(CURDIR)/misc/Coto88-ndstool-fa6b6d018813
+	-@sudo mv	$(CURDIR)/misc/Coto88-ndstool-fa6b6d018813/ndstool	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)ndstool
+	-@sudo rm -rf	$(CURDIR)/misc/Coto88-ndstool-fa6b6d018813
+
 buildstuff:
 	-rm -fr $(CURDIR)/temp
 	-mkdir -p $(CURDIR)/temp
@@ -286,11 +288,10 @@ buildstuff:
 	-$(MAKE)	buildbin2c
 	-$(MAKE)	buildbin2lzss	
 	-$(MAKE)	buildgrit
-	-$(MAKE)	ndstool
+	-$(MAKE)	buildndstool
 
 #order is important here. 
 cleanstuff:
-	-$(MAKE)	-C	$(CURDIR)/misc/ndstool1.31src/	clean	
 	-$(MAKE)	-C	$(CURDIR)/temp/bin2c-master/linux	clean
 	-$(MAKE)	-C	$(CURDIR)/temp/buildbin2lzss-master/linux	clean
 	-$(MAKE)	-C	$(CURDIR)/temp/Coto88-packages-d0c249eaa357/tgds-packages/grit_linux_18_04	clean
