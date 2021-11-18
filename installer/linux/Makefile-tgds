@@ -4,12 +4,12 @@ all :	buildtoolchain
 buildtoolchain:
 	-wget	-O	$(CURDIR)/../installer/linux/toolchain.zip https://bitbucket.org/Coto88/packages/get/master.zip
 	-7z	x	$(CURDIR)/../installer/linux/toolchain.zip	-o$(CURDIR)/../installer/linux/
-	-tar	xf		$(CURDIR)/../installer/linux/Coto88-packages-39aa2090a5bb/newlib-nds-packages/newlib-nds-packages.tar.xz	-C $(CURDIR)/../installer/linux/Coto88-packages-39aa2090a5bb/newlib-nds-packages/
+	-tar	xf		$(CURDIR)/../installer/linux/Coto88-packages-d0c249eaa357/newlib-nds-packages/newlib-nds-packages.tar.xz	-C $(CURDIR)/../installer/linux/Coto88-packages-39aa2090a5bb/newlib-nds-packages/
 	-sudo chown $(USER) /usr/arm-none-eabi/	
-	-chmod a+x -R	$(CURDIR)/../installer/linux/Coto88-packages-39aa2090a5bb/newlib-nds-packages/newlib-nds-packages/tgds-xubuntu-18.04/gcc-arm-none-eabi-4_9-2015q3/
-	-sudo cp	-a	$(CURDIR)/../installer/linux/Coto88-packages-39aa2090a5bb/newlib-nds-packages/newlib-nds-packages/tgds-xubuntu-18.04/gcc-arm-none-eabi-4_9-2015q3/.	/usr/arm-none-eabi/
+	-chmod a+x -R	$(CURDIR)/../installer/linux/Coto88-packages-d0c249eaa357/newlib-nds-packages/newlib-nds-packages/tgds-xubuntu-18.04/gcc-arm-none-eabi-4_9-2015q3/
+	-sudo cp	-a	$(CURDIR)/../installer/linux/Coto88-packages-d0c249eaa357/newlib-nds-packages/newlib-nds-packages/tgds-xubuntu-18.04/gcc-arm-none-eabi-4_9-2015q3/.	/usr/arm-none-eabi/
 
 clean:
 	-sudo rm	-fr	/usr/arm-none-eabi/
 	-@rm -fr	$(CURDIR)/toolchain.zip
-	-@rm -fr	$(CURDIR)/../installer/linux/Coto88-packages-39aa2090a5bb/
+	-@rm -fr	$(CURDIR)/../installer/linux/Coto88-packages-d0c249eaa357/
