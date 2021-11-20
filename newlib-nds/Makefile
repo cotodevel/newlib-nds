@@ -238,8 +238,8 @@ ifeq ($(TGDS_ENV),windows)
 	-@rm -rf	$(DEFAULT_GCC_PATH)../
 endif
 ifeq ($(TGDS_ENV),linux)
-	-@sudo rm -rf	$(DEFAULT_GCC_PATH)	$(CURDIR)/temp
-	-@sudo rm	/usr/bin/bin2c
+	-@sudo rm -rf	$(DEFAULT_GCC_PATH)	$(CURDIR)/temp	$(CURDIR)/../installer/linux/Coto88-packages-4bca653b717c
+	-@sudo rm	/usr/bin/bin2c	$(CURDIR)/../installer/linux/toolchain.zip
 	$(MAKE)	cleanstuff
 endif
 
@@ -281,6 +281,10 @@ buildndstool:
 	-@sudo mv	$(CURDIR)/misc/Coto88-ndstool-fa6b6d018813/ndstool	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)ndstool
 	-@sudo rm -rf	$(CURDIR)/misc/Coto88-ndstool-fa6b6d018813
 
+buildTGDSPKGBuilder:
+	-@sudo	$(MAKE) -C 	$(CURDIR)/../installer/linux/Coto88-packages-4bca653b717c/tgds-packages/TGDSPKGBuilder/linux	
+	-@sudo mv	$(CURDIR)/../installer/linux/Coto88-packages-4bca653b717c/tgds-packages/TGDSPKGBuilder/linux/TGDSPKGBuilder	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)TGDSPKGBuilder
+
 buildstuff:
 	-rm -fr $(CURDIR)/temp
 	-mkdir -p $(CURDIR)/temp
@@ -289,12 +293,14 @@ buildstuff:
 	-$(MAKE)	buildbin2lzss	
 	-$(MAKE)	buildgrit
 	-$(MAKE)	buildndstool
-
+	-$(MAKE)	buildTGDSPKGBuilder
+	
 #order is important here. 
 cleanstuff:
-	-$(MAKE)	-C	$(CURDIR)/temp/bin2c-master/linux	clean
-	-$(MAKE)	-C	$(CURDIR)/temp/buildbin2lzss-master/linux	clean
-	-$(MAKE)	-C	$(CURDIR)/temp/Coto88-packages-4bca653b717c/tgds-packages/grit_linux_18_04	clean
+	-$(MAKE)	-C	$(CURDIR)/temp/Coto88-bin2c-8baa565f6c46/linux	clean
+	-$(MAKE)	-C	$(CURDIR)/temp/Coto88-bin2lzss-2a4bca55d295/linux	clean
+	-$(MAKE)	-C	$(CURDIR)/../installer/linux/Coto88-packages-4bca653b717c/tgds-packages/grit_linux_18_04	clean
+	-$(MAKE)	-C	$(CURDIR)/../installer/linux/Coto88-packages-4bca653b717c/tgds-packages/TGDSPKGBuilder/linux	clean
 	-$(MAKE)	-f	$(CURDIR)/../installer/linux/Makefile-tgds	clean
 	
 #files renamed to -excluded is because the current toolchain paths are being included (for default GNU ARM tools), EVEN
