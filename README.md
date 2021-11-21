@@ -6,16 +6,16 @@ You can check a copy of these steps at:
 https://bitbucket.org/Coto88/newlib-nds
 
 Version: 
-	Windows : Clang 8.0.1
+	Windows : GCC 4.9.3	(ARM EABI)
 	Linux : GCC 4.9.3	(ARM NONE EABI)
 
 Features:
 - GAS (Gnu Assembler): .s / .S ARM assembler files, using the GNU syntax.
-- Clang 8.0.1 / GCC: C support (malloc, full POSIX file implementation): .c files, using the GNU syntax.
-- Clang 8.0.1 / GCC: C++ STL support (new / delete operators implemented): .cpp/.hpp files, using the GNU syntax.
+- GCC: C support (malloc, full POSIX file implementation): .c files, using the GNU syntax.
+- GCC: C++ STL support (new / delete operators implemented): .cpp/.hpp files, using the GNU syntax.
 
 Note on C++ projects:
-- 	It has overhead. A barebones C TGDS project is roughly 200K, where as C++ using <vector> <iostream> might use about 580K. 
+- 	It has overhead. A barebones C TGDS project is roughly 200K, where as C++ using <vector> <iostream> might use about 500K. 
 - 	While classes and templates are working, new/delete operators rely on malloc/free newlib implementation by design, 
 	this means there is NO garbage collector, and you MUST keep track of allocated/freed classes or you are guaranteed to get undefined behaviour.
 
