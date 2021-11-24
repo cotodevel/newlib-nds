@@ -65,15 +65,15 @@ endif
 ifeq ($(TGDS_ENV),linux)
 	export GCC_BUILD_ENV	:= $(DEFAULT_GCC_PATH)../../../../arm-none-eabi/
 	export GCC_BIN_PATH	:= bin/
-	export AR	:=	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)arm-none-eabi-ar
-	export AS	:=	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)arm-none-eabi-as
-	export CC 	:= 	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)arm-none-eabi-gcc
-	export CXX 	= 	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)arm-none-eabi-g++
-	export CPP 	= 	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)arm-none-eabi-c++
-	export LD	:=	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)arm-none-eabi-ld
-	export OBJCOPY	=	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)arm-none-eabi-objcopy
-	export OBJDUMP	=	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)arm-none-eabi-objdump
-	export OBJSTRIP	=	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)arm-none-eabi-strip
+	export AR	:=	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)arm-eabi-ar
+	export AS	:=	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)arm-eabi-as
+	export CC 	:= 	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)arm-eabi-gcc
+	export CXX 	= 	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)arm-eabi-g++
+	export CPP 	= 	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)arm-eabi-c++
+	export LD	:=	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)arm-eabi-ld
+	export OBJCOPY	=	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)arm-eabi-objcopy
+	export OBJDUMP	=	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)arm-eabi-objdump
+	export OBJSTRIP	=	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)arm-eabi-strip
 	export NDSTOOL	:=	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)ndstool
 	export BIN2C	:=	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)bin2c
 	export BIN2LZSS	=	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)bin2lzss

@@ -7,7 +7,7 @@ https://bitbucket.org/Coto88/newlib-nds
 
 Version: 
 	Windows : GCC 4.9.3	(ARM EABI)
-	Linux : GCC 4.9.3	(ARM NONE EABI)
+	Linux : GCC 4.9.1	(ARM EABI)
 
 Features:
 - GAS (Gnu Assembler): .s / .S ARM assembler files, using the GNU syntax.
