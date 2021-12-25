@@ -260,8 +260,8 @@ endif
 buildbin2c:
 	-@wget	-O $(CURDIR)/temp/bin2c.zip	https://bitbucket.org/Coto88/bin2c/get/master.zip
 	-@7z x $(CURDIR)/temp/bin2c.zip	-o$(CURDIR)/temp
-	-@$(MAKE)	-C	$(CURDIR)/temp/Coto88-bin2c-8baa565f6c46/linux
-	-@sudo mv	$(CURDIR)/temp/Coto88-bin2c-8baa565f6c46/linux/bin2c	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)bin2c
+	-@$(MAKE)	-C	$(CURDIR)/temp/Coto88-bin2c-bc004cc9c9a9/linux
+	-@sudo mv	$(CURDIR)/temp/Coto88-bin2c-bc004cc9c9a9/linux/bin2c	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)bin2c
 
 buildbin2lzss:
 	-@wget	-O $(CURDIR)/temp/bin2lzss.zip	https://bitbucket.org/Coto88/bin2lzss/get/master.zip
@@ -297,7 +297,7 @@ buildstuff:
 	
 #order is important here. 
 cleanstuff:
-	-$(MAKE)	-C	$(CURDIR)/temp/Coto88-bin2c-8baa565f6c46/linux	clean
+	-$(MAKE)	-C	$(CURDIR)/temp/Coto88-bin2c-bc004cc9c9a9/linux	clean
 	-$(MAKE)	-C	$(CURDIR)/temp/Coto88-bin2lzss-2a4bca55d295/linux	clean
 	-$(MAKE)	-C	$(CURDIR)/../installer/linux/Coto88-packages-5a92123ed8dd/tgds-packages/grit_linux_18_04	clean
 	-$(MAKE)	-C	$(CURDIR)/../installer/linux/Coto88-packages-5a92123ed8dd/tgds-packages/TGDSPKGBuilder/linux	clean
