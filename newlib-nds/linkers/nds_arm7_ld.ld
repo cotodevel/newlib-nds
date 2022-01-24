@@ -32,12 +32,12 @@ _arm7_irqcheckbits = 0x0380FFF8;	/* __irq_flags */
 _arm7_irqhandler = 0x0380FFFC;	/* __irq_vector */
 
 /* ARM ABI says stacks are full decreasing */
-sp_SVC	= _iwram_end - 0x400;
-sp_IRQ	= sp_SVC - 0x400;
-sp_FIQ	= sp_IRQ - 0x400;
-sp_ABT	= sp_FIQ - 0x400;
-sp_UND	= sp_ABT - 0x400;
-sp_USR	= sp_UND - 0x400;
+sp_SVC	= _iwram_end - 0x200;
+sp_IRQ	= sp_SVC - 0x200;
+sp_FIQ	= sp_IRQ - 0x200;
+sp_ABT	= sp_FIQ - 0x200;
+sp_UND	= sp_ABT - 0x200;
+sp_USR	= sp_UND - 0x200;
 sp_SYS	= sp_USR;
 
 OUTPUT_FORMAT("elf32-littlearm", "elf32-bigarm","elf32-littlearm")
@@ -50,15 +50,11 @@ SECTIONS
 		KEEP(*(.init))
 	} > IWRAM = 0xFF
 	
-	. = ALIGN(4);
-	
 	.dldiSection      :	SUBALIGN(4)
 	{
 		KEEP(*(.initDldiSection))
 		KEEP(*(.dldiSection))
 	} > IWRAM = 0xFF
-	
-	. = ALIGN(4);
 	
 	.text      :	SUBALIGN(4)
 	{
@@ -73,8 +69,6 @@ SECTIONS
 		KEEP(*(.text.*))
 	} > IWRAM = 0xFF
 	
-	. = ALIGN(4);
-	
 	.data : SUBALIGN(4) {				/* used by TGDS-Newlib C/C++ code */
 		PROVIDE (__data_start__ = ABSOLUTE(.));
 		KEEP(*(.data))
@@ -83,8 +77,6 @@ SECTIONS
 		KEEP(*(.gnu.linkonce.t*))
 		PROVIDE (__data_end__ = ABSOLUTE(.));
 	} > IWRAM = 0xff
-	
-	. = ALIGN(4);
 	
 	.rodata : SUBALIGN(4) {			/* used by TGDS-Newlib C/C++ code */
 		PROVIDE (__rodata_start__ = ABSOLUTE(.));
@@ -95,15 +87,11 @@ SECTIONS
 		PROVIDE (__rodata_end__ = ABSOLUTE(.));
 	} > IWRAM = 0xff
 	
-	. = ALIGN(4);
-	
 	.v4_bx : SUBALIGN(4) {
 		PROVIDE (__v4_bx_start__ = ABSOLUTE(.));
 		*(.v4_bx*)
 		PROVIDE (__v4_bx_end__ = ABSOLUTE(.));
 	} > IWRAM = 0xff
-	
-	. = ALIGN(4);
 	
 	.iplt : SUBALIGN(4) {
 		PROVIDE (__iplt_start__ = ABSOLUTE(.));
@@ -111,23 +99,17 @@ SECTIONS
 		PROVIDE (__iplt_end__ = ABSOLUTE(.));
 	} > IWRAM = 0xff
 	
-	. = ALIGN(4);
-	
 	.igot.plt : SUBALIGN(4) {
 		PROVIDE (__igot_plt_start__ = ABSOLUTE(.));
 		*(.igot.plt*)
 		PROVIDE (__igot_plt_end__ = ABSOLUTE(.));
 	} > IWRAM = 0xff
 	
-	. = ALIGN(4);
-	
 	.rel.dyn : SUBALIGN(4) {
 		PROVIDE (__rel_dyn_start__ = ABSOLUTE(.));
 		*(.rel.dyn*)
 		PROVIDE (__rel_dyn_end__ = ABSOLUTE(.));
 	} > IWRAM = 0xff
-	
-	. = ALIGN(4);
 	
 	.bss :	SUBALIGN(4) {				/* used by TGDS-Newlib C/C++ code */
 		PROVIDE (__bss_vma_start = ABSOLUTE(.));
@@ -138,8 +120,6 @@ SECTIONS
 		PROVIDE (__bss_vma_end = ABSOLUTE(.));
 	} > IWRAM
 	
-	. = ALIGN(4);
-	
 	.ARM.exidx : SUBALIGN(4) {			/* not used at all, but some code rely on ARM debugging symbols */
 		PROVIDE (__exidx_start = ABSOLUTE(.));
 		KEEP(*(.ARM.exidx))
@@ -149,8 +129,6 @@ SECTIONS
 		PROVIDE (__exidx_end = ABSOLUTE(.));
 	} > IWRAM = 0xff
 	
-	. = ALIGN(4);
-	
 	.fini : SUBALIGN(4) {				/* used by TGDS-Newlib C/C++ code */
 		PROVIDE (__fini_start__ = ABSOLUTE(.));
 		*(.fini)
@@ -159,8 +137,8 @@ SECTIONS
 	} > IWRAM = 0xff
 	
 	PROVIDE (__lib__end__ = __fini_end__);
-	. = ALIGN(0x40);
-	PROVIDE (__vma_stub_end__ = __lib__end__ + 0x40);
+	. = ALIGN(0x4);
+	PROVIDE (__vma_stub_end__ = __lib__end__ + 0x4);
 	
 	/* stubbed for ARM7i binaries crt0 in NTR mode, but actually used in TWL mode */
 	__arm7i_lma__ = __vma_stub_end__ + 4;
