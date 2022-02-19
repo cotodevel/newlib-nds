@@ -12,7 +12,6 @@ Compile:
 
 
 1a) Setup newlib for ToolchainGenericDS:
--environment tested: xubuntu/ubuntu x64 14.04 
 Open a terminal, execute these 3 commands before compile (enter password if required)
  - su $USER
  - chmod +x env_vars.source

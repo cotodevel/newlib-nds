@@ -58,17 +58,19 @@ Steps:
 	https://bitbucket.org/Coto88/newlib-nds/src/master/newlib-nds/README.MD
 
 [Linux]
-1.a)Building Newlib for NintendoDS: 
+Recommended OS:
+- ubuntu/xubuntu/kubuntu x86/x64 14.04 
+- ubuntu/xubuntu/kubuntu x86/x64 x64 16.04 
+- ubuntu/xubuntu/kubuntu x86/x64 x64 20.04
 
-- Requires Ubuntu 14.04 or later (kubuntu, xubuntu or others working as well). Proceed to:
+- 1.a)Building Newlib for NintendoDS: 
 	https://bitbucket.org/Coto88/newlib-nds/src/master/newlib-nds/README.MD
 	requires the SAME terminal to be open when compiling: newlib for NDS, ToolchainGenericDS, and Project Specific TGDS
 
-After a while, Newlib for NintendoDS will be recompiled for ToolchainGenericDS successfully.
 
 
-Next: 
-build ToolchainGenericDS:
+[Windows/Linux] If you followed all steps up to this point, Newlib for NintendoDS was built correctly. 
+ToolchainGenericDS needs to be built now:
 https://bitbucket.org/Coto88/toolchaingenericds
 
 Coto
