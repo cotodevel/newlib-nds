@@ -131,11 +131,11 @@ export GLOBAL_CXX_COMPILER_FLAGS =	-marm	-Wall	-Os	-s	-fno-exceptions	-DNDS	-std
 
 #CPU code builder settings TGDS project specific
 export SPECIFIC_AS_COMPILER_FLAGS_7		= -defsym	ARM7='1'	-defsym	appver='$(EXECUTABLE_VERSION)'
-export SPECIFIC_CC_COMPILER_FLAGS_7		= -DARM7	-Dappver='$(EXECUTABLE_VERSION)'
+export SPECIFIC_CC_COMPILER_FLAGS_7		= -DNDS	-DARM7	-Dappver='$(EXECUTABLE_VERSION)'
 export SPECIFIC_CXX_COMPILER_FLAGS_7	= $(SPECIFIC_CC_COMPILER_FLAGS_7)
 
-export SPECIFIC_AS_COMPILER_FLAGS_9		= -defsym	ARM9='1'	-defsym	appver='$(EXECUTABLE_VERSION)'
-export SPECIFIC_CC_COMPILER_FLAGS_9		= -DARM9	-Dappver='$(EXECUTABLE_VERSION)'
+export SPECIFIC_AS_COMPILER_FLAGS_9		= -defsym debug=0	-defsym	ARM9='1'	-defsym	appver='$(EXECUTABLE_VERSION)'
+export SPECIFIC_CC_COMPILER_FLAGS_9		= -DNDS	-DARM9	-Dappver='$(EXECUTABLE_VERSION)'
 export SPECIFIC_CXX_COMPILER_FLAGS_9	= $(SPECIFIC_CC_COMPILER_FLAGS_9)
 
 #default built-in rules removal

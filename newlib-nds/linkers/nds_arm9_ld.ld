@@ -25,6 +25,7 @@ MEMORY
 	ITCM : ORIGIN = 0x01FF8000, LENGTH = 32K
 	GBAROM : ORIGIN = 0x08000000, LENGTH = 32M
 	EWRAM : ORIGIN = 0x02000000, LENGTH = 4M
+	ARM9SHAREDWRAM : ORIGIN = 0x03000000, LENGTH = 32K
 }
 
 _itcm_start = ORIGIN(ITCM);
@@ -38,6 +39,9 @@ _gba_end = ORIGIN(GBAROM)	+	LENGTH(GBAROM);
 
 _dtcm_start = ORIGIN(DTCM);
 _dtcm_end = ORIGIN(DTCM)	+	LENGTH(DTCM);
+
+_arm9sharedwram_start = ORIGIN(ARM9SHAREDWRAM);
+_arm9sharedwram_end = ORIGIN(ARM9SHAREDWRAM)	+	LENGTH(ARM9SHAREDWRAM);
 
 /* ARM9 Specific */
 _arm9_irqcheckbits = ORIGIN(DTCM) + 0x3FF8;	/* __irq_flags */
@@ -62,15 +66,11 @@ SECTIONS
 		KEEP(*(.init))
 	} > EWRAM = 0xFF
 	
-	. = ALIGN(4);
-	
 	.dldiSection      :	SUBALIGN(4)
 	{
 		KEEP(*(.initDldiSection))
 		KEEP(*(.dldiSection))
 	} > EWRAM = 0xFF
-	
-	. = ALIGN(4);
 	
 	.text      :	SUBALIGN(4)
 	{
@@ -85,8 +85,6 @@ SECTIONS
 		KEEP(*(.text.*))
 	} > EWRAM = 0xFF
 	
-	. = ALIGN(4);
-	
 	.data : SUBALIGN(4) {				/* used by TGDS-Newlib C/C++ code */
 		PROVIDE (__data_start__ = ABSOLUTE(.));
 		KEEP(*(.data))
@@ -95,8 +93,6 @@ SECTIONS
 		KEEP(*(.gnu.linkonce.t*))
 		PROVIDE (__data_end__ = ABSOLUTE(.));
 	} > EWRAM = 0xff
-	
-	. = ALIGN(4);
 	
 	.rodata : SUBALIGN(4) {			/* used by TGDS-Newlib C/C++ code */
 		PROVIDE (__rodata_start__ = ABSOLUTE(.));
@@ -107,8 +103,6 @@ SECTIONS
 		PROVIDE (__rodata_end__ = ABSOLUTE(.));
 	} > EWRAM = 0xff
 	
-	. = ALIGN(4);
-	
 	.bss :	SUBALIGN(4) {				/* used by TGDS-Newlib C/C++ code */
 		PROVIDE (__bss_vma_start = ABSOLUTE(.));
 		KEEP(*(.dynbss*))
@@ -118,8 +112,6 @@ SECTIONS
 		PROVIDE (__bss_vma_end = ABSOLUTE(.));
 	} > EWRAM
 	
-	. = ALIGN(4);
-	
 	.ARM.exidx : SUBALIGN(4) {			/* not used at all, but some code rely on ARM debugging symbols */
 		PROVIDE (__exidx_start = ABSOLUTE(.));
 		KEEP(*(.ARM.exidx))
@@ -128,8 +120,6 @@ SECTIONS
 		KEEP(*(.gnu.linkonce.armexidx.*))
 		PROVIDE (__exidx_end = ABSOLUTE(.));
 	} > EWRAM = 0xff
-	
-	. = ALIGN(4);
 	
 	__itcm_vma_start = LOADADDR(.itcm);
 	__vectors_vma_start = __itcm_vma_start;
@@ -147,7 +137,12 @@ SECTIONS
 	} > DTCM AT > EWRAM
 	__dtcm_vma_end__ = .;
 	
-	. = ALIGN(4);
+	___arm9sharedwram_vma_start = LOADADDR(.arm9sharedwram);
+	.arm9sharedwram      : SUBALIGN(4)
+	{
+		KEEP (*(.arm9sharedwram*))
+	} > ARM9SHAREDWRAM AT > EWRAM
+	___arm9sharedwram_vma_end__ = .;
 	
 	.fini : SUBALIGN(4) {				/* used by TGDS-Newlib C/C++ code */
 		PROVIDE (__fini_start__ = ABSOLUTE(.));
@@ -157,8 +152,8 @@ SECTIONS
 	} > EWRAM = 0xff
 	
 	PROVIDE (__lib__end__ = __fini_end__);
-	. = ALIGN(0x40);
-	PROVIDE (__vma_stub_end__ = __lib__end__ + 0x40);
+	. = ALIGN(0x4);
+	PROVIDE (__vma_stub_end__ = __lib__end__ + 0x4);
 
 	/*
      	* Stabs le debugging sections.

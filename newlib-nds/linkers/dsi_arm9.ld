@@ -25,6 +25,7 @@ MEMORY
 	ITCM : ORIGIN = 0x01FF8000, LENGTH = 32K
 	GBAROM : ORIGIN = 0x08000000, LENGTH = 32M
 	EWRAM : ORIGIN = 0x02000000, LENGTH = 4M
+	ARM9SHAREDWRAM : ORIGIN = 0x03000000, LENGTH = 32K
 }
 
 _itcm_start = ORIGIN(ITCM);
@@ -38,6 +39,9 @@ _gba_end = ORIGIN(GBAROM)	+	LENGTH(GBAROM);
 
 _dtcm_start = ORIGIN(DTCM);
 _dtcm_end = ORIGIN(DTCM)	+	LENGTH(DTCM);
+
+_arm9sharedwram_start = ORIGIN(ARM9SHAREDWRAM);
+_arm9sharedwram_end = ORIGIN(ARM9SHAREDWRAM)	+	LENGTH(ARM9SHAREDWRAM);
 
 /* ARM9 Specific */
 _arm9_irqcheckbits = ORIGIN(DTCM) + 0x3FF8;	/* __irq_flags */
@@ -132,6 +136,13 @@ SECTIONS
 		KEEP (*(.dtcm*))
 	} > DTCM AT > EWRAM
 	__dtcm_vma_end__ = .;
+	
+	___arm9sharedwram_vma_start = LOADADDR(.arm9sharedwram);
+	.arm9sharedwram      : SUBALIGN(4)
+	{
+		KEEP (*(.arm9sharedwram*))
+	} > ARM9SHAREDWRAM AT > EWRAM
+	___arm9sharedwram_vma_end__ = .;
 	
 	.fini : SUBALIGN(4) {				/* used by TGDS-Newlib C/C++ code */
 		PROVIDE (__fini_start__ = ABSOLUTE(.));

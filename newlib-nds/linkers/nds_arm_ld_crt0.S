@@ -140,6 +140,12 @@ _start:
 	ldr                 r3,=_dtcm_end                  /* point r3 after the last byte we will be writing (LMA)*/
 	bl                  copy
 	
+	@Shared WRAM set. Copy sections
+	ldr                 r1,=___arm9sharedwram_vma_start                /* point our source register to the start of the .arm9sharedwram section (VMA)*/
+	ldr                 r2,=_arm9sharedwram_start                 /* point our destination register to the ARM9 SHARED WRAM dedicated to our writable data (LMA)*/
+	ldr                 r3,=_arm9sharedwram_end                  /* point r3 after the last byte we will be writing (LMA)*/
+	bl                  copy
+	
 	@TGDS-MB intra argv save-restore
 	ldr                 r1,=0x02FFFE70                /* point our source register to the start of the .dtcm section (VMA)*/
 	ldr                 r2,=argvIntraTGDSMB                 /* point our destination register to the D-TCM dedicated to our writable data (LMA)*/
