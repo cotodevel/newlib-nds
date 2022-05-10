@@ -33,12 +33,12 @@ _dtcm_end = _dtcm_start + 16K;
 _arm9sharedwram_start = 0x03000000;
 _arm9sharedwram_end = _arm9sharedwram_start + 32K;
 /* ARM ABI says stacks are full decreasing */
-sp_SVC	= _dtcm_end  - 0x400;	/* reset, swi exception*/
-sp_IRQ	= sp_SVC - 0x400;	/*irq exception*/
-sp_FIQ	= sp_IRQ - 0x400;	/* fiq exception */
-sp_ABT	= sp_FIQ - 0x400;	/* prefetch / data aborts exception */
-sp_UND	= sp_ABT - 0x400;	/* undefined exception */
-sp_USR	= sp_UND - 0x400;	/* usr / sys stacks */
+sp_SVC	= _dtcm_end  - 0x200;	/* reset, swi exception*/
+sp_IRQ	= sp_SVC - 0x200;	/*irq exception*/
+sp_FIQ	= sp_IRQ - 0x200;	/* fiq exception */
+sp_ABT	= sp_FIQ - 0x200;	/* prefetch / data aborts exception */
+sp_UND	= sp_ABT - 0x200;	/* undefined exception */
+sp_USR	= sp_UND - 0x200;	/* usr / sys stacks */
 sp_SYS = sp_USR;
 /* ARM9 Specific */
 _arm9_irqcheckbits = _dtcm_start + 0x3FF8;	/* __irq_flags */
@@ -53,7 +53,7 @@ SECTIONS
         KEEP(*(.init))
 		. = ALIGN(4);
     }
-	
+	. = ALIGN(4096);
     . = __text_start;
     .text :
     {
@@ -65,6 +65,7 @@ SECTIONS
 		. = ALIGN(4);
     }
     __text_end = .; 
+	. = ALIGN(4096);
     __rodata_start = .;
     .rodata :
     {
@@ -72,7 +73,7 @@ SECTIONS
 		. = ALIGN(4);
     }
     __rodata_end = .;
- 
+	. = ALIGN(4096);
     __data_start = .;
     .data :
     {
@@ -80,7 +81,7 @@ SECTIONS
 		. = ALIGN(4);
     }
     __data_end = .;
- 
+	. = ALIGN(4096);
     __bss_start = .;
     .bss :
     {
@@ -89,7 +90,7 @@ SECTIONS
 		. = ALIGN(4);
     }
     __bss_end = .;
-	
+	. = ALIGN(4096);
 	__exidx_start = .;
     .ARM.exidx :
     {
@@ -98,7 +99,7 @@ SECTIONS
 		. = ALIGN(4);
     }
     __exidx_end = .;
-	
+	. = ALIGN(4096);
 	/* Sharem Work Memory */
 	___arm9sharedwram_vma_start = .;
     .arm9sharedwram :
@@ -109,7 +110,7 @@ SECTIONS
     }
     . = ADDR (.arm9sharedwram) + SIZEOF (.arm9sharedwram);
     ___arm9sharedwram_vma_end__ = .;
-	
+	. = ALIGN(4096);
 	/* ITCM */
 	__itcm_vma_start = .;
 	.itcm _itcm_start : AT ( ADDR (.arm9sharedwram) + SIZEOF (.arm9sharedwram) )
@@ -119,7 +120,7 @@ SECTIONS
     } 
     . = ADDR (.arm9sharedwram) + SIZEOF (.arm9sharedwram) + SIZEOF (.itcm);
     __itcm_vma_end__ = .;
-	
+	. = ALIGN(4096);
 	/* DTCM */
 	__dtcm_vma_start = .;
     .dtcm _dtcm_start : AT ( ADDR (.arm9sharedwram) + SIZEOF (.arm9sharedwram) + SIZEOF (.itcm) )
@@ -129,10 +130,10 @@ SECTIONS
     } 
     . = ADDR (.arm9sharedwram) + SIZEOF (.arm9sharedwram) + SIZEOF (.itcm) + SIZEOF (.dtcm);
 	__dtcm_vma_end__ = .;
-	
+	. = ALIGN(4096);
 	__vma_stub_end__ = .;
-    __end = __vma_stub_end__ + 0x1000;
-	
+    __end = __vma_stub_end__ + 0x10000;
+	. = ALIGN(4096);
 	.pad ALIGN(4) : AT (__end)
 	{
 		LONG(0x70C070C0)
