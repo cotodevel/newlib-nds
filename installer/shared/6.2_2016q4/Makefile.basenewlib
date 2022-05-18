@@ -24,6 +24,9 @@ ifeq ($(TGDS_ENV),windows)
 	export BIN2LZSS	=	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)bin2lzss.exe
 	export ADPCMENCODER	=	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)adpcm_xq.exe
 	export TGDSPKGBUILDER	=	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)TGDSPKGBuilder.exe
+	export TGDSFFMPEG	=	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)ffmpeg.exe
+	export TGDSFFPLAY	=	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)ffplay.exe
+	export TGDSFFPROBE	=	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)ffprobe.exe
 	
 	#cleanup default C/C++/ASM flags
 	export ARFLAGS	=''
@@ -79,6 +82,9 @@ ifeq ($(TGDS_ENV),linux)
 	export BIN2LZSS	=	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)bin2lzss
 	export ADPCMENCODER	=	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)adpcm_xq
 	export TGDSPKGBUILDER	=	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)TGDSPKGBuilder
+	export TGDSFFMPEG	=	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)ffmpeg
+	export TGDSFFPLAY	=	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)ffplay
+	export TGDSFFPROBE	=	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)ffprobe
 	
 	#cleanup default C/C++/ASM flags
 	export ARFLAGS	=''
