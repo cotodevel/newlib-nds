@@ -285,6 +285,13 @@ buildTGDSPKGBuilder:
 	-@sudo	$(MAKE) -C 	$(CURDIR)/../installer/linux/Coto88-packages-a2564c404548/tgds-packages/TGDSPKGBuilder/linux	
 	-@sudo mv	$(CURDIR)/../installer/linux/Coto88-packages-a2564c404548/tgds-packages/TGDSPKGBuilder/linux/TGDSPKGBuilder	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)TGDSPKGBuilder
 
+buildffmpeg:
+	-@tar -xf $(CURDIR)/../installer/linux/Coto88-packages-a2564c404548/newlib-nds-packages/ffmpeg-4.2.2-i686-static.tar.xz -C $(GCC_BUILD_ENV)$(GCC_BIN_PATH)
+	-@sudo mv	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)ffmpeg-4.2.2-i686-static/ffmpeg	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)ffmpeg
+	-@sudo mv	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)ffmpeg-4.2.2-i686-static/ffprobe	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)ffprobe
+	-@sudo mv	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)ffmpeg-4.2.2-i686-static/qt-faststart	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)qt-faststart
+
+
 buildstuff:
 	-rm -fr $(CURDIR)/temp
 	-mkdir -p $(CURDIR)/temp
@@ -294,6 +301,8 @@ buildstuff:
 	-$(MAKE)	buildgrit
 	-$(MAKE)	buildndstool
 	-$(MAKE)	buildTGDSPKGBuilder
+	-$(MAKE)	buildffmpeg
+	
 	
 #order is important here. 
 cleanstuff:
