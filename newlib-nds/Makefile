@@ -210,8 +210,7 @@ export DIRS_ARM9_HEADER = ../../newlib-src/libgloss/	\
 
 	# Build Target(s)	(both processors here)
 all: compilelib
-#all: buildbin2c
-
+#all: debug
 #Make. Also copy libc headers and own nds-headers. Must resemble the windows folder structure 
 compilelib	:
 	$(MAKE)	setup
@@ -238,7 +237,7 @@ ifeq ($(TGDS_ENV),windows)
 	-@rm -rf	$(DEFAULT_GCC_PATH)../
 endif
 ifeq ($(TGDS_ENV),linux)
-	-@sudo rm -rf	$(DEFAULT_GCC_PATH)	$(CURDIR)/temp	$(CURDIR)/../installer/linux/Coto88-packages-a2564c404548
+	-@sudo rm -rf	$(DEFAULT_GCC_PATH)	$(CURDIR)/temp	$(CURDIR)/../installer/linux/Coto88-packages-1427a6b4ba43
 	-@sudo rm	/usr/bin/bin2c	$(CURDIR)/../installer/linux/toolchain.zip
 	$(MAKE)	cleanstuff
 endif
@@ -257,22 +256,16 @@ ifeq ($(TGDS_ENV),linux)
 endif
 
 #rule already validated == linux
-buildbin2c:
-	-@wget	-O $(CURDIR)/temp/bin2c.zip	https://bitbucket.org/Coto88/bin2c/get/master.zip
-	-@7z x $(CURDIR)/temp/bin2c.zip	-o$(CURDIR)/temp
-	-@$(MAKE)	-C	$(CURDIR)/temp/Coto88-bin2c-bc004cc9c9a9/linux
-	-@sudo mv	$(CURDIR)/temp/Coto88-bin2c-bc004cc9c9a9/linux/bin2c	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)bin2c
-
-buildbin2lzss:
-	-@wget	-O $(CURDIR)/temp/bin2lzss.zip	https://bitbucket.org/Coto88/bin2lzss/get/master.zip
-	-@7z x $(CURDIR)/temp/bin2lzss.zip	-o$(CURDIR)/temp
-	-@$(MAKE)	-C	$(CURDIR)/temp/Coto88-bin2lzss-2a4bca55d295/linux
-	-@sudo mv	$(CURDIR)/temp/Coto88-bin2lzss-2a4bca55d295/linux/bin2lzss	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)bin2lzss
+buildtgdsdutils:
+	-@wget	-O $(CURDIR)/temp/toolchaingenericds-utils.zip	https://bitbucket.org/Coto88/toolchaingenericds-utils/get/master.zip
+	-@7z x $(CURDIR)/temp/toolchaingenericds-utils.zip	-o$(CURDIR)/temp
+	-@$(MAKE)	-C	$(CURDIR)/temp/Coto88-toolchaingenericds-utils-ec52108eacf1/
+	-@sudo mv	$(CURDIR)/temp/Coto88-toolchaingenericds-utils-ec52108eacf1/toolchaingenericds-utils	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)toolchaingenericds-utils
 
 buildgrit:
-	-@sudo	$(MAKE) -C 	$(CURDIR)/../installer/linux/Coto88-packages-a2564c404548/tgds-packages/grit_linux_18_04/FreeImage all
-	-@sudo	$(MAKE) -C 	$(CURDIR)/../installer/linux/Coto88-packages-a2564c404548/tgds-packages/grit_linux_18_04/grit_src all
-	-@sudo mv	$(CURDIR)/../installer/linux/Coto88-packages-a2564c404548/tgds-packages/grit_linux_18_04/grit_src/grit	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)grit
+	-@sudo	$(MAKE) -C 	$(CURDIR)/../installer/linux/Coto88-packages-1427a6b4ba43/tgds-packages/grit_linux_18_04/FreeImage all
+	-@sudo	$(MAKE) -C 	$(CURDIR)/../installer/linux/Coto88-packages-1427a6b4ba43/tgds-packages/grit_linux_18_04/grit_src all
+	-@sudo mv	$(CURDIR)/../installer/linux/Coto88-packages-1427a6b4ba43/tgds-packages/grit_linux_18_04/grit_src/grit	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)grit
 
 buildndstool:
 	-@7z x $(CURDIR)/misc/ndstool-lat.zip	-o$(CURDIR)/misc
@@ -282,11 +275,11 @@ buildndstool:
 	-@sudo rm -rf	$(CURDIR)/misc/Coto88-ndstool-fa6b6d018813
 
 buildTGDSPKGBuilder:
-	-@sudo	$(MAKE) -C 	$(CURDIR)/../installer/linux/Coto88-packages-a2564c404548/tgds-packages/TGDSPKGBuilder/linux	
-	-@sudo mv	$(CURDIR)/../installer/linux/Coto88-packages-a2564c404548/tgds-packages/TGDSPKGBuilder/linux/TGDSPKGBuilder	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)TGDSPKGBuilder
+	-@sudo	$(MAKE) -C 	$(CURDIR)/../installer/linux/Coto88-packages-1427a6b4ba43/tgds-packages/TGDSPKGBuilder/linux	
+	-@sudo mv	$(CURDIR)/../installer/linux/Coto88-packages-1427a6b4ba43/tgds-packages/TGDSPKGBuilder/linux/TGDSPKGBuilder	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)TGDSPKGBuilder
 
 buildffmpeg:
-	-@tar -xf $(CURDIR)/../installer/linux/Coto88-packages-a2564c404548/newlib-nds-packages/ffmpeg-4.2.2-i686-static.tar.xz -C $(GCC_BUILD_ENV)$(GCC_BIN_PATH)
+	-@tar -xf $(CURDIR)/../installer/linux/Coto88-packages-1427a6b4ba43/newlib-nds-packages/ffmpeg-4.2.2-i686-static.tar.xz -C $(GCC_BUILD_ENV)$(GCC_BIN_PATH)
 	-@sudo mv	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)ffmpeg-4.2.2-i686-static/ffmpeg	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)ffmpeg
 	-@sudo mv	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)ffmpeg-4.2.2-i686-static/ffprobe	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)ffprobe
 	-@sudo mv	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)ffmpeg-4.2.2-i686-static/qt-faststart	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)qt-faststart
@@ -296,8 +289,7 @@ buildstuff:
 	-rm -fr $(CURDIR)/temp
 	-mkdir -p $(CURDIR)/temp
 	-$(MAKE)	-f	$(CURDIR)/../installer/linux/Makefile-tgds
-	-$(MAKE)	buildbin2c
-	-$(MAKE)	buildbin2lzss	
+	-$(MAKE)	buildtgdsdutils	
 	-$(MAKE)	buildgrit
 	-$(MAKE)	buildndstool
 	-$(MAKE)	buildTGDSPKGBuilder
@@ -306,10 +298,9 @@ buildstuff:
 	
 #order is important here. 
 cleanstuff:
-	-$(MAKE)	-C	$(CURDIR)/temp/Coto88-bin2c-bc004cc9c9a9/linux	clean
-	-$(MAKE)	-C	$(CURDIR)/temp/Coto88-bin2lzss-2a4bca55d295/linux	clean
-	-$(MAKE)	-C	$(CURDIR)/../installer/linux/Coto88-packages-a2564c404548/tgds-packages/grit_linux_18_04	clean
-	-$(MAKE)	-C	$(CURDIR)/../installer/linux/Coto88-packages-a2564c404548/tgds-packages/TGDSPKGBuilder/linux	clean
+	-$(MAKE)	-C	$(CURDIR)/temp/Coto88-toolchaingenericds-utils-ec52108eacf1/	clean
+	-$(MAKE)	-C	$(CURDIR)/../installer/linux/Coto88-packages-1427a6b4ba43/tgds-packages/grit_linux_18_04	clean
+	-$(MAKE)	-C	$(CURDIR)/../installer/linux/Coto88-packages-1427a6b4ba43/tgds-packages/TGDSPKGBuilder/linux	clean
 	-$(MAKE)	-f	$(CURDIR)/../installer/linux/Makefile-tgds	clean
 	
 #files renamed to -excluded is because the current toolchain paths are being included (for default GNU ARM tools), EVEN
