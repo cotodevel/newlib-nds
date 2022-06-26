@@ -1,0 +1,1 @@
+ffmpeg -i source.wav -f wav -acodec adpcm_ima_wav -ar 44100 source.ima
