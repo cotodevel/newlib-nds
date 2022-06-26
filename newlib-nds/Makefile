@@ -257,6 +257,7 @@ endif
 
 #rule already validated == linux
 buildtgdsdutils:
+	-@sudo mkdir -p $(GCC_BUILD_ENV)$(GCC_BIN_PATH)
 	-@wget	-O $(CURDIR)/temp/toolchaingenericds-utils.zip	https://bitbucket.org/Coto88/toolchaingenericds-utils/get/master.zip
 	-@7z x $(CURDIR)/temp/toolchaingenericds-utils.zip	-o$(CURDIR)/temp
 	-@sudo $(MAKE)	-C	$(CURDIR)/temp/Coto88-toolchaingenericds-utils-ec52108eacf1/
