@@ -260,8 +260,8 @@ buildtgdsdutils:
 	-@sudo mkdir -p $(GCC_BUILD_ENV)$(GCC_BIN_PATH)
 	-@wget	-O $(CURDIR)/temp/toolchaingenericds-utils.zip	https://bitbucket.org/Coto88/toolchaingenericds-utils/get/master.zip
 	-@7z x $(CURDIR)/temp/toolchaingenericds-utils.zip	-o$(CURDIR)/temp
-	-@sudo $(MAKE)	-C	$(CURDIR)/temp/Coto88-toolchaingenericds-utils-25f72a472acc/
-	-@sudo mv	$(CURDIR)/temp/Coto88-toolchaingenericds-utils-25f72a472acc/toolchaingenericds-utils	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)toolchaingenericds-utils
+	-@sudo $(MAKE)	-C	$(CURDIR)/temp/Coto88-toolchaingenericds-utils-73978a5586bc/
+	-@sudo mv	$(CURDIR)/temp/Coto88-toolchaingenericds-utils-73978a5586bc/toolchaingenericds-utils	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)toolchaingenericds-utils
 
 buildgrit:
 	-@sudo	$(MAKE) -C 	$(CURDIR)/../installer/linux/Coto88-packages-259926b7da68/tgds-packages/grit_linux_18_04/FreeImage all
@@ -294,7 +294,7 @@ buildstuff:
 	
 #order is important here. 
 cleanstuff:
-	-$(MAKE)	-C	$(CURDIR)/temp/Coto88-toolchaingenericds-utils-25f72a472acc/	clean
+	-$(MAKE)	-C	$(CURDIR)/temp/Coto88-toolchaingenericds-utils-73978a5586bc/	clean
 	-$(MAKE)	-C	$(CURDIR)/../installer/linux/Coto88-packages-259926b7da68/tgds-packages/grit_linux_18_04	clean
 	-$(MAKE)	-f	$(CURDIR)/../installer/linux/Makefile-tgds	clean
 	
