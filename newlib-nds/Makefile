@@ -259,7 +259,7 @@ endif
 buildtgdsdutils:
 	-@wget	-O $(CURDIR)/temp/toolchaingenericds-utils.zip	https://bitbucket.org/Coto88/toolchaingenericds-utils/get/master.zip
 	-@7z x $(CURDIR)/temp/toolchaingenericds-utils.zip	-o$(CURDIR)/temp
-	-@$(MAKE)	-C	$(CURDIR)/temp/Coto88-toolchaingenericds-utils-ec52108eacf1/
+	-@sudo $(MAKE)	-C	$(CURDIR)/temp/Coto88-toolchaingenericds-utils-ec52108eacf1/
 	-@sudo mv	$(CURDIR)/temp/Coto88-toolchaingenericds-utils-ec52108eacf1/toolchaingenericds-utils	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)toolchaingenericds-utils
 
 buildgrit:
@@ -273,10 +273,6 @@ buildndstool:
 	-@sudo $(MAKE)	-C	$(CURDIR)/misc/Coto88-ndstool-fa6b6d018813
 	-@sudo mv	$(CURDIR)/misc/Coto88-ndstool-fa6b6d018813/ndstool	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)ndstool
 	-@sudo rm -rf	$(CURDIR)/misc/Coto88-ndstool-fa6b6d018813
-
-buildTGDSPKGBuilder:
-	-@sudo	$(MAKE) -C 	$(CURDIR)/../installer/linux/Coto88-packages-1427a6b4ba43/tgds-packages/TGDSPKGBuilder/linux	
-	-@sudo mv	$(CURDIR)/../installer/linux/Coto88-packages-1427a6b4ba43/tgds-packages/TGDSPKGBuilder/linux/TGDSPKGBuilder	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)TGDSPKGBuilder
 
 buildffmpeg:
 	-@tar -xf $(CURDIR)/../installer/linux/Coto88-packages-1427a6b4ba43/newlib-nds-packages/ffmpeg-4.2.2-i686-static.tar.xz -C $(GCC_BUILD_ENV)$(GCC_BIN_PATH)
@@ -292,7 +288,6 @@ buildstuff:
 	-$(MAKE)	buildtgdsdutils	
 	-$(MAKE)	buildgrit
 	-$(MAKE)	buildndstool
-	-$(MAKE)	buildTGDSPKGBuilder
 	-$(MAKE)	buildffmpeg
 	
 	
@@ -300,7 +295,6 @@ buildstuff:
 cleanstuff:
 	-$(MAKE)	-C	$(CURDIR)/temp/Coto88-toolchaingenericds-utils-ec52108eacf1/	clean
 	-$(MAKE)	-C	$(CURDIR)/../installer/linux/Coto88-packages-1427a6b4ba43/tgds-packages/grit_linux_18_04	clean
-	-$(MAKE)	-C	$(CURDIR)/../installer/linux/Coto88-packages-1427a6b4ba43/tgds-packages/TGDSPKGBuilder/linux	clean
 	-$(MAKE)	-f	$(CURDIR)/../installer/linux/Makefile-tgds	clean
 	
 #files renamed to -excluded is because the current toolchain paths are being included (for default GNU ARM tools), EVEN
