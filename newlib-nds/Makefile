@@ -237,7 +237,7 @@ ifeq ($(TGDS_ENV),windows)
 	-@rm -rf	$(DEFAULT_GCC_PATH)../
 endif
 ifeq ($(TGDS_ENV),linux)
-	-@sudo rm -rf	$(DEFAULT_GCC_PATH)	$(CURDIR)/temp	$(CURDIR)/../installer/linux/Coto88-packages-1427a6b4ba43
+	-@sudo rm -rf	$(DEFAULT_GCC_PATH)	$(CURDIR)/temp	$(CURDIR)/../installer/linux/Coto88-packages-259926b7da68
 	-@sudo rm	/usr/bin/bin2c	$(CURDIR)/../installer/linux/toolchain.zip
 	$(MAKE)	cleanstuff
 endif
@@ -263,9 +263,9 @@ buildtgdsdutils:
 	-@sudo mv	$(CURDIR)/temp/Coto88-toolchaingenericds-utils-ec52108eacf1/toolchaingenericds-utils	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)toolchaingenericds-utils
 
 buildgrit:
-	-@sudo	$(MAKE) -C 	$(CURDIR)/../installer/linux/Coto88-packages-1427a6b4ba43/tgds-packages/grit_linux_18_04/FreeImage all
-	-@sudo	$(MAKE) -C 	$(CURDIR)/../installer/linux/Coto88-packages-1427a6b4ba43/tgds-packages/grit_linux_18_04/grit_src all
-	-@sudo mv	$(CURDIR)/../installer/linux/Coto88-packages-1427a6b4ba43/tgds-packages/grit_linux_18_04/grit_src/grit	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)grit
+	-@sudo	$(MAKE) -C 	$(CURDIR)/../installer/linux/Coto88-packages-259926b7da68/tgds-packages/grit_linux_18_04/FreeImage all
+	-@sudo	$(MAKE) -C 	$(CURDIR)/../installer/linux/Coto88-packages-259926b7da68/tgds-packages/grit_linux_18_04/grit_src all
+	-@sudo mv	$(CURDIR)/../installer/linux/Coto88-packages-259926b7da68/tgds-packages/grit_linux_18_04/grit_src/grit	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)grit
 
 buildndstool:
 	-@7z x $(CURDIR)/misc/ndstool-lat.zip	-o$(CURDIR)/misc
@@ -275,7 +275,7 @@ buildndstool:
 	-@sudo rm -rf	$(CURDIR)/misc/Coto88-ndstool-fa6b6d018813
 
 buildffmpeg:
-	-@tar -xf $(CURDIR)/../installer/linux/Coto88-packages-1427a6b4ba43/newlib-nds-packages/ffmpeg-4.2.2-i686-static.tar.xz -C $(GCC_BUILD_ENV)$(GCC_BIN_PATH)
+	-@tar -xf $(CURDIR)/../installer/linux/Coto88-packages-259926b7da68/newlib-nds-packages/ffmpeg-4.2.2-i686-static.tar.xz -C $(GCC_BUILD_ENV)$(GCC_BIN_PATH)
 	-@sudo mv	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)ffmpeg-4.2.2-i686-static/ffmpeg	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)ffmpeg
 	-@sudo mv	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)ffmpeg-4.2.2-i686-static/ffprobe	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)ffprobe
 	-@sudo mv	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)ffmpeg-4.2.2-i686-static/qt-faststart	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)qt-faststart
@@ -294,7 +294,7 @@ buildstuff:
 #order is important here. 
 cleanstuff:
 	-$(MAKE)	-C	$(CURDIR)/temp/Coto88-toolchaingenericds-utils-ec52108eacf1/	clean
-	-$(MAKE)	-C	$(CURDIR)/../installer/linux/Coto88-packages-1427a6b4ba43/tgds-packages/grit_linux_18_04	clean
+	-$(MAKE)	-C	$(CURDIR)/../installer/linux/Coto88-packages-259926b7da68/tgds-packages/grit_linux_18_04	clean
 	-$(MAKE)	-f	$(CURDIR)/../installer/linux/Makefile-tgds	clean
 	
 #files renamed to -excluded is because the current toolchain paths are being included (for default GNU ARM tools), EVEN
