@@ -29,7 +29,10 @@ ifeq ($(TGDS_ENV),windows)
 	export TGDSFFMPEG	=	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)ffmpeg.exe
 	export TGDSFFPLAY	=	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)ffplay.exe
 	export TGDSFFPROBE	=	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)ffprobe.exe
-	
+	export TGDSREMOTEBOOTER	=	$(TGDSUTILS) remotebooter
+	export TGDSHTTPSERVER	=	$(TGDSUTILS) httpserver
+	export TGDSUNTAR	=	$(TGDSUTILS) untar
+	export TGDSZIPARCHIVER	=	$(TGDSUTILS) zipfiles
 	#cleanup default C/C++/ASM flags
 	export ARFLAGS	=''
 	export ASFLAGS	=''
@@ -89,7 +92,10 @@ ifeq ($(TGDS_ENV),linux)
 	export TGDSFFMPEG	=	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)ffmpeg
 	export TGDSFFPLAY	=	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)ffplay
 	export TGDSFFPROBE	=	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)ffprobe
-	
+	export TGDSREMOTEBOOTER	=	$(TGDSUTILS) remotebooter
+	export TGDSHTTPSERVER	=	$(TGDSUTILS) httpserver
+	export TGDSUNTAR	=	$(TGDSUTILS) untar
+	export TGDSZIPARCHIVER	=	$(TGDSUTILS) zipfiles
 	#cleanup default C/C++/ASM flags
 	export ARFLAGS	=''
 	export ASFLAGS	=''
