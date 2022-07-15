@@ -202,7 +202,8 @@ _start:
 	pop {r1}
 	#endif	
 	
-	b	main			@entrypoint
+	bl	main			@entrypoint
+	b exception_sysexit
 	
 @format:	r0 = src_vma, r1 = dest_vma 
 clear:
