@@ -60,11 +60,6 @@ _start:
 @---------------------------------------------------------------------------------
 	#ifdef ARM7
 	@Copy ARM7i sections from VMA to LMA
-	ldr                 r1,=__arm7i_lma__                 /* point our source register to the start of the .itcm section (VMA)*/
-	ldr                 r2,=__arm7i_start__                 /* point our destination register to the I-TCM dedicated to our writable data (LMA)*/
-	ldr                 r3,=__arm7i_end__                  /* point r3 after the last byte we will be writing (LMA)*/
-	bl                  copy  
-	
 	ldr                 r1,=__arm7_lma__                 /* point our source register to the start of the .itcm section (VMA)*/
 	ldr                 r2,=__arm7_start__                 /* point our destination register to the I-TCM dedicated to our writable data (LMA)*/
 	ldr                 r3,=__arm7_end__                  /* point r3 after the last byte we will be writing (LMA)*/
