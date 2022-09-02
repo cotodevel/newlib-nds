@@ -1,3 +1,22 @@
+#ifdef ARM9
+
+#include "typedefsTGDS.h"
+
+#define SQRT_CR				(*(vuint16*)(0x040002B0))
+#define SQRT_PARAM64		(*(vint64*) (0x040002B8))
+#define SQRT_RESULT32		(*(vsint32*) (0x040002B4))
+#define SQRT_PARAM32		(*(vsint32*) (0x040002B8))
+
+#define SQRT_64				1
+#define SQRT_32				0
+#define SQRT_BUSY			(1<<15)
+
+#define floattof32(n)        ((int)((n) * (1 << 12)))
+#define f32toint(n)          (n >> 12)
+
+#endif
+
+
 /* wf_sqrt.c -- float version of w_sqrt.c.
  * Conversion to float by Ian Lance Taylor, Cygnus Support, ian@cygnus.com.
  */
@@ -66,7 +85,17 @@
 	double x;
 #endif
 {
+	#ifdef ARM7
 	return (double) sqrtf((float) x);
+	#endif
+	
+	#ifdef ARM9
+	SQRT_CR = SQRT_32;
+	//while(SQRT_CR & SQRT_BUSY);
+	SQRT_PARAM32 = f32toint(floattof32(x));
+	while(SQRT_CR & SQRT_BUSY);
+	return SQRT_RESULT32;
+	#endif
 }
 
 #endif /* defined(_DOUBLE_IS_32BITS) */

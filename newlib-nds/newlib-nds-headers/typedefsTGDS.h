@@ -34,7 +34,7 @@ USA
 typedef	unsigned	short	ushort;
 typedef	unsigned	char	uchar;
 
-typedef	long long			sint64;
+typedef	signed long long	sint64;
 typedef	int					sint32;
 typedef	short				sint16;
 typedef	char				sint8;
