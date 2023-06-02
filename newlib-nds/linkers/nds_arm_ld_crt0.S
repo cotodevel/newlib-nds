@@ -158,7 +158,9 @@ _start:
 		beq FirmwareARM7OK
 		cmp r0, #0x35		@DS Lite rare fw #1
 		beq FirmwareARM7OK
-		cmp r0, #0x57		@DSi
+		cmp r0, #0x57		@DSi (USA #1)
+		beq FirmwareARM7OK
+		cmp r0, #0x38		@DSi (EUR #1)
 		beq FirmwareARM7OK
 		cmp r0, #0x43		@iQueDS
 		beq FirmwareARM7OK
