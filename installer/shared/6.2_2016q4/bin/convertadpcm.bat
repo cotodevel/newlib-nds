@@ -1,1 +1,1 @@
-ffmpeg -i source.wav -af "apad=pad_dur=18" -f wav -acodec adpcm_ima_wav -ar 44100 source.ima
+ffmpeg -i source.wav -af "apad=pad_dur=1, lowpass=f=11000,afftdn=nf=-25,dynaudnorm=p=0.9:s=5" -f wav -acodec adpcm_ima_wav -ar 22050 source.ima
