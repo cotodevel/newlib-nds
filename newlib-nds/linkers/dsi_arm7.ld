@@ -1,20 +1,18 @@
-/*--------------------------------------------------------------------------------
-	This Source Code Form is subject to the terms of the Mozilla Public License,
-	v. 2.0. If a copy of the MPL was not distributed with this file, You can
-	obtain one at https://mozilla.org/MPL/2.0/.
---------------------------------------------------------------------------------*/
+/*Coto: 11 / Sept / 2023: This current linker guarantees to boot TGDS ARM7i binaries through Unlaunch*/ 
+/* it's got to do with how data is initialized & made relative, as opposed to the standard linker layout which does NOT work and it should*/
 OUTPUT_FORMAT("elf32-littlearm", "elf32-bigarm", "elf32-littlearm")
 OUTPUT_ARCH(arm)
 ENTRY(_start)
 
 PHDRS {
-	init  PT_LOAD FLAGS(7);
+	crt0  PT_LOAD FLAGS(7);
 	arm7  PT_LOAD FLAGS(7);
 	arm7i PT_LOAD FLAGS(0x100007);
 }
 
+
 MEMORY {
-	ewram  : ORIGIN = 0x02300000, LENGTH = 4M
+	ewram  : ORIGIN = 0x02300000, LENGTH = 64K
 	rom    : ORIGIN = 0x08000000, LENGTH = 32M
 	iwram  : ORIGIN = 0x03800000, LENGTH = 64K
 
@@ -22,22 +20,31 @@ MEMORY {
 	twl_iwram : ORIGIN = 0x03000000, LENGTH = 256K
 }
 
-_iwram_start =	ORIGIN(iwram);
-_iwram_end  =	ORIGIN(iwram)+ LENGTH(iwram);
+__iwram_start	=	ORIGIN(iwram);
+__iwram_top	=	ORIGIN(iwram)+ LENGTH(iwram);
 
+__irq_flags	=	0x04000000 - 8;
+__irq_flagsaux	=	0x04000000 - 0x40;
+__irq_vector	=	0x04000000 - 4;
+
+_iwram_start =	__iwram_start;
+_iwram_end = __iwram_top;
+
+__arm7_start__ = _iwram_start;
+__arm7_end__ = _iwram_end;
+
+/* ARM ABI says stacks are full decreasing */
+sp_SVC	= _iwram_end - 0x200; /* reset, swi exception*/
+sp_IRQ	= sp_SVC - 0x200;	/*irq exception*/
+sp_FIQ	= sp_IRQ - 0x200;	/* fiq exception */
+sp_ABT	= sp_FIQ - 0x200;	/* prefetch / data aborts exception */
+sp_UND	= sp_ABT - 0x200;	/* undefined exception */
+sp_USR	= sp_UND - 0x200;	/* usr / sys stacks */
+sp_SYS = sp_USR;
 /* ARM7 Specific */
 _arm7_irqcheckbits = 0x0380FFF8;	/* __irq_flags */
 __irq_flagsaux	=	0x04000000 - 0x40;
 _arm7_irqhandler = 0x0380FFFC;	/* __irq_vector */
-
-/* ARM ABI says stacks are full decreasing */
-sp_SVC	= _iwram_end - 0x200;
-sp_IRQ	= sp_SVC - 0x200;
-sp_FIQ	= sp_IRQ - 0x200;
-sp_ABT	= sp_FIQ - 0x200;
-sp_UND	= sp_ABT - 0x200;
-sp_USR	= sp_UND - 0x200;
-sp_SYS	= sp_USR;
 
 SECTIONS
 {
@@ -46,46 +53,20 @@ SECTIONS
 	{
 		__arm7i_lma__ = LOADADDR(.twl);
 		__arm7i_start__ = .;
-		
-		/* Moved to IWRAM to allow to use backwards compatible NTR 32K Shared WRAM so it doesn't cause IO conflicts
-		*(.twl)
-		*.twl*(.text .stub .text.* .gnu.linkonce.t.*)
-		*.twl*(.rodata)
-		*.twl*(.roda)
-		*.twl*(.rodata.*)
-		*.twl*(.data)
-		*.twl*(.data.*)
-		*.twl*(.gnu.linkonce.d*)
-		*/
 		__arm7i_end__ = .;
 	} >twl_iwram AT>twl_ewram :arm7i
 
 	.twl_bss ALIGN(4) (NOLOAD) :
 	{
-		/* (Moved) BSS Section Start */
-		/*
 		__twl_bss_start__ = .;
-		*(.twl_bss)
-		*.twl.*(.dynbss)
-		*.twl.*(.gnu.linkonce.b*)
-		*.twl.*(.bss*)
-		*.twl.*(COMMON)
 		__twl_bss_end__ = .;
-		*/
-		/* (Moved) BSS Section End */
-		
 	} >twl_iwram :NONE
-
-	.init	:
-	{
-		KEEP (*(SORT_NONE(.init)))
-		. = ALIGN(4);  /* REQUIRED. LD is flaky without it. */
-	} >ewram :init
-
+	
 	.text :
 	{
 		__arm7_lma__ = LOADADDR(.text);
 		__arm7_start__ = .;
+		KEEP (*(SORT_NONE(.init)))
 		*(.plt)
 		*(.text .stub .text.* .gnu.linkonce.t.*)
 		KEEP (*(.text.*personality*))
@@ -94,8 +75,6 @@ SECTIONS
 		*(.glue_7t) *(.glue_7) *(.vfp11_veneer)
 		. = ALIGN(4);  /* REQUIRED. LD is flaky without it. */
 		
-		
-		/* ARM7i code moved from .twl section to it allows to use backwards compatible NTR 32K Shared WRAM so it doesn't cause IO conflicts */
 		*(.twl)
 		*.twl*(.text .stub .text.* .gnu.linkonce.t.*)
 		*.twl*(.rodata)
@@ -107,7 +86,7 @@ SECTIONS
 		. = ALIGN(4);  /* REQUIRED. LD is flaky without it. */
 		
 	} >iwram AT>ewram :arm7
-
+	
 	.fini           :
 	{
 		KEEP (*(.fini))
@@ -200,33 +179,27 @@ SECTIONS
 		*(.gnu.linkonce.d*)
 		CONSTRUCTORS
 		. = ALIGN(4);
-		__data_end = ABSOLUTE(.) ;
-	} >iwram AT>ewram
-
-	.bss ALIGN(4) (NOLOAD) :
-	{
-		__arm7_end__ = .;
-		
-		/* (Moved) TWL BSS Section Start */
-		__twl_bss_start__ = .;
+		*(.dynbss)
+		*(.gnu.linkonce.b*)
+		*(.bss*)
+		*(COMMON)
 		*(.twl_bss)
 		*.twl.*(.dynbss)
 		*.twl.*(.gnu.linkonce.b*)
 		*.twl.*(.bss*)
 		*.twl.*(COMMON)
-		__twl_bss_end__ = .;
-		/* (Moved) TWL BSS Section End */
-		
+		. = ALIGN(4);
+		__data_end = ABSOLUTE(.) ;
+	} >iwram AT>ewram
+
+	.bss ALIGN(4) (NOLOAD) :
+	{
 		__bss_start = ABSOLUTE(.);
 		__bss_start__ = ABSOLUTE(.);
-		*(.dynbss)
-		*(.gnu.linkonce.b*)
-		*(.bss*)
-		*(COMMON)
 		. = ALIGN(4);    /* REQUIRED. LD is flaky without it. */
 		__bss_end__ = ABSOLUTE(.);
 		__end__ = ABSOLUTE(.);
-		__vma_stub_end__ = __end__;
+		__arm7_end__ = .;
 	} >iwram
 
 	/* Stabs debugging sections.  */
