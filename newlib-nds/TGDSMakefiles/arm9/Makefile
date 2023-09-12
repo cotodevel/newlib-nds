@@ -42,15 +42,15 @@ d_objs_arm9:=	${file_arm9_src_c:.c=.d}	${file_arm9_src_s:.s=.d}	${file_arm9_src_
 #ARM9 specific definitions.	-fno-common so we force initialized data to rodata
 MAPFILE = $(DIR_ARM9).map
 AS_ASFLAGS		=	$(GLOBAL_SHARED_FLAGS_9)	$(SPECIFIC_AS_COMPILER_FLAGS_9)		$(GLOBAL_AS_COMPILER_FLAGS)
-CC_ASFLAGS		=	-marm	-Ofast	-fno-short-enums	-mthumb-interwork	-DARM9	-fno-unwind-tables -fno-asynchronous-unwind-tables -fno-tree-loop-distribute-patterns -Dappver='$(EXECUTABLE_VERSION)'	-DTGDSPROJECTNAME='"$(TGDSPROJECTNAME)"'
-CPP_FLAGS		=	$(CC_ASFLAGS)	
+CC_ASFLAGS		=	$(GLOBAL_SHARED_FLAGS_9)	-marm	-Os	-fno-short-enums	-mthumb-interwork	-DARM9	-fno-unwind-tables -fno-asynchronous-unwind-tables -fno-tree-loop-distribute-patterns -Dappver='$(EXECUTABLE_VERSION)'	-DTGDSPROJECTNAME='"$(TGDSPROJECTNAME)"'
+CPP_FLAGS		=	$(CC_ASFLAGS)	-nostdinc++	
 BUILD			= 	$(BUILD_ARM9)
 DIR_SRC			=	$(DIRS_ARM9_SRC)	$(DIRS_ARM9_HEADER)
 
 #--gc-sections: allows relocatable sections linked (already) to be included, otherwise unused sections are discarded.
 #check arm9.map "Discarded input sections" to see --gc-sections in action.
 LDFLAGS	:=	-specs=$(TARGET_LIBRARY_LINKER_PATH_LD)/nds_arm9_ld.specs	-Wl,--no-gc-sections,-Map,$(MAPFILE),-z,defs
-LDFLAGS_DSI	:=	-specs=$(TARGET_LIBRARY_LINKER_PATH_LD)/nds_arm9_ld.specs	-Wl,--no-gc-sections,-Map,arm9-nonstripped_dsi.map,-z,defs
+LDFLAGS_DSI	:=	-specs=$(TARGET_LIBRARY_LINKER_PATH_LD)/dsi_arm9_ld.specs	-Wl,--gc-sections,-Map,arm9-nonstripped_dsi.map
 LIBRARIES_NTR =	-ltgdsfilesystem9	-lutils9	-l$(TARGET_LIBRARY_TGDS_NTR_9)	-lhardware9		-lwoopsi	-lstdc++	-lcnano9	-lgcc
 LIBRARIES_TWL =	-ltgdsfilesystem9i	-lutils9i	-l$(TARGET_LIBRARY_TGDS_TWL_9)	-lhardware9i	-lwoopsi	-lstdc++	-lcnano9	-lgcc
 
@@ -128,6 +128,8 @@ $(TARGET_LIBRARY_CRT0_FILE_9).o:	$(TARGET_LIBRARY_LINKER_FILE_9)
 	$(CPP)	-x assembler-with-cpp	$(DIRLIBS_HDR)	$(DIRLIBS_SRC)	$(CC_ASFLAGS)	-o	$(OBJDIR)/$@	-c	$<
 	cp	-r $(TARGET_LIBRARY_LINKER_PATH_LD)nds_arm9_ld.ld $(CURDIR)
 	cp	-r $(TARGET_LIBRARY_LINKER_PATH_LD)nds_arm9_ld.specs $(CURDIR)
+	cp	-r $(TARGET_LIBRARY_LINKER_PATH_LD)dsi_arm9.ld $(CURDIR)
+	cp	-r $(TARGET_LIBRARY_LINKER_PATH_LD)dsi_arm9_ld.specs $(CURDIR)
 	-@echo 'S Compile end: crt0s'
 
 #Linkage. 
@@ -140,8 +142,9 @@ $(OBJPROG): $(addprefix $(OBJDIR)/, $(OBJECTS))
 #xxxx-nonstripped.elf -> xxxx.elf STRIP operation
 $(ELF_ARM9): $(OBJPROG)
 	-@echo '$@ Unstripped. STRIP Start!'
-	-mv build/${@:.elf=-nonstripped_dsi.elf}	$(CURDIR)
 	$(OBJSTRIP)	-s -R .comment -R .gnu.version	$<
+	$(OBJSTRIP)	-s -R .comment -R .gnu.version	${<:.elf=_dsi.elf}
+	-mv build/${@:.elf=-nonstripped_dsi.elf}	$(CURDIR)
 	-mv	$<	$@
 	
 $(BINSTRIP_RULE_9): $(ELF_ARM9)
@@ -149,9 +152,8 @@ $(BINSTRIP_RULE_9): $(ELF_ARM9)
 	$(OBJCOPY) 	-S -O binary	$<	$@
 	-rm	$<
 	$(OBJCOPY) 	-S -O binary	${<:.elf=-nonstripped_dsi.elf}	${@:.bin=_twl.bin}
-	-rm	${<:.elf=-nonstripped_dsi.elf}
 ################################################################################################
 
 clean:
 	-@echo 'cleanup $(DIR_ARM9)'
-	-@rm -fr $(BINSTRIP_RULE_9)	$(MAPFILE)	${BINSTRIP_RULE_9:.bin=_twl.bin}	$(CURDIR)/nds_arm9_ld.specs	$(CURDIR)/nds_arm9_ld.ld	$(MAPFILE)	$(CURDIR)/arm9-nonstripped_dsi.elf $(CURDIR)/arm9-nonstripped_dsi.map
+	-@rm -fr $(BINSTRIP_RULE_9)	$(MAPFILE)	${BINSTRIP_RULE_9:.bin=_twl.bin}	$(CURDIR)/nds_arm9_ld.specs	$(CURDIR)/nds_arm9_ld.ld	$(CURDIR)/dsi_arm9_ld.specs	$(CURDIR)/dsi_arm9.ld	$(CURDIR)/arm9-nonstripped_dsi.elf $(CURDIR)/arm9-nonstripped_dsi.map	$(CURDIR)/data/tgds_multiboot_payload.bin	$(CURDIR)/data/tgds_multiboot_payload_twl.bin

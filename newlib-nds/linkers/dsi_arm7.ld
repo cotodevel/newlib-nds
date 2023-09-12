@@ -12,9 +12,9 @@ PHDRS {
 
 
 MEMORY {
-	ewram  : ORIGIN = 0x02300000, LENGTH = 64K
+	ewram  : ORIGIN = 0x023C0000, LENGTH = 64K
 	rom    : ORIGIN = 0x08000000, LENGTH = 32M
-	iwram  : ORIGIN = 0x03800000, LENGTH = 64K
+	iwram  : ORIGIN = 0x023C0000, LENGTH = 64K	/* copying sections is WIP on TWL */
 
 	twl_ewram : ORIGIN = 0x02e80000, LENGTH = 512K - 64K
 	twl_iwram : ORIGIN = 0x03000000, LENGTH = 256K
