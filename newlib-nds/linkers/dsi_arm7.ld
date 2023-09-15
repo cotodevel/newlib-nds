@@ -12,9 +12,9 @@ PHDRS {
 
 
 MEMORY {
-	ewram  : ORIGIN = 0x023C0000, LENGTH = 64K
+	ewram  : ORIGIN = 0x03800000, LENGTH = 64K
 	rom    : ORIGIN = 0x08000000, LENGTH = 32M
-	iwram  : ORIGIN = 0x023C0000, LENGTH = 64K	/* copying sections is WIP on TWL */
+	iwram  : ORIGIN = 0x03800000, LENGTH = 64K	/* copying sections is WIP on TWL */
 
 	twl_ewram : ORIGIN = 0x02e80000, LENGTH = 512K - 64K
 	twl_iwram : ORIGIN = 0x03000000, LENGTH = 256K
@@ -29,9 +29,6 @@ __irq_vector	=	0x04000000 - 4;
 
 _iwram_start =	__iwram_start;
 _iwram_end = __iwram_top;
-
-__arm7_start__ = _iwram_start;
-__arm7_end__ = _iwram_end;
 
 /* ARM ABI says stacks are full decreasing */
 sp_SVC	= _iwram_end - 0x200; /* reset, swi exception*/
@@ -64,8 +61,6 @@ SECTIONS
 	
 	.text :
 	{
-		__arm7_lma__ = LOADADDR(.text);
-		__arm7_start__ = .;
 		KEEP (*(SORT_NONE(.init)))
 		*(.plt)
 		*(.text .stub .text.* .gnu.linkonce.t.*)
@@ -199,9 +194,17 @@ SECTIONS
 		. = ALIGN(4);    /* REQUIRED. LD is flaky without it. */
 		__bss_end__ = ABSOLUTE(.);
 		__end__ = ABSOLUTE(.);
-		__arm7_end__ = .;
 	} >iwram
-
+	
+	/* stubbed for ARM7i binaries crt0 in NTR mode, but actually used in TWL mode */
+	__arm7i_lma__ = __end__ + 4;
+	__arm7i_start__ = __arm7i_lma__ + 4;
+	__arm7i_end__ = __arm7i_start__ + 4;
+	
+	__arm7_lma__ = __arm7i_end__ + 4;
+	__arm7_start__ = __arm7_lma__ + 4;
+	__arm7_end__ = __arm7_start__ + 4;
+	
 	/* Stabs debugging sections.  */
 	.stab 0 : { *(.stab) }
 	.stabstr 0 : { *(.stabstr) }
