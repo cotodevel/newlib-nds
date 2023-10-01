@@ -18,17 +18,14 @@
 
 #TGDS1.6 compatible Makefile
 
+default: all
+
 #ToolchainGenericDS specific: Use Makefiles from either TGDS, or custom
 export SOURCE_MAKEFILE7 = custom
 export SOURCE_MAKEFILE9 = custom
 
 #Shared
-ifeq ($(TGDS_ENV),windows)	
-	include $(DEFAULT_GCC_PATH)/Makefile.basenewlib
-endif
-ifeq ($(TGDS_ENV),linux)
-	include $(CURDIR)/../installer/shared/6.2_2016q4/Makefile.basenewlib
-endif
+include $(CURDIR)/../installer/shared/6.2_2016q4/Makefile.basenewlib
 
 
 #Custom

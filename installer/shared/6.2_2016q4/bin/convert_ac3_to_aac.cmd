@@ -1,0 +1,1 @@
+ffmpeg -i pat.ac3 -c:a aac -ar 44100 pat.m4a

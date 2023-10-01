@@ -1,10 +1,16 @@
-export TOOLCHAIN_GENERIC_DS_VER	=	"TGDS1.6"
+export TOOLCHAIN_GENERIC_DS_VER	=	"TGDS1.65"
 
 # Shared start
 
 export DIR_ARM7 = arm7
 export DIR_ARM9 = arm9
 export PosIndCodeDIR_FILENAME = PositionIndependentCode
+
+#LINUX == blank. WIN == base path
+ifeq ($(TGDS_ENV),)
+export TGDS_ENV := linux
+export DEFAULT_GCC_PATH := /usr/arm-none-eabi/lib/newlib-nano-2.1-nds/6.2_2016q4/
+endif
 
 ifeq ($(TGDS_ENV),windows)
 	export GCC_BUILD_ENV	= $(DEFAULT_GCC_PATH)
