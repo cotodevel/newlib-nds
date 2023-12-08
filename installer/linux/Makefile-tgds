@@ -1,4 +1,12 @@
-all :	buildtoolchain
+all :	buildgrit	buildtoolchain
+
+#Setup GRIT
+buildgrit:
+	-sudo apt-get -y install libfreeimage-dev
+	-7z	-aoa	x	$(CURDIR)/../installer/linux/grit-master.zip	-o$(CURDIR)/../installer/linux/
+	-chmod +x $(CURDIR)/../installer/linux/grit-master/autogen.sh
+	-(cd $(CURDIR)/../installer/linux/grit-master && sudo ./autogen.sh && sudo ./configure && sudo make && sudo make install)
+	
 	
 #Setup prebuilt GCC 4.9.2 arm-eabi
 buildtoolchain:
@@ -11,5 +19,6 @@ buildtoolchain:
 
 clean:
 	-sudo rm	-fr	/usr/arm-none-eabi/
-	-@rm -fr	$(CURDIR)/toolchain.zip
-	-@rm -fr	$(CURDIR)/../installer/linux/Coto88-packages-259926b7da68/
+	$(MAKE)	-R	-C	$(CURDIR)/../installer/linux/grit-master clean
+	-sudo rm -fr	$(CURDIR)/toolchain.zip	/usr/local/bin/grit	$(CURDIR)/../installer/linux/Coto88-packages-259926b7da68/	$(CURDIR)/../installer/linux/grit-master	$(CURDIR)/../ltmain.sh
+	-sudo rm -rf cldib	extlib	libgrit	srcgrit
