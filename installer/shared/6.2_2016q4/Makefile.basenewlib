@@ -85,6 +85,7 @@ ifeq ($(TGDS_ENV),linux)
 	export CXX 	= 	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)arm-eabi-g++
 	export CPP 	= 	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)arm-eabi-c++
 	export LD	:=	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)arm-eabi-ld
+	export GRITTOOL	=	grit
 	export OBJCOPY	=	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)arm-eabi-objcopy
 	export OBJDUMP	=	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)arm-eabi-objdump
 	export OBJSTRIP	=	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)arm-eabi-strip
