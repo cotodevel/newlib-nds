@@ -83,6 +83,21 @@ _start:
 	str r1,[r0]
 	
 	#ifdef ARM9
+	.extern _io_dldi_stub
+	
+	@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+	@initialize ARM7DLDI: 
+	@ 1) ARM9 passes its DLDI section to ARM7
+	ldr r0,=_io_dldi_stub
+	ldr r1,=0x02FFDFE8	@ARM7_ARM9_DLDI_STATUS
+	str r0,[r1]
+	
+	@ 2) Give VRAM_D to ARM7 @0x06000000
+	ldr	r3, =0x04000200
+	ldr	r2, =0x7d	@ u8 vrambits = (VRAM_D_0x06000000_ARM7 | VRAM_ENABLE);
+	strb	r2, [r3, #0x43]
+	@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+	
 	mov	r0, #0x1f		@ sys
 	msr	cpsr, r0
 	ldr 	sp, =(0x027FF000)
@@ -147,25 +162,14 @@ _start:
 	add                 r3,r2,#(256)                  /* point r3 after the last byte we will be writing (LMA)*/
 	bl                  copy
 	
-	/* Wait until ARM7 reads firmware and we initialize ARM9 from this flag */
-	waitForFirmwareARM7Setup:
-		ldr r0,=(0x027FF000 + 0x5D)	@(uint8)Console Type: 
+	/* Wait until ARM7 initializes DLDI */
+	ldr r1,=_io_dldi_stub
+	
+	waitForARM7DLDISetup:
+		ldr r0,=0x02FFDFE8	@ARM7_ARM9_DLDI_STATUS
 		blx getValueSafe
-		and r0,r0,#0xFF
-		cmp r0, #0xFF		@DS Phat
-		beq FirmwareARM7OK
-		cmp r0, #0x20		@DS Lite
-		beq FirmwareARM7OK
-		cmp r0, #0x35		@DS Lite rare fw #1
-		beq FirmwareARM7OK
-		cmp r0, #0x57		@DSi (USA #1)
-		beq FirmwareARM7OK
-		cmp r0, #0x38		@DSi (EUR #1)
-		beq FirmwareARM7OK
-		cmp r0, #0x43		@iQueDS
-		beq FirmwareARM7OK
-		cmp r0, #0x63		@iQueDS Lite
-		beq FirmwareARM7OK
+		cmp r0, r1		@ARM7DLDI Init OK?
+		bne ARM7DLDIOK
 		
 		.extern TGDSInitLoopCount
 		ldr r2,=TGDSInitLoopCount
@@ -173,17 +177,20 @@ _start:
 		add r3,r3,#1
 		cmp r3,#(8192 << 6) @524288
 		
-		moveq r1,r0	@u32 fwNo
-		moveq r0,#0x0	@stage
+		moveq r1,#0		@u32 fwNo (unknown)
+		moveq r0,#0x1	@stage
 		beq handleDSInitError 
 		
 		str r3, [r2]
 		
-		b waitForFirmwareARM7Setup
-	FirmwareARM7OK:
+		b waitForARM7DLDISetup
+	ARM7DLDIOK:
+	ldr r0,=(0x027FF000 + 0x5D)	@(uint8)Console Type:
+	blx getValueSafe
+	and r0,r0,#0xFF
 	#endif
+	
 	bl initHardware
-	ldr	lr, =exception_sysexit
 	
 	#ifdef ARM9
 	ldr                 r1,=argvIntraTGDSMB                /* point our source register to the start of the .dtcm section (VMA)*/
