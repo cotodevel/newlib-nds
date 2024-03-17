@@ -60,10 +60,19 @@ _start:
 @---------------------------------------------------------------------------------
 	#ifdef ARM7
 	@Copy ARM7i sections from VMA to LMA
-	ldr                 r1,=__arm7_lma__                 /* point our source register to the start of the .itcm section (VMA)*/
-	ldr                 r2,=__arm7_start__                 /* point our destination register to the I-TCM dedicated to our writable data (LMA)*/
-	ldr                 r3,=__arm7_end__                  /* point r3 after the last byte we will be writing (LMA)*/
-	bl                  copy  
+	mov r0, pc
+	lsr    r0, r0, #24
+	cmp r0, #3
+	ldrne                 r1,=__arm7_lma__                 /* point our source register to the start of the .itcm section (VMA)*/
+	ldrne                 r2,=__arm7_start__                 /* point our destination register to the I-TCM dedicated to our writable data (LMA)*/
+	ldrne                 r3,=__arm7_end__                  /* point r3 after the last byte we will be writing (LMA)*/
+	blne                  copy  
+@jump to reloc. RAM if we're not already there	
+	ldr r1,=__arm7_start__
+	mov r0, pc
+	lsr    r0, r0, #24
+	cmp r0, #3
+	bxne r1
 	#endif
 
 	@Info from: http://problemkaputt.de/gbatek.htm
