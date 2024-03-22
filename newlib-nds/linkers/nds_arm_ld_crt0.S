@@ -1,4 +1,3 @@
-
 /*
 
 			Copyright (C) 2017  Coto
@@ -58,7 +57,8 @@ USA
 .global _start
 _start:
 @---------------------------------------------------------------------------------
-	#ifdef ARM7
+	
+	#ifdef ARM7	
 	@Copy ARM7i sections from VMA to LMA
 	mov r0, pc
 	lsr    r0, r0, #24
@@ -86,14 +86,8 @@ _start:
 	
 	@Also, MPU exceptions are triggered in USR mode (0x10&psr), SYS mode exceptions are ignored. (0x1f&psr)
 	
-	@disable exceptions when MPU setup. Enter SYS mode.
-	ldr r0,=0x04000204
-	mov r1,#0
-	str r1,[r0]
-	
 	#ifdef ARM9
 	.extern _io_dldi_stub
-	
 	@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 	@initialize ARM7DLDI: 
 	@ 1) ARM9 passes its DLDI section to ARM7
