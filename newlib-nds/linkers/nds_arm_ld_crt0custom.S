@@ -1,3 +1,4 @@
+
 /*
 
 			Copyright (C) 2017  Coto
@@ -54,12 +55,11 @@ USA
 #endif
 .arm
 .section ".init"
-.global _start
-_start:
+.global _startarm7bootldr
+_startarm7bootldr:
 @---------------------------------------------------------------------------------
-	
-	@disable general exceptions (IME) when MPU setup
-	ldr r0,=0x04000208
+	@disable exceptions when MPU setup. Enter SYS mode.
+	ldr r0,=0x04000204
 	mov r1,#0
 	str r1,[r0]
 	
@@ -67,7 +67,7 @@ _start:
 	@Copy ARM7i sections from VMA to LMA
 	mov r0, pc
 	lsr    r0, r0, #24
-	cmp r0, #3
+	cmp r0, #6
 	ldrne                 r1,=__arm7_lma__                 /* point our source register to the start of the .itcm section (VMA)*/
 	ldrne                 r2,=__arm7_start__                 /* point our destination register to the I-TCM dedicated to our writable data (LMA)*/
 	ldrne                 r3,=__arm7_end__                  /* point r3 after the last byte we will be writing (LMA)*/
@@ -76,7 +76,7 @@ _start:
 	ldr r1,=__arm7_start__
 	mov r0, pc
 	lsr    r0, r0, #24
-	cmp r0, #3
+	cmp r0, #6
 	bxne r1
 	#endif
 
@@ -90,22 +90,7 @@ _start:
 	@Thus, BIOS exceptions must be handled from such DS BIOS RAM stacks.
 	
 	@Also, MPU exceptions are triggered in USR mode (0x10&psr), SYS mode exceptions are ignored. (0x1f&psr)
-	
 	#ifdef ARM9
-	.extern _io_dldi_stub
-	@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-	@initialize ARM7DLDI: 
-	@ 1) ARM9 passes its DLDI section to ARM7
-	ldr r0,=_io_dldi_stub
-	ldr r1,=0x02FFDFE8	@ARM7_ARM9_DLDI_STATUS
-	str r0,[r1]
-	
-	@ 2) Give VRAM_D to ARM7 @0x06000000
-	ldr	r3, =0x04000200
-	ldr	r2, =0x82	@ u8 vrambits = (VRAM_D_0x06000000_ARM7 | VRAM_ENABLE);
-	strb	r2, [r3, #0x43]
-	@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-	
 	mov	r0, #0x1f		@ sys
 	msr	cpsr, r0
 	ldr 	sp, =(0x027FF000)
@@ -169,36 +154,11 @@ _start:
 	ldr                 r2,=argvIntraTGDSMB                 /* point our destination register to the D-TCM dedicated to our writable data (LMA)*/
 	add                 r3,r2,#(256)                  /* point r3 after the last byte we will be writing (LMA)*/
 	bl                  copy
-	
-	/* Wait until ARM7 initializes DLDI */
-	ldr r1,=_io_dldi_stub
-	
-	waitForARM7DLDISetup:
-		ldr r0,=0x02FFDFE8	@ARM7_ARM9_DLDI_STATUS
-		blx getValueSafe
-		cmp r0, r1		@ARM7DLDI Init OK?
-		bne ARM7DLDIOK
-		
-		.extern TGDSInitLoopCount
-		ldr r2,=TGDSInitLoopCount
-		ldr r3, [r2]
-		add r3,r3,#1
-		cmp r3,#(8192 << 6) @524288
-		
-		moveq r1,#0		@u32 fwNo (unknown)
-		moveq r0,#0x1	@stage
-		beq handleDSInitError 
-		
-		str r3, [r2]
-		
-		b waitForARM7DLDISetup
-	ARM7DLDIOK:
-	ldr r0,=(0x027FF000 + 0x5D)	@(uint8)Console Type:
-	blx getValueSafe
-	and r0,r0,#0xFF
 	#endif
 	
-	bl initHardware
+	#ifdef ARM7
+	bl initHardware	@ARM7 only
+	#endif
 	
 	#ifdef ARM9
 	ldr                 r1,=argvIntraTGDSMB                /* point our source register to the start of the .dtcm section (VMA)*/
@@ -232,10 +192,6 @@ copy:
 	strlo               r0,[r2],#4                  /* if end not reached, store word and advance destination pointer */
 	blo                 copy                        /* if end not reached, branch back to loop */
 	bx                  lr                          /* return to caller */
-
-.global argvIntraTGDSMB
-argvIntraTGDSMB:
-	.skip 0x100
 
 .pool
 .align
