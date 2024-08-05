@@ -16,6 +16,10 @@ MEMORY {
 __iwram_start	=	ORIGIN(iwram);
 __iwram_top	=	ORIGIN(iwram)+ LENGTH(iwram);
 
+/* TGDS ARM7 Stage 1 IWRAM bootloader: skip copy */
+__iwram_startFast	=	__iwram_top;
+__iwram_topFast	=	__iwram_top;
+__arm7iwram_lma__ = __iwram_startFast;
 __irq_flags	=	0x04000000 - 8;
 __irq_flagsaux	=	0x04000000 - 0x40;
 __irq_vector	=	0x04000000 - 4;
