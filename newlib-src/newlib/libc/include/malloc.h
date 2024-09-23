@@ -1,7 +1,7 @@
 /* malloc.h -- header file for memory routines.  */
 
-#ifndef _INCLUDE_MALLOC_H_
-#define _INCLUDE_MALLOC_H_
+#ifndef _INCLUDE_MALLOC_H__
+#define _INCLUDE_MALLOC_H__
 
 #include <_ansi.h>
 #include <sys/reent.h>
@@ -9,25 +9,185 @@
 #define __need_size_t
 #include <stddef.h>
 
+//DS dmalloc
+#define FOOTERS 1
+#define HAVE_MMAP 0
+#define ONLY_MSPACES 0	/* dlmalloc is the default newlib malloc */
+#undef MSPACES
+#define malloc_getpagesize 4096
+#define DEBUG 1
+#define ABORT_ON_ASSERT_FAILURE 1
+#define ABORT ds_malloc_abort()
+
+
+#ifndef WIN32
+#ifdef _WIN32
+#define WIN32 1
+#endif  /* _WIN32 */
+#endif  /* WIN32 */
+#ifdef WIN32
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#define HAVE_MMAP 1
+#define HAVE_MORECORE 0
+#define LACKS_UNISTD_H
+#define LACKS_SYS_PARAM_H
+#define LACKS_SYS_MMAN_H
+#define LACKS_STRING_H
+#define LACKS_STRINGS_H
+#define LACKS_SYS_TYPES_H
+#define LACKS_ERRNO_H
+#define MALLOC_FAILURE_ACTION
+#define MMAP_CLEARS 0 /* WINCE and some others apparently don't clear */
+#endif  /* WIN32 */
+
+#if defined(DARWIN) || defined(_DARWIN)
+/* Mac OSX docs advise not to use sbrk; it seems better to use mmap */
+#ifndef HAVE_MORECORE
+#define HAVE_MORECORE 0
+#define HAVE_MMAP 1
+#endif  /* HAVE_MORECORE */
+#endif  /* DARWIN */
+
+#ifndef LACKS_SYS_TYPES_H
+#include <sys/types.h>  /* For size_t */
+#endif  /* LACKS_SYS_TYPES_H */
+
+/* The maximum possible size_t value has all bits set */
+#define MAX_SIZE_T           (~(size_t)0)
+
+#ifndef ONLY_MSPACES
+#define ONLY_MSPACES 0
+#endif  /* ONLY_MSPACES */
+#ifndef MSPACES
+#if ONLY_MSPACES
+#define MSPACES 1
+#else   /* ONLY_MSPACES */
+#define MSPACES 0
+#endif  /* ONLY_MSPACES */
+#endif  /* MSPACES */
+#ifndef MALLOC_ALIGNMENT
+#define MALLOC_ALIGNMENT ((size_t)8U)
+#endif  /* MALLOC_ALIGNMENT */
+#ifndef FOOTERS
+#define FOOTERS 0
+#endif  /* FOOTERS */
+#ifndef ABORT
+#define ABORT  abort()
+#endif  /* ABORT */
+#ifndef ABORT_ON_ASSERT_FAILURE
+#define ABORT_ON_ASSERT_FAILURE 1
+#endif  /* ABORT_ON_ASSERT_FAILURE */
+#ifndef PROCEED_ON_ERROR
+#define PROCEED_ON_ERROR 0
+#endif  /* PROCEED_ON_ERROR */
+#ifndef USE_LOCKS
+#define USE_LOCKS 0
+#endif  /* USE_LOCKS */
+#ifndef INSECURE
+#define INSECURE 0
+#endif  /* INSECURE */
+#ifndef HAVE_MMAP
+#define HAVE_MMAP 1
+#endif  /* HAVE_MMAP */
+#ifndef MMAP_CLEARS
+#define MMAP_CLEARS 1
+#endif  /* MMAP_CLEARS */
+#ifndef HAVE_MREMAP
+#ifdef linux
+#define HAVE_MREMAP 1
+#else   /* linux */
+#define HAVE_MREMAP 0
+#endif  /* linux */
+#endif  /* HAVE_MREMAP */
+#ifndef MALLOC_FAILURE_ACTION
+#define MALLOC_FAILURE_ACTION  errno = ENOMEM;
+#endif  /* MALLOC_FAILURE_ACTION */
+#ifndef HAVE_MORECORE
+#if ONLY_MSPACES
+#define HAVE_MORECORE 0
+#else   /* ONLY_MSPACES */
+#define HAVE_MORECORE 1
+#endif  /* ONLY_MSPACES */
+#endif  /* HAVE_MORECORE */
+#if !HAVE_MORECORE
+#define MORECORE_CONTIGUOUS 0
+#else   /* !HAVE_MORECORE */
+#ifndef MORECORE
+#define MORECORE sbrk
+#endif  /* MORECORE */
+#ifndef MORECORE_CONTIGUOUS
+#define MORECORE_CONTIGUOUS 1
+#endif  /* MORECORE_CONTIGUOUS */
+#endif  /* HAVE_MORECORE */
+#ifndef DEFAULT_GRANULARITY
+#if MORECORE_CONTIGUOUS
+#define DEFAULT_GRANULARITY (0)  /* 0 means to compute in init_mparams */
+#else   /* MORECORE_CONTIGUOUS */
+#define DEFAULT_GRANULARITY ((size_t)64U * (size_t)1024U)
+#endif  /* MORECORE_CONTIGUOUS */
+#endif  /* DEFAULT_GRANULARITY */
+#ifndef DEFAULT_TRIM_THRESHOLD
+#ifndef MORECORE_CANNOT_TRIM
+#define DEFAULT_TRIM_THRESHOLD ((size_t)2U * (size_t)1024U * (size_t)1024U)
+#else   /* MORECORE_CANNOT_TRIM */
+#define DEFAULT_TRIM_THRESHOLD MAX_SIZE_T
+#endif  /* MORECORE_CANNOT_TRIM */
+#endif  /* DEFAULT_TRIM_THRESHOLD */
+#ifndef DEFAULT_MMAP_THRESHOLD
+#if HAVE_MMAP
+#define DEFAULT_MMAP_THRESHOLD ((size_t)256U * (size_t)1024U)
+#else   /* HAVE_MMAP */
+#define DEFAULT_MMAP_THRESHOLD MAX_SIZE_T
+#endif  /* HAVE_MMAP */
+#endif  /* DEFAULT_MMAP_THRESHOLD */
+#ifndef USE_BUILTIN_FFS
+#define USE_BUILTIN_FFS 0
+#endif  /* USE_BUILTIN_FFS */
+#ifndef USE_DEV_RANDOM
+#define USE_DEV_RANDOM 0
+#endif  /* USE_DEV_RANDOM */
+#ifndef NO_MALLINFO
+#define NO_MALLINFO 0
+#endif  /* NO_MALLINFO */
+#ifndef MALLINFO_FIELD_TYPE
+#define MALLINFO_FIELD_TYPE size_t
+#endif  /* MALLINFO_FIELD_TYPE */
+
+
+/*
+  mallopt tuning options.  SVID/XPG defines four standard parameter
+  numbers for mallopt, normally defined in malloc.h.  None of these
+  are used in this malloc, so setting them has no effect. But this
+  malloc does support the following options.
+*/
+
+#define M_TRIM_THRESHOLD     (-1)
+#define M_GRANULARITY        (-2)
+#define M_MMAP_THRESHOLD     (-3)
+
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+extern void ds_malloc_abort(void);
+
 /* This version of struct mallinfo must match the one in
    libc/stdlib/mallocr.c.  */
-
 struct mallinfo {
-  size_t arena;    /* total space allocated from system */
-  size_t ordblks;  /* number of non-inuse chunks */
-  size_t smblks;   /* unused -- always zero */
-  size_t hblks;    /* number of mmapped regions */
-  size_t hblkhd;   /* total space in mmapped regions */
-  size_t usmblks;  /* unused -- always zero */
-  size_t fsmblks;  /* unused -- always zero */
-  size_t uordblks; /* total allocated space */
-  size_t fordblks; /* total non-inuse space */
-  size_t keepcost; /* top-most, releasable (via malloc_trim) space */
-};	
+  MALLINFO_FIELD_TYPE arena;    /* non-mmapped space allocated from system */
+  MALLINFO_FIELD_TYPE ordblks;  /* number of free chunks */
+  MALLINFO_FIELD_TYPE smblks;   /* always 0 */
+  MALLINFO_FIELD_TYPE hblks;    /* always 0 */
+  MALLINFO_FIELD_TYPE hblkhd;   /* space in mmapped regions */
+  MALLINFO_FIELD_TYPE usmblks;  /* maximum total allocated space */
+  MALLINFO_FIELD_TYPE fsmblks;  /* always 0 */
+  MALLINFO_FIELD_TYPE uordblks; /* total allocated space */
+  MALLINFO_FIELD_TYPE fordblks; /* total free space */
+  MALLINFO_FIELD_TYPE keepcost; /* releasable (via malloc_trim) space */
+};
+
 
 /* The routines.  */
 
@@ -146,13 +306,6 @@ extern _VOID _mstats_r _PARAMS ((struct _reent *, char *));
 #define M_NLBLKS  2    /* UNUSED in this malloc */
 #define M_GRAIN   3    /* UNUSED in this malloc */
 #define M_KEEP    4    /* UNUSED in this malloc */
-
-/* mallopt options that actually do something */
-  
-#define M_TRIM_THRESHOLD    -1
-#define M_TOP_PAD           -2
-#define M_MMAP_THRESHOLD    -3 
-#define M_MMAP_MAX          -4
 
 #ifndef __CYGWIN__
 /* Some systems provide this, so do too for compatibility.  */
