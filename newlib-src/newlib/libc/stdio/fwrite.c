@@ -103,6 +103,9 @@ _DEFUN(_fwrite_r, (ptr, buf, size, count, fp),
        FILE * __restrict fp)
 {
   size_t n;
+  if( (fp == NULL) || (buf == NULL) ){
+	return 0;
+  }
 #ifdef _FVWRITE_IN_STREAMIO
   struct __suio uio;
   struct __siov iov;

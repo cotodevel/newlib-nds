@@ -131,9 +131,12 @@ _DEFUN(_fseeko_r, (ptr, fp, offset, whence),
 #else
 #endif
   int havepos;
+  
+	if (fp == NULL){
+		return 0;
+	}
 
-  /* Make sure stdio is set up.  */
-
+/* Make sure stdio is set up.  */
   CHECK_INIT (ptr, fp);
 
   _newlib_flockfile_start (fp);
