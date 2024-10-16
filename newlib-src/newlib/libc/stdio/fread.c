@@ -90,7 +90,7 @@ _DEFUN(crlf_r, (ptr, fp, buf, count, eof),
   int r;
   char *s, *d, *e;
 
-  if (count == 0)
+  if ((count == 0) || (fp == NULL) || (buf == NULL))
     return 0;
 
   e = buf + count;
