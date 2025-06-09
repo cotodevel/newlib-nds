@@ -10,15 +10,15 @@ buildgrit:
 	
 #Setup prebuilt GCC 4.9.2 arm-eabi
 buildtoolchain:
-	-wget	-O	$(CURDIR)/../installer/linux/toolchain.zip https://bitbucket.org/Coto88/packages/get/master.zip
-	-7z	x	$(CURDIR)/../installer/linux/toolchain.zip	-o$(CURDIR)/../installer/linux/
-	-tar	xf		$(CURDIR)/../installer/linux/Coto88-packages-259926b7da68/newlib-nds-packages/newlib-nds-packages.tar.xz	-C $(CURDIR)/../installer/linux/Coto88-packages-259926b7da68/newlib-nds-packages/
+	-wget	-O	$(CURDIR)/../installer/linux/toolchain.tar.gz https://github.com/cotodevel/packages/archive/refs/heads/TGDS1.65.tar.gz
+	-tar 	xvfz $(CURDIR)/../installer/linux/toolchain.tar.gz	-C $(CURDIR)/../installer/linux/
+	-tar	xf		$(CURDIR)/../installer/linux/packages-TGDS1.65/newlib-nds-packages/newlib-nds-packages.tar.xz	-C $(CURDIR)/../installer/linux/packages-TGDS1.65/newlib-nds-packages/
 	-sudo chown $(USER) /usr/arm-none-eabi/	
-	-chmod a+x -R	$(CURDIR)/../installer/linux/Coto88-packages-259926b7da68/newlib-nds-packages/newlib-nds-packages/tgds-xubuntu-18.04/gcc-arm-none-eabi-4_9-2015q3/
-	-sudo cp	-a	$(CURDIR)/../installer/linux/Coto88-packages-259926b7da68/newlib-nds-packages/newlib-nds-packages/tgds-xubuntu-18.04/gcc-arm-none-eabi-4_9-2015q3/.	/usr/arm-none-eabi/
+	-chmod a+x -R	$(CURDIR)/../installer/linux/packages-TGDS1.65/newlib-nds-packages/newlib-nds-packages/tgds-xubuntu-18.04/gcc-arm-none-eabi-4_9-2015q3/
+	-sudo cp	-a	$(CURDIR)/../installer/linux/packages-TGDS1.65/newlib-nds-packages/newlib-nds-packages/tgds-xubuntu-18.04/gcc-arm-none-eabi-4_9-2015q3/.	/usr/arm-none-eabi/
 
 clean:
 	-sudo rm	-fr	/usr/arm-none-eabi/
 	$(MAKE)	-R	-C	$(CURDIR)/../installer/linux/grit-master clean
-	-sudo rm -fr	$(CURDIR)/toolchain.zip	/usr/local/bin/grit	$(CURDIR)/../installer/linux/Coto88-packages-259926b7da68/	$(CURDIR)/../installer/linux/grit-master	$(CURDIR)/../ltmain.sh
+	-sudo rm -fr	$(CURDIR)/toolchain.tar.gz	$(CURDIR)/../installer/linux/toolchain.tar.gz	/usr/local/bin/grit	$(CURDIR)/../installer/linux/packages-TGDS1.65/	$(CURDIR)/../installer/linux/grit-master	$(CURDIR)/../ltmain.sh
 	-sudo rm -rf cldib	extlib	libgrit	srcgrit
