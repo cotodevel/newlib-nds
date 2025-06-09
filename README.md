@@ -16,7 +16,7 @@ Features:
 Steps:
 
 [Windows]
-Follow the steps at https://bitbucket.org/Coto88/toolchaingenericds-ide then proceed to [Done].
+Set up the IDE at: https://github.com/cotodevel/toolchaingenericds-ide then proceed to [Done].
 
 [Linux]
 - 1.a)Building Newlib for NintendoDS: 
@@ -28,6 +28,6 @@ Notes:
 		Expected output is a lot of code compiled, then shell is idle.
 
 [Done] If you followed all steps up to this point, newlib for NintendoDS was built correctly. ToolchainGenericDS needs to be built now:
-https://bitbucket.org/Coto88/toolchaingenericds
+https://github.com/cotodevel/toolchaingenericds
 
 Coto
