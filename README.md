@@ -1,8 +1,5 @@
 [Newlib for NintendoDS]
-These sources are Newlib + ARM specific drivers, for Nintendo DS.
-
-Version: 
-	Windows/Linux : GCC 4.9.1	(ARM EABI)
+Windows/Linux : GCC 4.9.3 ARM-EABI + Newlib 2.1 ARM, for Nintendo DS.
 
 Features:
 - GAS (Gnu Assembler): .s / .S ARM assembler files, using the GNU syntax.
