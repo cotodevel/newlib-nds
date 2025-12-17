@@ -8,7 +8,7 @@ buildgrit:
 	-(cd $(CURDIR)/../installer/linux/grit-master && sudo ./autogen.sh && sudo ./configure && sudo make && sudo make install)
 	
 	
-#Setup prebuilt GCC 4.9.2 arm-eabi
+#Setup prebuilt GCC 4.9.3 arm-eabi + Clang on linux
 buildtoolchain:
 	-wget	-O	$(CURDIR)/../installer/linux/toolchain.tar.gz https://github.com/cotodevel/packages/archive/refs/heads/TGDS1.65.tar.gz
 	-tar 	xvfz $(CURDIR)/../installer/linux/toolchain.tar.gz	-C $(CURDIR)/../installer/linux/
