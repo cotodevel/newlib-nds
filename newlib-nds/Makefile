@@ -249,7 +249,7 @@ ifeq ($(TGDS_ENV),linux)
 		build-essential automake libtool lib32z1 lib32ncurses-dev libmpc-dev libgmp3-dev	\
 		libmpfr-dev zlib1g-dev autoconf autogen bison dejagnu flex gcc-9-i686-linux-gnu gcc-i686-linux-gnu \
 		flip gawk git gperf gzip nsis openssh-client p7zip-full perl python-dev-is-python3 libisl-dev \
-		scons tcl texinfo tofrodos wget zip texlive texlive-extra-utils	g++ 
+		scons tcl texinfo tofrodos wget zip texlive texlive-extra-utils	g++	clang lld binutils-arm-none-eabi
 endif
 
 #rule already validated == linux

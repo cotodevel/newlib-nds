@@ -18,6 +18,7 @@ ifeq ($(TGDS_ENV),windows)
 	export AR	=	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)arm-eabi-ar.exe
 	export AS	=	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)arm-eabi-as.exe
 	export CC 	= 	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)arm-eabi-gcc.exe
+	export CC_CLANG 	:= 	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)clang.exe
 	export CXX 	= 	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)arm-eabi-g++.exe
 	export CPP 	= 	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)arm-eabi-c++.exe
 	export LD	=	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)arm-eabi-ld.exe
@@ -83,6 +84,7 @@ ifeq ($(TGDS_ENV),linux)
 	export AR	:=	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)arm-eabi-ar
 	export AS	:=	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)arm-eabi-as
 	export CC 	:= 	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)arm-eabi-gcc
+	export CC_CLANG 	:= 	clang
 	export CXX 	= 	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)arm-eabi-g++
 	export CPP 	= 	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)arm-eabi-c++
 	export LD	:=	$(GCC_BUILD_ENV)$(GCC_BIN_PATH)arm-eabi-ld
@@ -146,8 +148,9 @@ endif
 #global ASM / C / C++ vars used across all TGDS Makefiles (TGDS / Newlib / TGDS project):
 
 #CPU specific
-export GLOBAL_SHARED_FLAGS_7 = -march=armv4t	-mthumb-interwork	-mfloat-abi=soft	
-export GLOBAL_SHARED_FLAGS_9 = -march=armv5te	-mthumb-interwork	-mfloat-abi=soft	
+export GLOBAL_SHARED_FLAGS_7 = -march=armv4t	-mthumb-interwork	
+export GLOBAL_SHARED_FLAGS_9 = -march=armv5te	-mthumb-interwork	
+export GLOBAL_SHARED_FLAGS_GCC := -mfloat-abi=soft
 
 #CPU code builder settings
 export GLOBAL_AS_COMPILER_FLAGS =	-defsym	TGDSBinVersion='$(TOOLCHAIN_GENERIC_DS_VER)'	-defsym		NDS='1'	-defsym	TGDSPROJECTNAME='$(TGDSPROJECTNAME)'
